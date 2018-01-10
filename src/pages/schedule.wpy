@@ -1,0 +1,135 @@
+<template>
+    <view class="contanier">
+        <block wx:for="{{dataArr}}" wx:for-item="items" wx:for-index="i">
+            <view class="col">
+                <block wx:for="{{items}}" wx:for-item="item" wx:for-index="j">
+                    <view class="row title" wx:if="{{i == 0 || j==0}}">{{item}}</view>
+                    <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"> </view>
+                    <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
+                        <text class="address">
+                                                <text>{{item.building}}</text>
+                        <text>{{item.classroom}}</text>
+                        </text>
+                        <text class="course-name">{{item.course_name}}</text>
+                    </view>
+                </block>
+            </view>
+        </block>
+    </view>
+</template>
+<script>
+    import wepy from "wepy";
+    export default class Schedule extends wepy.page {
+        config = {
+            navigationBarBackgroundColor: "#f06292",
+            navigationBarTextStyle: "#fbcce1",
+            navigationBarTitleText: "我的课表",
+            backgroundColor: "#dddddd"
+        };
+        data = {
+            dataArr: [
+                ["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            ],
+            schedules: [{
+                    course_name: "数据库设计",
+                    day: 5,
+                    session: "1,2",
+                    building: "一教",
+                    classroom: "c102"
+                },
+                {
+                    course_name: "测试测试测试测试测试测试",
+                    day: 4,
+                    session: "1,2,3",
+                    building: "一教",
+                    classroom: "c102"
+                }
+            ]
+        };
+        onLoad() {
+            this.initData();
+            this.initSchedules();
+            console.log(this.dataArr);
+        }
+        initSchedules() {
+            let colors = [
+                "#009966",
+                "#99CC99",
+                "#0099CC",
+                "#339999",
+                "#FF9999"
+            ];
+            for (let e of this.schedules) {
+                e.sessionArr = e.session.split(",");
+                e.flex = e.sessionArr.length;
+                // 生成随机背景色
+                let ridx = Math.round(Math.random() * (colors.length - 1));
+                e.color = colors[ridx];
+                // 替换原矩阵值
+                e.sessionArr.forEach(element => {
+                    this.dataArr[e.day - 0][element].flex = 0;
+                });
+                this.dataArr[e.day - 0][e.sessionArr[0]] = e;
+            }
+        }
+        initData() {
+            // 初始化data
+            let title = ["一", "二", "三", "四", "五", "六", "日"];
+            for (let i = 0; i < 7; i++) {
+                let tmpData = [];
+                for (let j = 0; j < 13; j++) {
+                    if (j == 0) {
+                        tmpData[j] = title[i];
+                        continue;
+                    }
+                    tmpData[j] = {
+                        course_name: "",
+                        flex: 1
+                    };
+                }
+                this.dataArr.push(tmpData);
+            }
+        }
+    }
+</script>
+<style lang="less">
+    .contanier {
+        display: flex;
+    }
+    .col {
+        display: flex;
+        flex-direction: column;
+        width: 5rem;
+        flex-wrap: wrap;
+    }
+    .row {
+        text-align: center;
+        flex: 1;
+        height: 3rem;
+        border-bottom: 1px solid #eee;
+        border-right: 1px solid #eee;
+        background: #fff;
+        padding: 0 0.15rem;
+        &.title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        &.item {
+            font-size: 0.7rem;
+            height: 2rem;
+            color: #fefefe;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            text{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .course-name {
+                padding-bottom: 0.5rem;
+            }
+        }
+    }
+</style>

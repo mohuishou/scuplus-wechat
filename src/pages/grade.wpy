@@ -1,0 +1,117 @@
+<template>
+    <view>
+        <view class="grade-lists">
+            <view class="grade-header">
+                <text class="title">2016-2017学年春(两学期)</text>
+                <view>
+                    <view class="info">
+                        <text>必修绩点： 3.340</text>
+                        <text>必修平均分： 86.250</text>
+                    </view>
+                    <view class="info">
+                        <text>全部绩点： 3.391</text>
+                        <text>全部平均分： 87.045</text>
+                    </view>
+                </view>
+            </view>
+            <view class="grade-list">
+                <text>课程名</text>
+                <text>分数</text>
+                <text>绩点</text>
+                <text>学分</text>
+                <text>属性</text>
+            </view>
+            <block wx:for="{{'1234567890'}}">
+                <view class="grade-list">
+                    <text>数据库设计</text>
+                    <text>95</text>
+                    <text>4.0</text>
+                    <text>3.0</text>
+                    <text>必修</text>
+                </view>
+            </block>
+        </view>
+        <view class="grade-lists">
+            <view class="grade-header">
+                <text class="title">2016-2017学年春(两学期)</text>
+                <view>
+                    <view class="info">
+                        <text>必修绩点： 3.340</text>
+                        <text>必修平均分： 86.250</text>
+                    </view>
+                    <view class="info">
+                        <text>全部绩点： 3.391</text>
+                        <text>全部平均分： 87.045</text>
+                    </view>
+                </view>
+            </view>
+            <view class="grade-list">
+                <text>课程名</text>
+                <text>分数</text>
+                <text>绩点</text>
+                <text>学分</text>
+                <text>属性</text>
+            </view>
+            <block wx:for="{{'1234567890'}}">
+                <view class="grade-list">
+                    <text>数据库设计</text>
+                    <text>95</text>
+                    <text>4.0</text>
+                    <text>3.0</text>
+                    <text>必修</text>
+                </view>
+            </block>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from "wepy";
+    export default class Grade extends wepy.page {
+        config = {
+            navigationBarBackgroundColor: "#f06292",
+            navigationBarTextStyle: "#ffffff",
+            navigationBarTitleText: "我的成绩",
+            backgroundColor: "#eee"
+        };
+    }
+</script>
+<style lang="less">
+    @import "./src/less/config.less";
+    page {
+        background: #eee;
+    }
+    .grade-lists {
+        background: #fff;
+        margin: 0.5rem;
+        .grade-header {
+            background: @base-color;
+            color: #fff; 
+            text-align: center;
+            padding: 0.5rem;
+            .title {
+                display: block;
+            }
+            .info {
+                font-size: 0.7rem;
+                display: flex;
+                justify-content: space-between;
+                padding-top: 0.5rem;
+            }
+        }
+        .grade-list {
+            display: flex;
+            border-bottom: 1px dashed #eee;
+            color: #666;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            text {
+                padding: 0.1rem;
+                display: table-cell;
+                flex: 1;
+                &:nth-child(1) {
+                    flex: 4;
+                }
+            }
+        }
+    }
+</style>

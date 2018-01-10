@@ -1,0 +1,260 @@
+<template>
+    <view>
+        <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
+        <swiper class="swiper" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+            <block wx:for="{{imgUrls}}" wx:key="item">
+                <swiper-item>
+                    <image @tap="test({{item}})" src="{{item}}" class="slide-image" />
+                </swiper-item>
+            </block>
+        </swiper>
+        <!-- 功能区 -->
+        <view class="func">
+            <block wx:for="{{imgUrls}}" wx:key="item">
+                <view class="icon-btn">
+                    <view class="iconfont icon-kechengbiao"></view>
+                    <text>课程表</text>
+                </view>
+            </block>
+        </view>
+        <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
+        <view>
+            <view class="card">
+                <view class="card-title">
+                    <view class="iconfont icon-kechengbiao"></view>
+                    <text>今日课表</text>
+                </view>
+                <view class="card-lists">
+                    <view class="card-list">
+                        <view class="card-left">
+                            <text class="class-name">数据库设计</text>
+                            <text class="class-info">第一大节(8:00 ~ 10:00)</text>
+                        </view>
+                        <view class="card-right">
+                            <text>一教C102</text>
+                        </view>
+                    </view>
+                     <view class="card-list">
+                        <view class="card-left">
+                            <text class="class-name">数据库设计</text>
+                            <text class="class-info">第一大节(8:00 ~ 10:00)</text>
+                        </view>
+                        <view class="card-right">
+                            <text>一教C102</text>
+                        </view>
+                    </view>
+                    
+                </view>
+                <view class="card-foot">
+                    <text>查看完整课表</text>
+                </view>
+            </view>
+
+             <view class="card">
+                <view class="card-title">
+                    <view class="iconfont icon-kechengbiao"></view>
+                    <text>今日课表</text>
+                </view>
+                <view class="card-lists">
+                    <view class="card-list">
+                        <view class="card-left">
+                            <text class="class-name">数据库设计</text>
+                            <text class="class-info">第一大节(8:00 ~ 10:00)</text>
+                        </view>
+                        <view class="card-right">
+                            <text>一教C102</text>
+                        </view>
+                    </view>
+                     <view class="card-list">
+                        <view class="card-left">
+                            <text class="class-name">数据库设计</text>
+                            <text class="class-info">第一大节(8:00 ~ 10:00)</text>
+                        </view>
+                        <view class="card-right">
+                            <text>一教C102</text>
+                        </view>
+                    </view>
+                    
+                </view>
+                <view class="card-foot">
+                    <text>查看完整课表</text>
+                </view>
+            </view>
+
+             <view class="card">
+                <view class="card-title">
+                    <view class="iconfont icon-kechengbiao"></view>
+                    <text>今日课表</text>
+                </view>
+                <view class="card-lists">
+                    <view class="card-list">
+                        <view class="card-left">
+                            <text class="class-name">数据库设计</text>
+                            <text class="class-info">第一大节(8:00 ~ 10:00)</text>
+                        </view>
+                        <view class="card-right">
+                            <text>一教C102</text>
+                        </view>
+                    </view>
+                     <view class="card-list">
+                        <view class="card-left">
+                            <text class="class-name">数据库设计</text>
+                            <text class="class-info">第一大节(8:00 ~ 10:00)</text>
+                        </view>
+                        <view class="card-right">
+                            <text>一教C102</text>
+                        </view>
+                    </view>
+                    
+                </view>
+                <view class="card-foot">
+                    <text>查看完整课表</text>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from "wepy";
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarBackgroundColor: "#f06292",
+            navigationBarTextStyle: "#fbcce1",
+            navigationBarTitleText: "SCUPLUS",
+            backgroundColor: "#dddddd"
+        };
+        data = {
+            imgUrls: [
+                "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
+                "http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg",
+                "http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg",
+                "http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg"
+            ],
+            indicatorDots: true,
+            autoplay: false,
+            interval: 5000,
+            duration: 1000
+        };
+        methods = {
+            test(x) {
+                console.log(x);
+            }
+        };
+    }
+</script>
+<style lang="less">
+    @import "./src/icon/iconfont.less";
+    @import "./src/img/index.less";
+
+    /* 函数变量 */
+    .icon(@size, @font-size, @background) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: @size;
+        height: @size;
+        background: @background;
+        border-radius: @size*0.5rem;
+        color: #fff;
+        font-size: @font-size;
+    }
+
+    @border: 1px solid #eee;
+
+    /* 函数变量 END */
+
+    page {
+        background: #eee;
+    }
+
+    .card {
+        background: #fff;
+        background-image: data-uri(@card-kb);
+        background-position: center;
+        background-size: cover;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-top: @border;
+        border-bottom: @border;
+        padding: 0.3rem;
+        padding-bottom: 0;
+        .card-title {
+            display: flex;
+            align-items: baseline;
+            padding-bottom: 0.3rem;
+            border-bottom: @border;
+            .iconfont {
+                margin-left: 0.2rem;
+                .icon(1.3rem, 0.7rem, #99ccee);
+            }
+            text {
+                margin-left: 0.2rem;
+                font-size: 0.7rem;
+                color: #888;
+            }
+        }
+
+        .card-list{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 0.4rem;
+            text{
+                color: #666;
+                        font-size: 0.8rem;
+            }
+            .card-left{
+                display: inline-block;
+                text-align: center;
+                text {
+                    display: block;
+                    padding-top: 0.3rem;                    
+                    &.class-info{
+                        color: #999;
+                        font-size: 0.7rem;
+                    }
+                }
+            }
+        }
+
+        .card-foot{
+            text-align: center;
+            padding: 0.3rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    }
+    .func {
+        background: #fff;
+        display: flex;
+        justify-content: space-around;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+        border-bottom: 1px solid #eee;
+    }
+    .icon-btn {
+        width: 2.7rem;
+        text-align: center;
+        .iconfont {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 2.7rem;
+            background: #99ccee;
+            border-radius: 2.7*0.5rem;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        text {
+            margin-top: 5rpx;
+            font-size: 0.8rem;
+        }
+    }
+    .swiper {
+        image {
+            width: 100%;
+            height: 15rem;
+        }
+    }
+</style>
