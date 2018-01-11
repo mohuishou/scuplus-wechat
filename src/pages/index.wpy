@@ -1,7 +1,7 @@
 <template>
     <view>
         <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
-        <swiper class="swiper" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+        <swiper class="swiper" indicator-dots="true" autoplay="true" interval="4000" duration="1000">
             <block wx:for="{{imgUrls}}" wx:key="item">
                 <swiper-item>
                     <image @tap="test({{item}})" src="{{item}}" class="slide-image" />
@@ -10,10 +10,10 @@
         </swiper>
         <!-- 功能区 -->
         <view class="func">
-            <block wx:for="{{imgUrls}}" wx:key="item">
-                <view class="icon-btn">
-                    <view class="iconfont icon-kechengbiao"></view>
-                    <text>课程表</text>
+            <block wx:for="{{funcs}}" wx:key="item">
+                <view @tap="to({{item.url}})" class="icon-btn">
+                    <view class="iconfont icon-{{item.icon}}"></view>
+                    <text>{{item.name}}</text>
                 </view>
             </block>
         </view>
@@ -34,7 +34,7 @@
                             <text>一教C102</text>
                         </view>
                     </view>
-                     <view class="card-list">
+                    <view class="card-list">
                         <view class="card-left">
                             <text class="class-name">数据库设计</text>
                             <text class="class-info">第一大节(8:00 ~ 10:00)</text>
@@ -43,14 +43,12 @@
                             <text>一教C102</text>
                         </view>
                     </view>
-                    
                 </view>
                 <view class="card-foot">
                     <text>查看完整课表</text>
                 </view>
             </view>
-
-             <view class="card">
+            <view class="card">
                 <view class="card-title">
                     <view class="iconfont icon-kechengbiao"></view>
                     <text>今日课表</text>
@@ -65,7 +63,7 @@
                             <text>一教C102</text>
                         </view>
                     </view>
-                     <view class="card-list">
+                    <view class="card-list">
                         <view class="card-left">
                             <text class="class-name">数据库设计</text>
                             <text class="class-info">第一大节(8:00 ~ 10:00)</text>
@@ -74,14 +72,12 @@
                             <text>一教C102</text>
                         </view>
                     </view>
-                    
                 </view>
                 <view class="card-foot">
                     <text>查看完整课表</text>
                 </view>
             </view>
-
-             <view class="card">
+            <view class="card">
                 <view class="card-title">
                     <view class="iconfont icon-kechengbiao"></view>
                     <text>今日课表</text>
@@ -96,7 +92,7 @@
                             <text>一教C102</text>
                         </view>
                     </view>
-                     <view class="card-list">
+                    <view class="card-list">
                         <view class="card-left">
                             <text class="class-name">数据库设计</text>
                             <text class="class-info">第一大节(8:00 ~ 10:00)</text>
@@ -105,7 +101,6 @@
                             <text>一教C102</text>
                         </view>
                     </view>
-                    
                 </view>
                 <view class="card-foot">
                     <text>查看完整课表</text>
@@ -130,14 +125,26 @@
                 "http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg",
                 "http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg"
             ],
-            indicatorDots: true,
-            autoplay: false,
-            interval: 5000,
-            duration: 1000
+            funcs: [{
+                    name: "课程表",
+                    url: "schedule",
+                    icon: "kechengbiao"
+                },
+                {
+                    name: "成绩",
+                    url: "grade",
+                    icon: "chengji"
+                }
+            ]
         };
         methods = {
             test(x) {
                 console.log(x);
+            },
+            to(url) {
+                wepy.navigateTo({
+                    url: url
+                });
             }
         };
     }
@@ -145,7 +152,6 @@
 <style lang="less">
     @import "./src/icon/iconfont.less";
     @import "./src/img/index.less";
-
     /* 函数变量 */
     .icon(@size, @font-size, @background) {
         display: flex;
@@ -158,15 +164,11 @@
         color: #fff;
         font-size: @font-size;
     }
-
     @border: 1px solid #eee;
-
     /* 函数变量 END */
-
     page {
         background: #eee;
     }
-
     .card {
         background: #fff;
         background-image: data-uri(@card-kb);
@@ -193,32 +195,30 @@
                 color: #888;
             }
         }
-
-        .card-list{
+        .card-list {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px dashed #eee;
             padding-bottom: 0.4rem;
-            text{
+            text {
                 color: #666;
-                        font-size: 0.8rem;
+                font-size: 0.8rem;
             }
-            .card-left{
+            .card-left {
                 display: inline-block;
                 text-align: center;
                 text {
                     display: block;
-                    padding-top: 0.3rem;                    
-                    &.class-info{
+                    padding-top: 0.3rem;
+                    &.class-info {
                         color: #999;
                         font-size: 0.7rem;
                     }
                 }
             }
         }
-
-        .card-foot{
+        .card-foot {
             text-align: center;
             padding: 0.3rem;
             font-size: 0.8rem;

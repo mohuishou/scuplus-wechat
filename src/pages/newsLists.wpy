@@ -1,0 +1,167 @@
+<template>
+  <view @touchstart="moveStart" @touchend="moveEnd">
+    <view class="tab-lists">
+      <view class="tabs">
+        <block wx:for="{{tabs}}">
+          <view class="tab {{active == index ? 'active' : ''}}" @tap="tabHandle({{index}})">{{item.name}}</view>
+        </block>
+      </view>
+      <view class="slider" style="transform: translateX({{100 * active}}%);">
+        <view class="indicator"></view>
+      </view>
+    </view>
+    <view class="lists">
+      <block wx:for="{{'1234567890'}}">
+        <view class="list">
+          <view class="title">
+            关于组织开展2018年四川大学寒假社会实践活动的通知
+          </view>
+          <view class="info">
+            <view class="tags">
+              <text>#青春川大</text>
+              <text>#公告</text>
+            </view>
+            <view class="time">2018-01-10</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from "wepy";
+  export default class NewsLists extends wepy.page {
+    config = {
+      navigationBarBackgroundColor: "#7e57c2",
+      navigationBarTextStyle: "#7e57c2",
+      navigationBarTitleText: "最新资讯",
+      backgroundColor: "#eee"
+    };
+    data = {
+      active: 0,
+      swipe:0,
+      swipeY: 0,
+      tabs: [{
+          name: "全部",
+          category: "",
+        },
+        {
+          name: "scuinfo",
+          category: "",
+        },
+        {
+          name: "青春川大",
+          category: "",
+        },
+        {
+          name: "学工部",
+          category: "",
+        },
+        {
+          name: "教务处",
+          category: "",
+        },
+        {
+          name: "官网",
+          category: "",
+        },
+      ]
+    };
+    methods = {
+      tabHandle(index) {
+        this.active = index
+      },
+      moveStart(e){
+        this.swipe= e.touches[0].clientX
+        this.swipeY= e.touches[0].clientY
+      },
+      moveEnd(e){
+        let changedX = e.changedTouches[0].clientX - this.swipe
+        if (Math.abs(e.changedTouches[0].clientY - this.swipeY) >= Math.abs(changedX)) return;
+        
+        if (changedX > 60){
+          // 右移
+          this.active++
+        }else if(changedX < -60){
+          // 左移
+          this.active--
+        }
+      }
+    }
+  }
+</script>
+<style lang="less">
+  @base-color: #7e57c2;
+  @keyframes fadeinL {
+    0% {
+      opacity: 0;
+      transform: translateX(-1rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  page {
+    background: #eee;
+  }
+  .slider {
+    position: relative;
+    width: 100%/6;
+    -webkit-transition: all 0.2s cubic-bezier(0.38, 0.8, 0.32, 1.07);
+    transition: all 0.2s cubic-bezier(0.38, 0.8, 0.32, 1.07);
+  }
+  .slider .indicator {
+    position: relative;
+    width: 50px;
+    max-width: 100%;
+    margin: 0 auto;
+    height: 2px;
+    background: @base-color;
+    border-radius: 1px;
+  }
+  .tab-lists {
+    position: fixed;
+    width: 100%;
+    top: 0;
+  }
+  .tabs {
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    overflow: auto;
+    padding: 0.3rem 0.2rem;
+    font-size: 0.8rem;
+    .tab {
+      flex: 1;
+      color: #666;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &.active {
+        color: @base-color;
+      }
+    }
+  }
+  .lists {
+    margin-top: 2rem;
+    .list {
+      padding: 0.5rem;
+      background: #fff;
+      margin-bottom: 0.5rem;
+      .title {
+        font-size: 0.8rem;
+      }
+      .info {
+        margin-top: 0.5rem;
+        font-size: 0.6rem;
+        display: flex;
+        justify-content: space-between;
+        text{
+          display: inline-block;
+          margin-right: 0.2rem;
+        }
+      }
+    }
+  }
+</style>

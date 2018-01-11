@@ -14,24 +14,24 @@
   import "wepy-async-function";
   export default class extends wepy.app {
     config = {
-      pages: ["pages/grade","pages/schedule","pages/index","pages/bindJwc"],
+      pages: ["pages/newsLists", "pages/index", "pages/grade", "pages/schedule", "pages/bindJwc"],
       window: {
         backgroundTextStyle: "light",
         navigationBarBackgroundColor: "#fff",
         navigationBarTitleText: "WeChat",
         navigationBarTextStyle: "black"
       },
-      // tabBar: {
-      //   list: [{
-      //       pagePath: "pages/index",
-      //       text: "首页"
-      //     },
-      //     // {
-      //     //   pagePath: "pages/bindJwc",
-      //     //   text: "日志"
-      //     // }
-      //   ]
-      // }
+      tabBar: {
+        list: [{
+            pagePath: "pages/index",
+            text: "首页"
+          },
+          {
+            pagePath: "pages/newsLists",
+            text: "资讯"
+          }
+        ]
+      }
     };
     globalData = {
       userInfo: null
