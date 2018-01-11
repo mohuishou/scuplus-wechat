@@ -14,7 +14,7 @@
   import "wepy-async-function";
   export default class extends wepy.app {
     config = {
-      pages: ["pages/newsLists", "pages/index", "pages/grade", "pages/schedule", "pages/bindJwc"],
+      pages: ["pages/details", "pages/newsLists", "pages/index", "pages/grade", "pages/schedule", "pages/bindJwc"],
       window: {
         backgroundTextStyle: "light",
         navigationBarBackgroundColor: "#fff",
