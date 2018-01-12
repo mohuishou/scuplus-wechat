@@ -12,9 +12,17 @@
 <script>
   import wepy from "wepy";
   import "wepy-async-function";
+  import http from "./util/http";
   export default class extends wepy.app {
     config = {
-      pages: ["pages/details", "pages/newsLists", "pages/index", "pages/grade", "pages/schedule", "pages/bindJwc"],
+      pages: [
+        "pages/index",
+        "pages/details",
+        "pages/newsLists",
+        "pages/grade",
+        "pages/schedule",
+        "pages/bindJwc"
+      ],
       window: {
         backgroundTextStyle: "light",
         navigationBarBackgroundColor: "#fff",
@@ -34,7 +42,9 @@
       }
     };
     globalData = {
-      userInfo: null
+      userInfo: null,
+      token: "",
+      jwc_verify: 0
     };
     constructor() {
       super();
@@ -42,6 +52,7 @@
     }
     onLaunch() {
       this.testAsync();
+      this.getToken();
     }
     sleep(s) {
       return new Promise((resolve, reject) => {
@@ -65,6 +76,75 @@
           cb && cb(res.userInfo);
         }
       });
+    }
+    login() {
+      wepy.login({
+        success: function(res) {
+          if (res.code) {
+            http.post({
+              url: "/login",
+              params: {
+                code: res.code
+              }
+            }).then(res => {
+              if (res.status == 0) {
+                let data = res.data;
+                wepy.setStorage({
+                  key: "token",
+                  data: data.token
+                });
+                wepy.setStorage({
+                  key: "jwc_verify",
+                  data: data.jwc_verify
+                });
+                this.globalData.token = data.token;
+                this.globalData.jwc_verify = data.jwc_verify;
+                if (data.jwc_verify == 0) {
+                  wepy.navigateTo({
+                    url: "bindJwc"
+                  });
+                }
+              } else {
+                wepy.showToast({
+                  title: "用户登录失败！",
+                  icon: "loading",
+                  duration: 2000
+                });
+              }
+            });
+          } else {
+            wepy.showToast({
+              title: "获取用户登录态失败！",
+              icon: "error",
+              duration: 2000
+            });
+            console.log("获取用户登录态失败！" + res.errMsg);
+          }
+        }
+      });
+    }
+    getToken() {
+      let token = wepy.getStorageSync("token");
+      let jwc_verify = wepy.getStorageSync("jwc_verify");
+      let _this = this;
+      if (!token) {
+        this.login();
+      } else {
+        wepy.checkSession({
+          success: function() {
+            _this.globalData.token = token;
+            _this.globalData.jwc_verify = jwc_verify;
+            if (jwc_verify == 0) {
+              wepy.navigateTo({
+                url: "bindJwc"
+              });
+            }
+          },
+          fail: function() {
+            _this.login();
+          }
+        });
+      }
     }
   }
 </script>
