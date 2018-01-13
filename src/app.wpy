@@ -16,9 +16,10 @@
   export default class extends wepy.app {
     config = {
       pages: [
+        "pages/newsLists",
+        
         "pages/index",
         "pages/details",
-        "pages/newsLists",
         "pages/grade",
         "pages/schedule",
         "pages/bindJwc"
@@ -26,7 +27,7 @@
       window: {
         backgroundTextStyle: "light",
         navigationBarBackgroundColor: "#fff",
-        navigationBarTitleText: "WeChat",
+        navigationBarTitleText: "SCUPLUS",
         navigationBarTextStyle: "black"
       },
       tabBar: {

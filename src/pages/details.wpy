@@ -8,24 +8,48 @@
             </view>
         </view>
         <htmlParser :parserName="name" :parserContent.sync="content" />
+        <view class="footer">
+            <view>
+                原文：{{url}}
+            </view>
+        </view>
     </view>
 </template>
 <script>
     import wepy from 'wepy'
     import htmlParser from '../components/htmlParser'
+    import http from "../util/http";
     export default class Details extends wepy.page {
         config = {
-            navigationBarBackgroundColor: "#7e57c2",
-            navigationBarTextStyle: "#7e57c2",
-            navigationBarTitleText: "测试",
-            backgroundColor: "#eee"
         }
         components = {
             htmlParser: htmlParser,
         }
         data = {
-            name: "测试",
-            content: `<p style="margin: 0px; text-align: left; line-height: 150%; text-indent: 24pt;"><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;">2018年1月1日晚，化学工程学院“化梦为马，工祝新华——献礼十九大”迎新晚会</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">在江安校区艺术学院小剧场顺利举办</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">。出席本次晚会的</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">领导和老师有：</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">学院党委书记庞国伟、党委副书记姜利寒</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">、</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">副院长唐盛伟、副院长余徽</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">、</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">副院长钮大文、制药与生工系副主任姚舜、冶金系副主任黄青松、教导员李川娜</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">、</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;">2017级班主任蒋文伟、刘壮、王烨、唐思扬</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">、杨秀山、</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">张国权</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">以及</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">辅导员老师们。</span> </span></p><p style="margin: 0px; text-align: center; line-height: 150%; text-indent: 24pt;"><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><img title="TIM图片20180102145937.jpg" alt="TIM图片20180102145937.jpg" src="http://xsc.scu.edu.cn/Scripts/ueditor/net/upload/ue/image/20180109/6365109180685870854176274.jpg"/></span></p><p style="margin: 0px; text-align: left; line-height: 150%; text-indent: 24pt;"><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">晚会伊始，</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">庞国伟书记代表学院致辞</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">。</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">庞书记首先表达了对</span>2017级化工新生的欢迎，</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">与同学们共同回顾了</span>2017年学校和学院经历的重要事件</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">，向同学们提出了几点希望</span>:希望新同学有梦想，有朝气，同时要努力学习；同时他强调，“青年兴则国家兴，青年强则国家强。中华民族伟大复兴的中国梦终将在一代代青年的接力奋斗中变为现实”。</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"></span></p><p style="margin: 0px; line-height: 150%; text-indent: 24pt;"><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">随后晚会迎来了第一篇章</span>“心迎新——敞开心扉，辞旧迎新”。在第一个节目歌曲《梦想天空分外蓝》中，清越的女声与铿锵的男声为我们描画出了一幅书写梦想的蓝天的图画；接下来是表演《Show T》，表演与走秀相结合，相辅相成；相声《夜行记》结合生活讲述了有关出行路上乘公交、摩托车、汽车、飞机等的有趣故事，带来欢乐的同时提倡了作为当代大学生应尽自己的义务，做遵守交通规则的好公民；接下来的小人舞《小小人儿》让同学们大开眼界，随着节奏旋律的转变“小人们”翩翩起舞，三个小人收放自如的表演深受大家的喜爱，收获了大家的阵阵欢呼和掌声；在“我爱学习”的视频中，“近化鸡”与“工程制兔”的有趣对话以夸张的手法表现了化工学子对学习的热爱，引得台下笑声连连。</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"></span></p><p style="margin: 0px; line-height: 150%; text-indent: 24pt;"><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">走进第二篇章</span>“梦启航”，诗朗诵《以梦为马》，从诗人海子的视角为大家展现了化工学子报答祖国的一腔热忱，诗中所述的“和所有以梦为马的诗人一样，我选择永恒的事业”彰显了化工人坚定化工事业的志向；在</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">四川大学凤凰展翅舞蹈</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">比赛中荣获二等奖的学院舞蹈队带来</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">了</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">舞蹈《掀起你的盖头来》，姑娘小伙举手投足间所传达的热情洋溢的民族风情赢得了热烈的掌声和喝彩；小品《看病》幽默搞笑却不失严谨的思考。</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"></span></p><p style="margin: 0px; line-height: 150%; text-indent: 24pt;"><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">随着第三篇章</span>“路同行”的开启，舞蹈串烧带领着大家迎接新的一年、迎接快乐的到来；舞台剧《废弃柴油的自我救赎》传达了“绿色是化工永恒的主题”的思想，剧中废弃柴油向可再生柴油的转变正是在告诉大家要“不忘初心，砥砺前行”，表达了对祖国化工事业、环境保护做贡献的美好愿景，生动而有内涵的表演引发了台下热烈而持久的掌声；接下来研究生</span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">选送的节目和本科生演唱的歌曲曲风混搭、新鲜有趣</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">；压轴的《主席部长秀》，化工团委学生会主席团</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">和</span></span><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">各部门部长展现出了特色与风采。</span></span></p><p style="margin: 0px; line-height: 150%; text-indent: 24pt;"><span style="margin: 0px; line-height: 150%; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体"></span></span><span style="margin: 0px; font-family: 宋体; font-size: 12pt;"><span style="font-family:宋体">迎新晚会在《相亲相爱》的歌声里徐徐落下帷幕，晚会画上了圆满的句点。迎新晚会是</span>2017级化工学子新的起点，是新的一年的开始，是响应习近平总书记在党的十九大报告中发出的“坚定理想信念，志存高远，脚踏实地，勇做时代的弄潮儿”的号召。自此，2017级新生将展望未来，追逐未来，接受新使命的召唤，勇敢踏上新征程，携梦启航，共同描绘梦想天空的色彩！</span></p><p><br/></p>`
+            content: "",
+            name: "123",
+            url: ""
+        }
+        async onLoad(option) {
+            let self = this
+            http.get("/detail/" + option.id).then(
+                resp => {
+                    if (resp.status == 0) {
+                        let title = resp.data.title
+                        if (resp.data.category == "scuinfo"){
+                            title = resp.data.author
+                            resp.data.content = resp.data.content.replace(/\n/g,"<br />")
+                        }
+                        self.content = resp.data.content
+                        wepy.setNavigationBarTitle({
+                            title: title
+                        })
+                        self.url = resp.data.url
+                        self.$apply()
+                        self.$invoke('htmlParser', 'htmlParserNotice')
+                    }
+                }
+            )
         }
     }
 </script>
@@ -33,11 +57,16 @@
     page {
         background: #eee;
     }
+    .footer{
+        font-size: 0.6rem;
+        color: #888;
+    }
     .details {
         margin: 0.2rem;
         padding: 0.5rem;
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 0.1rem;
+        line-height: 150%;
     }
 </style>

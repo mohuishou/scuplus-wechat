@@ -1,5 +1,5 @@
 <template>
-  <view @touchstart="moveStart" @touchend="moveEnd">
+  <scroll-view @scrolltolower="updateLists()" enable-back-to-top scroll-y @touchstart="moveStart" @touchend="moveEnd">
     <view class="tab-lists">
       <view class="tabs">
         <block wx:for="{{tabs}}">
@@ -11,25 +11,28 @@
       </view>
     </view>
     <view class="lists">
-      <block wx:for="{{'1234567890'}}">
+      <block wx:for="{{details}}" wx:key="{{item.id}}">
         <view class="list">
-          <view class="title">
-            关于组织开展2018年四川大学寒假社会实践活动的通知
+          <view @tap="toDetail({{item.id}})" class="title">
+            {{item.title}}
           </view>
           <view class="info">
             <view class="tags">
-              <text>#青春川大</text>
-              <text>#公告</text>
+              <text>{{item.category}}</text>
+              <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="{{tag.id}}">
+                <text>#{{tag.name}}</text>
+              </block>
             </view>
-            <view class="time">2018-01-10</view>
+            <view class="time">{{item.created_at}}</view>
           </view>
         </view>
       </block>
     </view>
-  </view>
+  </scroll-view>
 </template>
 <script>
   import wepy from "wepy";
+  import http from "../util/http";
   export default class NewsLists extends wepy.page {
     config = {
       navigationBarBackgroundColor: "#7e57c2",
@@ -39,7 +42,7 @@
     };
     data = {
       active: 0,
-      swipe:0,
+      swipe: 0,
       swipeY: 0,
       tabs: [{
           name: "全部",
@@ -47,46 +50,99 @@
         },
         {
           name: "scuinfo",
-          category: "",
+          category: "scuinfo",
         },
         {
           name: "青春川大",
-          category: "",
+          category: "青春川大",
         },
         {
           name: "学工部",
-          category: "",
+          category: "学工部",
         },
         {
           name: "教务处",
-          category: "",
+          category: "教务处",
         },
         {
-          name: "官网",
-          category: "",
+          name: "官网新闻",
+          category: "四川大学新闻网",
         },
-      ]
+      ],
+      details: [],
+      page: 1,
+      page_size: 20
     };
     methods = {
+      updateLists() {
+        this.page++;
+        console.log('this.page');
+        this.getDetails()
+      },
+      toDetail(id) {
+        wepy.navigateTo({
+          url: "details?id=" + id
+        })
+      },
       tabHandle(index) {
         this.active = index
       },
-      moveStart(e){
-        this.swipe= e.touches[0].clientX
-        this.swipeY= e.touches[0].clientY
+      moveStart(e) {
+        this.swipe = e.touches[0].clientX
+        this.swipeY = e.touches[0].clientY
       },
-      moveEnd(e){
+      moveEnd(e) {
         let changedX = e.changedTouches[0].clientX - this.swipe
         if (Math.abs(e.changedTouches[0].clientY - this.swipeY) >= Math.abs(changedX)) return;
-        
-        if (changedX > 60){
+        if (changedX > 60) {
           // 右移
-          this.active++
-        }else if(changedX < -60){
+          if (this.active < 5) this.active++
+        } else if (changedX < -60) {
           // 左移
-          this.active--
+          if (this.active > 0) this.active--
         }
       }
+    }
+    watch = {
+      active(newValue, oldValue) {
+        this.page = 1
+        this.getDetails()
+      }
+    }
+    getDetails() {
+      let self = this
+      // if (self.page == 1) {
+      //   wepy.pageScrollTo({
+      //     scrollTop: 0
+      //   })
+      // }
+      http.get({
+        url: "/details",
+        params: {
+          page: self.page,
+          page_size: self.page_size,
+          category: self.tabs[self.active].category
+        }
+      }).then(
+        resp => {
+          if (resp.status == 0) {
+            if (self.page != 1) {
+              self.details = self.details.concat(resp.data.data)
+            } else {
+              self.details = resp.data.data
+            }
+            self.$apply();
+          } else {
+            wepy.showModal({
+              title: "数据获取失败！",
+              content: res.msg
+            });
+          }
+        }
+      )
+    }
+    onLoad() {
+      this.getDetails()
     }
   }
 </script>
@@ -104,6 +160,11 @@
   }
   page {
     background: #eee;
+    width: 100%;
+    height: 100%;
+  }
+  scroll-view {
+    height: 100%;
   }
   .slider {
     position: relative;
@@ -157,7 +218,7 @@
         font-size: 0.6rem;
         display: flex;
         justify-content: space-between;
-        text{
+        text {
           display: inline-block;
           margin-right: 0.2rem;
         }
