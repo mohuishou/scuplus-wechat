@@ -67,6 +67,6 @@
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 0.1rem;
-        line-height: 150%;
+        line-height: 150% !important;
     }
 </style>

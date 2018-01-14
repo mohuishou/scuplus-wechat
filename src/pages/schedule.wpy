@@ -1,13 +1,13 @@
 <template>
     <view class="contanier">
-        <block wx:for="{{dataArr}}" wx:for-item="items" wx:for-index="i">
+        <block wx:for="{{dataArr}}" wx:key="{{index}}" wx:for-item="items" wx:for-index="i">
             <view class="col">
-                <block wx:for="{{items}}" wx:for-item="item" wx:for-index="j">
+                <block wx:for="{{items}}"  wx:key="{{j}}" wx:for-item="item" wx:for-index="j">
                     <view class="row title" wx:if="{{i == 0 || j==0}}">{{item}}</view>
                     <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"> </view>
                     <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
                         <text class="address">
-                                                <text>{{item.building}}</text>
+                                 <text>{{item.building}}</text>
                         <text>{{item.classroom}}</text>
                         </text>
                         <text class="course-name">{{item.course_name}}</text>
@@ -19,46 +19,69 @@
 </template>
 <script>
     import wepy from "wepy";
+     import http from "../util/http";
     export default class Schedule extends wepy.page {
         config = {
             navigationBarBackgroundColor: "#f06292",
             navigationBarTextStyle: "#fbcce1",
             navigationBarTitleText: "我的课表",
-            backgroundColor: "#dddddd"
+            backgroundColor: "#dddddd",
+            enablePullDownRefresh: true
         };
         data = {
             dataArr: [
                 ["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
             ],
-            schedules: [{
-                    course_name: "数据库设计",
-                    day: 5,
-                    session: "1,2",
-                    building: "一教",
-                    classroom: "c102"
-                },
-                {
-                    course_name: "测试测试测试测试测试测试",
-                    day: 4,
-                    session: "1,2,3",
-                    building: "一教",
-                    classroom: "c102"
-                }
-            ]
+            schedules: []
         };
+        watch = {
+            schedules(oldVal, newVal) {
+                this.initSchedules();
+                wepy.setStorage("schedules",this.dataArr);
+            }
+        }
         onLoad() {
             this.initData();
-            this.initSchedules();
-            console.log(this.dataArr);
+            this.getSchedules()
+        }
+        getSchedules() {
+            let schedules = wepy.getStorageSync("schedules");
+            if (schedules) {
+                this.dataArr = schedules;
+                return;
+            }
+            let self = this
+            http.get("/user/schedule").then(resp => {
+                if (resp.status == 0) {
+                    self.schedules = resp.data;
+                    self.$apply();
+                } else {
+                    wepy.showModal({
+                        title: "数据获取失败！",
+                        content: resp.msg
+                    });
+                }
+            });
+        }
+        onPullDownRefresh() {
+            let self = this
+            http.post({
+                url: "/user/schedule"
+            }).then(resp => {
+                if (resp.status == 0) {
+                    self.schedules = resp.data;
+                    self.$apply();
+                } else {
+                    wepy.showModal({
+                        title: "更新失败！",
+                        content: resp.msg
+                    });
+                }
+                wepy.stopPullDownRefresh()
+            });
         }
         initSchedules() {
-            let colors = [
-                "#009966",
-                "#99CC99",
-                "#0099CC",
-                "#339999",
-                "#FF9999"
-            ];
+            let colors = ["#009966", "#99CC99", "#0099CC", "#339999", "#FF9999"];
             for (let e of this.schedules) {
                 e.sessionArr = e.session.split(",");
                 e.flex = e.sessionArr.length;
@@ -122,7 +145,7 @@
             display: flex;
             justify-content: space-between;
             flex-direction: column;
-            text{
+            text {
                 display: flex;
                 align-items: center;
                 justify-content: center;

@@ -21,6 +21,9 @@
                     </view>
                 </view>
             </view>
+            <view @tap="updateGrades" wx:else class="none">
+                没有成绩，点击更新！
+            </view>
         </view>
         <block wx:for="{{grades}}" wx:key="index">
             <view class="grade-lists">
@@ -132,7 +135,7 @@
                         } else {
                             wepy.showModal({
                                 title: "数据获取失败！",
-                                content: res.msg
+                                content: resp.msg
                             });
                         }
                     }
@@ -159,7 +162,7 @@
                     } else {
                         wepy.showModal({
                             title: "数据获取失败！",
-                            content: res.msg
+                            content: resp.msg
                         });
                     }
                 }
@@ -185,6 +188,10 @@
         margin: 0.5rem;
     }
     .header {
+        .none{
+            text-align: center;
+            background: #fff;
+        }
         .grade-header {
             border-radius: 0.2rem;
             .title {

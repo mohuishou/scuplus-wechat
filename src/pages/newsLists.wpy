@@ -35,8 +35,6 @@
   import http from "../util/http";
   export default class NewsLists extends wepy.page {
     config = {
-      navigationBarBackgroundColor: "#7e57c2",
-      navigationBarTextStyle: "#7e57c2",
       navigationBarTitleText: "最新资讯",
       backgroundColor: "#eee"
     };
@@ -147,7 +145,7 @@
   }
 </script>
 <style lang="less">
-  @base-color: #7e57c2;
+  @base-color: #f06292;
   @keyframes fadeinL {
     0% {
       opacity: 0;

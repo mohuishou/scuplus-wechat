@@ -16,27 +16,33 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        "pages/grade",
-        "pages/newsLists",
         "pages/index",
-        "pages/details",
         "pages/schedule",
+        "pages/newsLists",
+        "pages/grade",
+        "pages/details",
         "pages/bindJwc"
       ],
       window: {
-        backgroundTextStyle: "light",
-        navigationBarBackgroundColor: "#fff",
+        navigationBarBackgroundColor: "#f06292",
+        navigationBarTextStyle: "#fff",
         navigationBarTitleText: "SCUPLUS",
-        navigationBarTextStyle: "black"
+        backgroundColor: "#dddddd"
       },
       tabBar: {
+        selectedColor: "#f06292",
+        color:"#707070",
         list: [{
             pagePath: "pages/index",
-            text: "首页"
+            text: "首页",
+            iconPath: "icon/home.png",
+            selectedIconPath: "icon/home@select.png",
           },
           {
             pagePath: "pages/newsLists",
-            text: "资讯"
+            text: "资讯",
+            iconPath: "icon/news.png",
+            selectedIconPath: "icon/news@select.png",
           }
         ]
       }
@@ -134,11 +140,6 @@
           success: function() {
             _this.globalData.token = token;
             _this.globalData.jwc_verify = jwc_verify;
-            if (jwc_verify == 0) {
-              wepy.navigateTo({
-                url: "bindJwc"
-              });
-            }
           },
           fail: function() {
             _this.login();
