@@ -1,4 +1,4 @@
-let domain = "http://192.168.199.123"
+let domain = "http://localhost"
 
 let token = wx.getStorageSync("token");
 

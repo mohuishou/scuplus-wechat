@@ -16,11 +16,10 @@
   export default class extends wepy.app {
     config = {
       pages: [
+        "pages/grade",
         "pages/newsLists",
-        
         "pages/index",
         "pages/details",
-        "pages/grade",
         "pages/schedule",
         "pages/bindJwc"
       ],
