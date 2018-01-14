@@ -1,4 +1,5 @@
-let domain = "http://localhost"
+const config = require("../config/config.js")
+let domain = config.domain
 
 let token = wx.getStorageSync("token");
 

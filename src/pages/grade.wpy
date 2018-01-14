@@ -115,6 +115,7 @@
         }
         methods = {
             updateGrades() {
+                let self = this
                 http.post({
                     url: "/user/grade"
                 }).then(
@@ -130,8 +131,8 @@
                             grades = gradeUtil.cal(grades)
                             grades = grades.reverse()
                             self.grades = grades
+                            self.calAllGrades()
                             self.$apply()
-                            this.calAllGrades()
                         } else {
                             wepy.showModal({
                                 title: "数据获取失败！",

@@ -91,6 +91,9 @@
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 0.1rem;
+    }
+    view {
         line-height: 150% !important;
+        font-size: 0.8rem !important;
     }
 </style>
