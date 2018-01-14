@@ -2,9 +2,9 @@
     <view>
         <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
         <swiper class="swiper" indicator-dots="true" autoplay="true" interval="4000" duration="1000">
-            <block wx:for="{{imgUrls}}" wx:key="item">
+            <block wx:for="{{notices}}" wx:key="item">
                 <swiper-item>
-                    <image @tap="test({{item}})" src="{{item}}" class="slide-image" />
+                    <image @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
                 </swiper-item>
             </block>
         </swiper>
@@ -25,7 +25,7 @@
                     <view class="iconfont icon-kechengbiao"></view>
                     <text>今日课表</text>
                 </view>
-                <view wx:if="{{todaySchedule}}"  class="card-lists">
+                <view wx:if="{{todaySchedule}}" class="card-lists">
                     <block wx:for="{{todaySchedule}}" wx:key="{{index}}">
                         <view class="card-list">
                             <view class="card-left">
@@ -37,7 +37,6 @@
                             </view>
                         </view>
                     </block>
-                
                 </view>
                 <view wx:if="{{todaySchedule}}" @tap="to({{'schedule'}})" class="card-foot">
                     <text>查看完整课表</text>
@@ -45,7 +44,6 @@
                 <view wx:else class="only">
                     <text>今日无课</text>
                 </view>
-                
             </view>
             <!-- 课程表卡片 end -->
         </view>
@@ -53,6 +51,7 @@
 </template>
 <script>
     import wepy from "wepy";
+      import http from "../util/http";
     export default class Index extends wepy.page {
         config = {
             navigationBarBackgroundColor: "#f06292",
@@ -61,12 +60,10 @@
             backgroundColor: "#dddddd"
         };
         data = {
-            imgUrls: [
-                "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
-                "http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg",
-                "http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg",
-                "http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg"
-            ],
+            notices: [{
+                cover: "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
+                id: 1
+            }],
             funcs: [{
                     name: "课程表",
                     url: "schedule",
@@ -84,8 +81,10 @@
             todaySchedule: null,
         };
         methods = {
-            test(x) {
-                console.log(x);
+            noticeTo(id) {
+                wepy.navigateTo({
+                    url: `details?id=${id}&&from=notice`
+                })
             },
             to(url) {
                 if (this.jwcVerify == 0) {
@@ -107,16 +106,33 @@
                 });
             }
         };
-        getTodaySchedules(){
+        getTodaySchedules() {
             let schedules = wepy.getStorageSync("schedules");
-            if (!schedules){
+            if (!schedules) {
                 return
             }
             let today = new Date().getDay() || 7
             this.todaySchedule = schedules[today]
         }
+        getNotice() {
+            let self = this
+            http.get("/notices").then(
+                resp => {
+                    if (resp.status == 0) {
+                        self.notices = resp.data
+                        self.$apply()
+                    } else {
+                        wepy.showModal({
+                            title: "数据获取失败！",
+                            content: resp.msg
+                        });
+                    }
+                }
+            )
+        }
         onLoad() {
             this.jwcVerify = wepy.getStorageSync("jwc_verify")
+            this.getNotice()
         }
     }
 </script>
@@ -151,7 +167,7 @@
         border-bottom: @border;
         padding: 0.3rem;
         padding-bottom: 0;
-        .only{
+        .only {
             text-align: center;
             color: #999;
             font-size: 1.5rem;

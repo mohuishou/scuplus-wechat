@@ -40,6 +40,10 @@ function request(method, requestHandler) {
         resolve(res.data)
       },
       fail: function () {
+        wx.showModal({
+          title: "网络错误",
+          content: "网络错误",
+        });
         reject('Network request failed')
       },
       complete: function () {

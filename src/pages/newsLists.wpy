@@ -79,7 +79,7 @@
       },
       toDetail(id) {
         wepy.navigateTo({
-          url: "details?id=" + id
+          url: `details?id=${id}&&from=news`
         })
       },
       tabHandle(index) {

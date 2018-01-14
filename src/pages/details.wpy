@@ -8,7 +8,7 @@
             </view>
         </view>
         <htmlParser :parserName="name" :parserContent.sync="content" />
-        <view class="footer">
+        <view wx:if="{{url}}" class="footer">
             <view>
                 原文：{{url}}
             </view>
@@ -20,8 +20,7 @@
     import htmlParser from '../components/htmlParser'
     import http from "../util/http";
     export default class Details extends wepy.page {
-        config = {
-        }
+        config = {}
         components = {
             htmlParser: htmlParser,
         }
@@ -30,15 +29,15 @@
             name: "123",
             url: ""
         }
-        async onLoad(option) {
+        getDetail(id) {
             let self = this
-            http.get("/detail/" + option.id).then(
+            http.get("/detail/" + id).then(
                 resp => {
                     if (resp.status == 0) {
                         let title = resp.data.title
-                        if (resp.data.category == "scuinfo"){
+                        if (resp.data.category == "scuinfo") {
                             title = resp.data.author
-                            resp.data.content = resp.data.content.replace(/\n/g,"<br />")
+                            resp.data.content = resp.data.content.replace(/\n/g, "<br />")
                         }
                         self.content = resp.data.content
                         wepy.setNavigationBarTitle({
@@ -51,13 +50,38 @@
                 }
             )
         }
+        getNotice(id) {
+            let self = this
+            http.get("/notice/" + id).then(
+                resp => {
+                    if (resp.status == 0) {
+                        self.content = resp.data.content
+                        wepy.setNavigationBarTitle({
+                            title: resp.data.title
+                        })
+                        self.$apply()
+                        self.$invoke('htmlParser', 'htmlParserNotice')
+                    }
+                }
+            )
+        }
+        async onLoad(option) {
+            switch (option.from) {
+                case "notice":
+                    this.getNotice(option.id)
+                    break;
+                default:
+                    this.getDetail(option.id)
+                    break;
+            }
+        }
     }
 </script>
 <style lang="less">
     page {
         background: #eee;
     }
-    .footer{
+    .footer {
         font-size: 0.6rem;
         color: #888;
     }
