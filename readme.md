@@ -10,11 +10,7 @@
 ![img/code.jpg](img/code.jpg)
 
 ## 预览
-![](img/index.png)
-![](img/grade.jpg)
-![](img/schedule.png)
-![](img/newsList.png)
-![](img/news.png)
+[点击查看-多图预警](https://github.com/mohuishou/scuplus-wechat/issues/1)
 
 ## Feature && ChangeLog
 
