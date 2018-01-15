@@ -51,7 +51,7 @@
 </template>
 <script>
     import wepy from "wepy";
-      import http from "../util/http";
+    import http from "../util/http";
     export default class Index extends wepy.page {
         config = {
             navigationBarBackgroundColor: "#f06292",
@@ -113,7 +113,7 @@
             }
             let today = new Date().getDay() || 7
             schedules[today].forEach(e => {
-                if (e.course_name){
+                if (e.course_name) {
                     this.todaySchedule.push(e)
                 }
             });
