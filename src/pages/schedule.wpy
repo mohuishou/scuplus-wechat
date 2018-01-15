@@ -2,12 +2,12 @@
     <view class="contanier">
         <block wx:for="{{dataArr}}" wx:key="{{index}}" wx:for-item="items" wx:for-index="i">
             <view class="col">
-                <block wx:for="{{items}}"  wx:key="{{j}}" wx:for-item="item" wx:for-index="j">
+                <block wx:for="{{items}}" wx:key="{{j}}" wx:for-item="item" wx:for-index="j">
                     <view class="row title" wx:if="{{i == 0 || j==0}}">{{item}}</view>
                     <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"> </view>
                     <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
                         <text class="address">
-                                 <text>{{item.building}}</text>
+                                     <text>{{item.building}}</text>
                         <text>{{item.classroom}}</text>
                         </text>
                         <text class="course-name">{{item.course_name}}</text>
@@ -19,7 +19,7 @@
 </template>
 <script>
     import wepy from "wepy";
-     import http from "../util/http";
+    import http from "../util/http";
     export default class Schedule extends wepy.page {
         config = {
             navigationBarBackgroundColor: "#f06292",
@@ -37,7 +37,7 @@
         watch = {
             schedules(oldVal, newVal) {
                 this.initSchedules();
-                wepy.setStorage("schedules",this.dataArr);
+                wepy.setStorage({key: "schedules", data: this.dataArr});
             }
         }
         onLoad() {
@@ -83,8 +83,12 @@
         initSchedules() {
             let colors = ["#009966", "#99CC99", "#0099CC", "#339999", "#FF9999"];
             for (let e of this.schedules) {
-                e.sessionArr = e.session.split(",");
-                e.flex = e.sessionArr.length;
+                e.flex = 0
+                e.sessionArr = []
+                if (e.session != "") {
+                    e.sessionArr = e.session.split(",");
+                    e.flex = e.sessionArr.length;
+                }
                 // 生成随机背景色
                 let ridx = Math.round(Math.random() * (colors.length - 1));
                 e.color = colors[ridx];

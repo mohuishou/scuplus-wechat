@@ -26,7 +26,7 @@
       window: {
         navigationBarBackgroundColor: "#f06292",
         navigationBarTextStyle: "#fff",
-        navigationBarTitleText: "SCUPLUS",
+        navigationBarTitleText: "We川大",
         backgroundColor: "#dddddd"
       },
       tabBar: {

@@ -25,8 +25,8 @@
                     <view class="iconfont icon-kechengbiao"></view>
                     <text>今日课表</text>
                 </view>
-                <view wx:if="{{todaySchedule}}" class="card-lists">
-                    <block wx:for="{{todaySchedule}}" wx:key="{{index}}">
+                <view wx:if="{{todaySchedule.length}}" class="card-lists">
+                    <block wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
                         <view class="card-list">
                             <view class="card-left">
                                 <text class="class-name">{{item.course_name}}</text>
@@ -38,7 +38,7 @@
                         </view>
                     </block>
                 </view>
-                <view wx:if="{{todaySchedule}}" @tap="to({{'schedule'}})" class="card-foot">
+                <view wx:if="{{todaySchedule.length}}" @tap="to({{'schedule'}})" class="card-foot">
                     <text>查看完整课表</text>
                 </view>
                 <view wx:else class="only">
@@ -56,7 +56,7 @@
         config = {
             navigationBarBackgroundColor: "#f06292",
             navigationBarTextStyle: "#fff",
-            navigationBarTitleText: "SCUPLUS",
+            navigationBarTitleText: "We川大",
             backgroundColor: "#dddddd"
         };
         data = {
@@ -78,7 +78,7 @@
                 }
             ],
             jwcVerify: 0,
-            todaySchedule: null,
+            todaySchedule: [],
         };
         methods = {
             noticeTo(id) {
@@ -112,7 +112,11 @@
                 return
             }
             let today = new Date().getDay() || 7
-            this.todaySchedule = schedules[today]
+            schedules[today].forEach(e => {
+                if (e.course_name){
+                    this.todaySchedule.push(e)
+                }
+            });
         }
         getNotice() {
             let self = this
@@ -132,6 +136,7 @@
         }
         onLoad() {
             this.getNotice()
+            this.getTodaySchedules()
         }
     }
 </script>
