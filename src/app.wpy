@@ -16,8 +16,8 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        "pages/feedback",
         "pages/index",
+        "pages/feedback",
         "pages/schedule",
         "pages/newsLists",
         "pages/grade",
@@ -32,7 +32,7 @@
       },
       tabBar: {
         selectedColor: "#f06292",
-        color:"#707070",
+        color: "#707070",
         list: [{
             pagePath: "pages/index",
             text: "首页",

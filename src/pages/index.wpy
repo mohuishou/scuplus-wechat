@@ -75,6 +75,12 @@
                     url: "grade",
                     icon: "chengji",
                     bg: "#99ccee"
+                },
+                {
+                    name: "反馈",
+                    url: "feedback",
+                    icon: "fankui",
+                    bg: "#569597"
                 }
             ],
             jwcVerify: 0,
