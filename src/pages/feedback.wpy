@@ -43,14 +43,14 @@
                     return
                 }
                 try {
-                   let info = wepy.getSystemInfoSync()
-                   param.brand = info.brand
-                   param.model = info.model
-                   param.system = info.system
-                   param.version = info.version
-                   param.SDKVersion = info.SDKVersion
-                   param.scuplusVersion = config.version
-                   param.label = this.feedbackType[param.label]
+                    let info = wepy.getSystemInfoSync()
+                    param.brand = info.brand
+                    param.model = info.model
+                    param.system = info.system
+                    param.version = info.version
+                    param.SDKVersion = info.SDKVersion
+                    param.scuplusVersion = config.version
+                    param.label = this.feedbackType[param.label]
                 } catch (error) {
                     wepy.showModal({
                         title: "获取系统信息错误",
@@ -66,7 +66,9 @@
                     resp => {
                         if (resp.status == 0) {
                             wepy.showToast({
-                                title: "成功"
+                                title: '成功',
+                                icon: 'success',
+                                duration: 2000
                             })
                             wepy.navigateBack({
                                 delta: 1
