@@ -67,7 +67,7 @@
                     <view class="room-name">{{item.roomName}}</view>
                     <block wx:for="{{item.classUse}}" wx:for-item="val" wx:key="{{index}}">
                         <view @tap="show({{item}},{{index}})" class="item">
-                            <view class="{{val.use == 0 ? 'not-use' : 'use'}}">{{val.kcm ? '借' : '空'}}</view>
+                            <view class="{{val.use == 0 ? 'not-use' : 'use'}}">{{val.kcm ? val.kcm[2] : '空'}}</view>
                         </view>
                     </block>
                 </view>
@@ -184,302 +184,13 @@
                 ]
             ],
             index: [0, 0],
-            rooms: [{
-                "roomName": "1-1",
-                "roomZws": "108",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "1-2",
-                "roomZws": "108",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "1-3",
-                "roomZws": "70",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "2-1",
-                "roomZws": "108",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "2-2",
-                "roomZws": "108",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "3-1",
-                "roomZws": "108",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": "师生借用",
-                    "use": "1",
-                    "zymkid": "room"
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "3-2",
-                "roomZws": "108",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "4-1",
-                "roomZws": "108",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "4-2",
-                "roomZws": "92",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }, {
-                "roomName": "演播厅",
-                "roomZws": "260",
-                "classUse": [{
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }, {
-                    "jsm": null,
-                    "kcm": null,
-                    "use": "0",
-                    "zymkid": null
-                }]
-            }]
+            rooms: []
         }
         methods = {
             changeBuilding(e) {
                 this.index = e.detail.value
                 this.building = this.buildings[1][this.index[1]]
+                this.getClassroom(this.building.value)
             },
             columnchange(e) {
                 if (e.detail.column != 0) {
@@ -495,6 +206,37 @@
                     showCancel: false
                 })
             }
+        }
+        getClassroom(classroom) {
+            const self = this
+            http.post({
+                url: "/classroom",
+                params: {
+                    classroom: classroom
+                }
+            }).then(
+                resp => {
+                    if (resp.status == 0) {
+                        self.rooms = JSON.parse(resp.data).roomdata
+                        self.$apply()
+                        wepy.setStorage({
+                            key:"classroom",
+                            data: self.building
+                        })
+                    } else {
+                        wepy.showModal({
+                            title: "自习教室获取错误",
+                            content: resp.msg,
+                            showCancel: false
+                        })
+                    }
+                }
+            )
+        }
+        async onLoad() {
+            this.building = wepy.getStorageSync("classroom")
+            // 获取教室
+            this.getClassroom(this.building.value || "WJdong2")
         }
     }
 </script>

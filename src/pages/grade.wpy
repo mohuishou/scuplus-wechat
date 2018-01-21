@@ -169,7 +169,7 @@
                 }
             )
         }
-        onLoad() {
+        async onLoad() {
             // 获取本地缓存的成绩
             // let grades = wepy.wx.getStorageSync("grades")
             // if (!grades){

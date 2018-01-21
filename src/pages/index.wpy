@@ -84,6 +84,13 @@
           icon: "fankui",
           bg: "#569597",
           type: "normal"
+        },
+        {
+          name: "自习",
+          url: "classroom",
+          icon: "building",
+          bg: "#90caaf",
+          type: "normal"
         }
       ],
       jwcVerify: 0,
