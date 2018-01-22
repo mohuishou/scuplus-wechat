@@ -47,7 +47,7 @@
     <view class="classroom">
         <picker mode="multiSelector" range-key="name" @change="changeBuilding" @columnchange="columnchange" value="{{index}}" range="{{buildings}}">
             <view class="picker">
-                <view>当前选择：{{buildings[0][index[0]].name}}-{{building.name}}</view>
+                <view>当前选择：{{building.addr}}-{{building.name}}</view>
                 <view>
                     点击切换
                 </view>
@@ -148,6 +148,7 @@
                 },
             ],
             building: {
+                addr: "望江",
                 name: "东二教",
                 value: "WJdong2"
             },
@@ -190,6 +191,7 @@
             changeBuilding(e) {
                 this.index = e.detail.value
                 this.building = this.buildings[1][this.index[1]]
+                this.building.addr = this.buildings[0][this.index[0]].name
                 this.getClassroom(this.building.value)
             },
             columnchange(e) {
@@ -234,7 +236,7 @@
             )
         }
         async onLoad() {
-            this.building = wepy.getStorageSync("classroom")
+            this.building = wepy.getStorageSync("classroom") || this.building
             // 获取教室
             this.getClassroom(this.building.value || "WJdong2")
         }
