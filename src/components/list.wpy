@@ -1,0 +1,114 @@
+<style lang="less">
+  @base-color: #f06292;
+  scroll-view {
+    height: 100%;
+  }
+  .lists {
+    margin-top: .5rem;
+    .list {
+      padding: 0.5rem;
+      background: #fff;
+      margin-bottom: 0.5rem;
+      .title {
+        font-size: 0.8rem;
+      }
+      .info {
+        margin-top: 0.5rem;
+        font-size: 0.6rem;
+        display: flex;
+        justify-content: space-between;
+        text {
+          display: inline-block;
+          margin-right: 0.2rem;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <scroll-view @scrolltolower="updateLists" enable-back-to-top scroll-y>
+    <view class="lists">
+      <block wx:for="{{details}}" wx:key="{{item.id}}">
+        <view class="list">
+          <view @tap="toDetail({{item.id}})" class="title">
+            {{item.title}}
+          </view>
+          <view class="info">
+            <view class="tags">
+              <text>{{item.category}}</text>
+              <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="{{tag.id}}">
+                <text>#{{tag.name}}</text>
+              </block>
+            </view>
+            <view class="time">{{item.created_at}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from "wepy";
+  import http from "../util/http";
+  export default class List extends wepy.page {
+    props = {
+      params: {
+        type: Object,
+        default: {
+          category: ""
+        }
+      }
+    }
+    data = {
+      page: 1,
+      page_size: 20,
+      details: [],
+    };
+    methods = {
+      updateLists() {
+        this.page++;
+        this.getDetails()
+      },
+      toDetail(id) {
+        wepy.navigateTo({
+          url: `details?id=${id}&&from=news`
+        })
+      },
+      getNewDetails(page) {
+        if (page) this.page = page
+        this.getDetails()
+      }
+    }
+    getDetails() {
+      let self = this
+      http.get({
+        url: "/details",
+        params: Object.assign({
+          page: this.page,
+          page_size: self.page_size,
+        }, self.params)
+      }).then(
+        resp => {
+          if (resp.status == 0) {
+            if (self.page != 1) {
+              self.details = self.details.concat(resp.data.data)
+            } else {
+              self.details = resp.data.data
+            }
+            self.$apply();
+          } else {
+            wepy.showModal({
+              title: "数据获取失败！",
+              content: res.msg
+            });
+          }
+        }
+      )
+    }
+    async onLoad() {
+      this.getDetails()
+    }
+  }
+</script>

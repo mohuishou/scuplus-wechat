@@ -1,8 +1,8 @@
 <template>
-  <scroll-view @scrolltolower="updateLists()" enable-back-to-top scroll-y @touchstart="moveStart" @touchend="moveEnd">
+  <view class="newsLists" @touchstart="moveStart" @touchend="moveEnd">
     <view class="tab-lists">
       <view class="tabs">
-        <block wx:for="{{tabs}}">
+        <block wx:for="{{tabs}}" wx:key="{{index}}">
           <view class="tab {{active == index ? 'active' : ''}}" @tap="tabHandle({{index}})">{{item.name}}</view>
         </block>
       </view>
@@ -10,27 +10,11 @@
         <view class="indicator"></view>
       </view>
     </view>
-    <view class="lists">
-      <block wx:for="{{details}}" wx:key="{{item.id}}">
-        <view class="list">
-          <view @tap="toDetail({{item.id}})" class="title">
-            {{item.title}}
-          </view>
-          <view class="info">
-            <view class="tags">
-              <text>{{item.category}}</text>
-              <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="{{tag.id}}">
-                <text>#{{tag.name}}</text>
-              </block>
-            </view>
-            <view class="time">{{item.created_at}}</view>
-          </view>
-        </view>
-      </block>
-    </view>
-  </scroll-view>
+    <list :params.sync="params"></list>
+  </view>
 </template>
 <script>
+  import list from "../components/list"
   import wepy from "wepy";
   import http from "../util/http";
   export default class NewsLists extends wepy.page {
@@ -38,10 +22,16 @@
       navigationBarTitleText: "最新资讯",
       backgroundColor: "#eee"
     };
+    components = {
+      list: list,
+    }
     data = {
       active: 0,
       swipe: 0,
       swipeY: 0,
+      params: {
+        category: ""
+      },
       tabs: [{
           name: "全部",
           category: "",
@@ -66,22 +56,9 @@
           name: "官网新闻",
           category: "四川大学新闻网",
         },
-      ],
-      details: [],
-      page: 1,
-      page_size: 20
+      ]
     };
     methods = {
-      updateLists() {
-        this.page++;
-        console.log('this.page');
-        this.getDetails()
-      },
-      toDetail(id) {
-        wepy.navigateTo({
-          url: `details?id=${id}&&from=news`
-        })
-      },
       tabHandle(index) {
         this.active = index
       },
@@ -103,44 +80,11 @@
     }
     watch = {
       active(newValue, oldValue) {
-        this.page = 1
-        this.getDetails()
+        this.params.category = this.tabs[newValue].category
+        setTimeout(() => {
+          this.$invoke('list', 'getNewDetails', 1)
+        }, 100);
       }
-    }
-    getDetails() {
-      let self = this
-      // if (self.page == 1) {
-      //   wepy.pageScrollTo({
-      //     scrollTop: 0
-      //   })
-      // }
-      http.get({
-        url: "/details",
-        params: {
-          page: self.page,
-          page_size: self.page_size,
-          category: self.tabs[self.active].category
-        }
-      }).then(
-        resp => {
-          if (resp.status == 0) {
-            if (self.page != 1) {
-              self.details = self.details.concat(resp.data.data)
-            } else {
-              self.details = resp.data.data
-            }
-            self.$apply();
-          } else {
-            wepy.showModal({
-              title: "数据获取失败！",
-              content: res.msg
-            });
-          }
-        }
-      )
-    }
-    onLoad() {
-      this.getDetails()
     }
   }
 </script>
@@ -161,7 +105,7 @@
     width: 100%;
     height: 100%;
   }
-  scroll-view {
+  .newsLists {
     height: 100%;
   }
   .slider {
@@ -180,7 +124,6 @@
     border-radius: 1px;
   }
   .tab-lists {
-    position: fixed;
     width: 100%;
     top: 0;
   }
@@ -199,27 +142,6 @@
       align-items: center;
       &.active {
         color: @base-color;
-      }
-    }
-  }
-  .lists {
-    margin-top: 2rem;
-    .list {
-      padding: 0.5rem;
-      background: #fff;
-      margin-bottom: 0.5rem;
-      .title {
-        font-size: 0.8rem;
-      }
-      .info {
-        margin-top: 0.5rem;
-        font-size: 0.6rem;
-        display: flex;
-        justify-content: space-between;
-        text {
-          display: inline-block;
-          margin-right: 0.2rem;
-        }
       }
     }
   }
