@@ -81,9 +81,7 @@
     watch = {
       active(newValue, oldValue) {
         this.params.category = this.tabs[newValue].category
-        setTimeout(() => {
-          this.$invoke('list', 'getNewDetails', 1)
-        }, 100);
+        this.$invoke('list', 'getNewDetails', 1)
       }
     }
   }

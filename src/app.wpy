@@ -18,6 +18,7 @@
       pages: [
         "pages/newsLists",
         "pages/index",
+        "pages/tagLists",
         "pages/classroom",
         "pages/feedback",
         "pages/schedule",

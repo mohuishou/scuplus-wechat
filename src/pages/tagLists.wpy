@@ -1,0 +1,30 @@
+<template>
+  <list2 :params.sync="params">
+  </list2>
+</template>
+
+<script>
+  import wepy from "wepy";
+  import list from "../components/list"
+  export default class TagLists extends wepy.page {
+    config = {}
+    components = {
+      list2: list,
+    }
+    data = {
+      params: {
+        tag_id: 1
+      },
+    }
+    async onLoad(option) {
+      this.params.tag_id = option.id
+      wepy.setNavigationBarTitle({
+        title: "#" + option.name
+      })
+    }
+  }
+</script>
+
+<style lang="less">
+
+</style>

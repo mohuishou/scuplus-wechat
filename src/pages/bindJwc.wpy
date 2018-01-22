@@ -28,7 +28,6 @@
     };
     methods = {
       bind(e) {
-        console.log(e);
         let params = e.detail.value;
         if (params.student_id == 0 || params.password == "") {
           wepy.showToast({
@@ -60,10 +59,6 @@
             }
           });
       }
-    };
-    onLoad() {
-      console.log("lalal");
-      console.log(this.$parent);
     }
   }
 </script>

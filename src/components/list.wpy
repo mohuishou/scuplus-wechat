@@ -2,6 +2,7 @@
   @base-color: #f06292;
   scroll-view {
     height: 100%;
+    background: #eee;
   }
   .lists {
     margin-top: .5rem;
@@ -38,7 +39,7 @@
             <view class="tags">
               <text>{{item.category}}</text>
               <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="{{tag.id}}">
-                <text>#{{tag.name}}</text>
+                <text class="tag" @tap="toTagLists({{tag}})">#{{tag.name}}</text>
               </block>
             </view>
             <view class="time">{{item.created_at}}</view>
@@ -67,6 +68,9 @@
       details: [],
     };
     methods = {
+      scroll(e) {
+        console.log(e);
+      },
       updateLists() {
         this.page++;
         this.getDetails()
@@ -76,9 +80,16 @@
           url: `details?id=${id}&&from=news`
         })
       },
+      toTagLists(tag) {
+        wepy.navigateTo({
+          url: `tagLists?id=${tag.id}&&name=${tag.name}`
+        })
+      },
       getNewDetails(page) {
         if (page) this.page = page
-        this.getDetails()
+        setTimeout(() => {
+          this.getDetails()
+        }, 100)
       }
     }
     getDetails() {
@@ -108,7 +119,9 @@
       )
     }
     async onLoad() {
-      this.getDetails()
+      setTimeout(() => {
+        this.getDetails()
+      }, 100)
     }
   }
 </script>
