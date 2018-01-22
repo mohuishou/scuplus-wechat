@@ -106,6 +106,9 @@
             if (self.page != 1) {
               self.details = self.details.concat(resp.data.data)
             } else {
+              for (let i = 0; i < resp.data.data.length; i++) {
+                resp.data.data[i].created_at = self.timeParser(resp.data.data[i].created_at)
+              }
               self.details = resp.data.data
             }
             self.$apply();
@@ -117,6 +120,18 @@
           }
         }
       )
+    }
+    timeParser(t) {
+      let date = new Date(Date.parse(t))
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? '0' + m : m;
+      let d = date.getDate();
+      d = d < 10 ? ('0' + d) : d;
+      let h = date.getHours();
+      let minute = date.getMinutes();
+      minute = minute < 10 ? ('0' + minute) : minute;
+      return y + '-' + m + '-' + d + ' ' + h + ':' + minute;
     }
     async onLoad() {
       setTimeout(() => {
