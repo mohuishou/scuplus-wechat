@@ -103,12 +103,12 @@
       }).then(
         resp => {
           if (resp.status == 0) {
+            for (let i = 0; i < resp.data.data.length; i++) {
+              resp.data.data[i].created_at = self.timeParser(resp.data.data[i].created_at)
+            }
             if (self.page != 1) {
               self.details = self.details.concat(resp.data.data)
             } else {
-              for (let i = 0; i < resp.data.data.length; i++) {
-                resp.data.data[i].created_at = self.timeParser(resp.data.data[i].created_at)
-              }
               self.details = resp.data.data
             }
             self.$apply();
