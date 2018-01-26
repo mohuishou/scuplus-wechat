@@ -25,6 +25,7 @@
       htmlParser: htmlParser,
     }
     data = {
+      title: "",
       content: "",
       name: "123",
       url: ""
@@ -43,6 +44,7 @@
             wepy.setNavigationBarTitle({
               title: title
             })
+            self.title = title
             self.url = resp.data.url
             self.$apply()
             self.$invoke('htmlParser', 'htmlParserNotice')
@@ -76,7 +78,9 @@
       }
     }
     onShareAppMessage(options) {
-      return {}
+      return {
+        title: this.title
+      }
     }
   }
 </script>

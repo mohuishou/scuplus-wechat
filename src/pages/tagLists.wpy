@@ -12,18 +12,22 @@
       list2: list,
     }
     data = {
+      name: "",
       params: {
         tag_id: 1
       },
     }
     async onLoad(option) {
       this.params.tag_id = option.id
+      this.name = option.name
       wepy.setNavigationBarTitle({
         title: "#" + option.name
       })
     }
     onShareAppMessage(options) {
-      return {}
+      return {
+        title: "#"+this.name
+      }
     }
   }
 </script>

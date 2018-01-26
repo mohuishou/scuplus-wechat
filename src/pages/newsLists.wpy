@@ -85,7 +85,9 @@
       }
     }
     onShareAppMessage(options) {
-      return {}
+      return {
+        title: "最新资讯"
+      }
     }
   }
 </script>

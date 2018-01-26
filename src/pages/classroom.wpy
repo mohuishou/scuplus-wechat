@@ -241,7 +241,9 @@
       this.getClassroom(this.building.value || "WJdong2")
     }
     onShareAppMessage(options) {
-      return {}
+      return {
+        title: "一起来自习" 
+      }
     }
   }
 </script>

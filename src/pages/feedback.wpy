@@ -85,7 +85,9 @@
     }
     onLoad() {}
     onShareAppMessage(options) {
-      return {}
+      return {
+        title: "we川大-反馈"
+      }
     }
   }
 </script>
