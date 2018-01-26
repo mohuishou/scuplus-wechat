@@ -38,7 +38,7 @@
             </view>
           </block>
         </view>
-        <view wx:if="{{todaySchedule.length}}" @tap="to({{'schedule'}})" class="card-foot">
+        <view wx:if="{{todaySchedule.length}}" @tap="to({{ funcs[0] }})" class="card-foot">
           <text>查看完整课表</text>
         </view>
         <view wx:else class="only">
