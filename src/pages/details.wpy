@@ -1,99 +1,102 @@
 <template>
-    <view class="details">
-        <view class="header">
-            <view class="title">
-                <text></text>
-            </view>
-            <view class="info">
-            </view>
-        </view>
-        <htmlParser :parserName="name" :parserContent.sync="content" />
-        <view wx:if="{{url}}" class="footer">
-            <view>
-                原文：{{url}}
-            </view>
-        </view>
+  <view class="details">
+    <view class="header">
+      <view class="title">
+        <text></text>
+      </view>
+      <view class="info">
+      </view>
     </view>
+    <htmlParser :parserName="name" :parserContent.sync="content" />
+    <view wx:if="{{url}}" class="footer">
+      <view>
+        原文：{{url}}
+      </view>
+    </view>
+  </view>
 </template>
 <script>
-    import wepy from 'wepy'
-    import htmlParser from '../components/htmlParser'
-    import http from "../util/http";
-    export default class Details extends wepy.page {
-        config = {}
-        components = {
-            htmlParser: htmlParser,
-        }
-        data = {
-            content: "",
-            name: "123",
-            url: ""
-        }
-        getDetail(id) {
-            let self = this
-            http.get("/detail/" + id).then(
-                resp => {
-                    if (resp.status == 0) {
-                        let title = resp.data.title
-                        if (resp.data.category == "scuinfo") {
-                            title = resp.data.author
-                            resp.data.content = resp.data.content.replace(/\n/g, "<br />")
-                        }
-                        self.content = resp.data.content
-                        wepy.setNavigationBarTitle({
-                            title: title
-                        })
-                        self.url = resp.data.url
-                        self.$apply()
-                        self.$invoke('htmlParser', 'htmlParserNotice')
-                    }
-                }
-            )
-        }
-        getNotice(id) {
-            let self = this
-            http.get("/notice/" + id).then(
-                resp => {
-                    if (resp.status == 0) {
-                        self.content = resp.data.content
-                        wepy.setNavigationBarTitle({
-                            title: resp.data.title
-                        })
-                        self.$apply()
-                        self.$invoke('htmlParser', 'htmlParserNotice')
-                    }
-                }
-            )
-        }
-        async onLoad(option) {
-            switch (option.from) {
-                case "notice":
-                    this.getNotice(option.id)
-                    break;
-                default:
-                    this.getDetail(option.id)
-                    break;
-            }
-        }
+  import wepy from 'wepy'
+  import htmlParser from '../components/htmlParser'
+  import http from "../util/http";
+  export default class Details extends wepy.page {
+    config = {}
+    components = {
+      htmlParser: htmlParser,
     }
+    data = {
+      content: "",
+      name: "123",
+      url: ""
+    }
+    getDetail(id) {
+      let self = this
+      http.get("/detail/" + id).then(
+        resp => {
+          if (resp.status == 0) {
+            let title = resp.data.title
+            if (resp.data.category == "scuinfo") {
+              title = resp.data.author
+              resp.data.content = resp.data.content.replace(/\n/g, "<br />")
+            }
+            self.content = resp.data.content
+            wepy.setNavigationBarTitle({
+              title: title
+            })
+            self.url = resp.data.url
+            self.$apply()
+            self.$invoke('htmlParser', 'htmlParserNotice')
+          }
+        }
+      )
+    }
+    getNotice(id) {
+      let self = this
+      http.get("/notice/" + id).then(
+        resp => {
+          if (resp.status == 0) {
+            self.content = resp.data.content
+            wepy.setNavigationBarTitle({
+              title: resp.data.title
+            })
+            self.$apply()
+            self.$invoke('htmlParser', 'htmlParserNotice')
+          }
+        }
+      )
+    }
+    async onLoad(option) {
+      switch (option.from) {
+        case "notice":
+          this.getNotice(option.id)
+          break;
+        default:
+          this.getDetail(option.id)
+          break;
+      }
+    }
+    onShareAppMessage(options) {
+      return {}
+    }
+  }
 </script>
 <style lang="less">
-    page {
-        background: #eee;
-    }
-    .footer {
-        font-size: 0.6rem;
-        color: #888;
-    }
-    .details {
-        margin: 0.2rem;
-        padding: 0.5rem;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 0.1rem;
-    }
-    view {
-        line-height: 150% !important;
-        font-size: 0.8rem !important;
-    }
+  page {
+    background: #eee;
+  }
+  .footer {
+    font-size: 0.6rem;
+    color: #888;
+  }
+  .details {
+    margin: 0.2rem;
+    padding: 0.5rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0.1rem;
+  }
+  view {
+    line-height: 150% !important;
+    font-size: 0.8rem !important;
+  }
 </style>

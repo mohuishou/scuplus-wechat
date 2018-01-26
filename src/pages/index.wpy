@@ -8,6 +8,7 @@
         </swiper-item>
       </block>
     </swiper>
+
     <!-- 功能区 -->
     <view class="func">
       <block wx:for="{{funcs}}" wx:key="item">
@@ -17,6 +18,7 @@
         </view>
       </block>
     </view>
+
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
     <view>
       <!-- 课程表卡片 -->
@@ -47,6 +49,7 @@
       </view>
       <!-- 课程表卡片 end -->
     </view>
+
   </view>
 </template>
 <script>
@@ -54,10 +57,6 @@
   import http from "../util/http";
   export default class Index extends wepy.page {
     config = {
-      navigationBarBackgroundColor: "#f06292",
-      navigationBarTextStyle: "#fff",
-      navigationBarTitleText: "We川大",
-      backgroundColor: "#dddddd"
     };
     data = {
       notices: [{
@@ -154,6 +153,9 @@
     onLoad() {
       this.getNotice()
       this.getTodaySchedules()
+    }
+    onShareAppMessage(options){
+      return {}
     }
   }
 </script>

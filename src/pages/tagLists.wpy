@@ -22,6 +22,9 @@
         title: "#" + option.name
       })
     }
+    onShareAppMessage(options) {
+      return {}
+    }
   }
 </script>
 

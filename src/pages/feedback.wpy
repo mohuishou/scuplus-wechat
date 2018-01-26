@@ -1,134 +1,137 @@
 <template>
-    <view>
-        <form @submit="feedback">
-            <text class="info">新建反馈</text>
-            <input name="title" placeholder="请输入标题" />
-            <picker name="label" @change="pickerHandle" value="{{feedbackIndex}}" range="{{feedbackType}}">
-                <view class="picker">
-                    <text>请选择类型: </text>
-                    <text>{{feedbackType[feedbackIndex]}}</text>
-                </view>
-            </picker>
-            <textarea name="content" placeholder="请输入内容" />
-            <view class="help">
-                <text>感谢您的反馈，您的反馈将以issue的形式提交到scuplus-wechat的github，您可以通过访问https://github.com/mohuishou/scuplus-wechat/issues 来获取您的反馈动态，同时也可以关注项目的开发进度，当然如果您有更好的实现欢迎提交PR</text>
-            </view>
-            <button formType="submit">提交反馈</button>
-        </form>
-    </view>
+  <view>
+    <form @submit="feedback">
+      <text class="info">新建反馈</text>
+      <input name="title" placeholder="请输入标题" />
+      <picker name="label" @change="pickerHandle" value="{{feedbackIndex}}" range="{{feedbackType}}">
+        <view class="picker">
+          <text>请选择类型: </text>
+          <text>{{feedbackType[feedbackIndex]}}</text>
+        </view>
+      </picker>
+      <textarea name="content" placeholder="请输入内容" />
+      <view class="help">
+        <text>感谢您的反馈，您的反馈将以issue的形式提交到scuplus-wechat的github，您可以通过访问https://github.com/mohuishou/scuplus-wechat/issues 来获取您的反馈动态，同时也可以关注项目的开发进度，当然如果您有更好的实现欢迎提交PR</text>
+      </view>
+      <button formType="submit">提交反馈</button>
+    </form>
+  </view>
 </template>
 <script>
-    import wepy from "wepy";
-    import http from "../util/http";
-    import config from "../config/config";
-    export default class Feedback extends wepy.page {
-        config = {
-            navigationBarTitleText: "反馈",
-        }
-        data = {
-            feedbackType: ["Bug", "功能建议", "其他"],
-            feedbackIndex: 0
-        }
-        methods = {
-            pickerHandle(e) {
-                this.feedbackIndex = e.detail.value
-            },
-            feedback(e) {
-                let param = e.detail.value
-                if (!param.title || !param.content) {
-                    wepy.showModal({
-                        title: "参数错误",
-                        content: "标题或内容为空！"
-                    })
-                    return
-                }
-                try {
-                    let info = wepy.getSystemInfoSync()
-                    param.brand = info.brand
-                    param.model = info.model
-                    param.system = info.system
-                    param.version = info.version
-                    param.SDKVersion = info.SDKVersion
-                    param.scuplusVersion = config.version
-                    param.label = this.feedbackType[param.label]
-                } catch (error) {
-                    wepy.showModal({
-                        title: "获取系统信息错误",
-                        content: "请稍候再试！"
-                    })
-                    return
-                }
-                // 提交反馈信息
-                http.post({
-                    url: "/user/feedback",
-                    params: param
-                }).then(
-                    resp => {
-                        if (resp.status == 0) {
-                            wepy.showToast({
-                                title: '成功',
-                                icon: 'success',
-                                duration: 2000
-                            })
-                            wepy.navigateBack({
-                                delta: 1
-                            })
-                        } else {
-                            wepy.showModal({
-                                title: "提交反馈信息失败",
-                                content: resp.msg
-                            })
-                        }
-                    }
-                )
-            }
-        }
-        onLoad() {}
+  import wepy from "wepy";
+  import http from "../util/http";
+  import config from "../config/config";
+  export default class Feedback extends wepy.page {
+    config = {
+      navigationBarTitleText: "反馈",
     }
+    data = {
+      feedbackType: ["Bug", "功能建议", "其他"],
+      feedbackIndex: 0
+    }
+    methods = {
+      pickerHandle(e) {
+        this.feedbackIndex = e.detail.value
+      },
+      feedback(e) {
+        let param = e.detail.value
+        if (!param.title || !param.content) {
+          wepy.showModal({
+            title: "参数错误",
+            content: "标题或内容为空！"
+          })
+          return
+        }
+        try {
+          let info = wepy.getSystemInfoSync()
+          param.brand = info.brand
+          param.model = info.model
+          param.system = info.system
+          param.version = info.version
+          param.SDKVersion = info.SDKVersion
+          param.scuplusVersion = config.version
+          param.label = this.feedbackType[param.label]
+        } catch (error) {
+          wepy.showModal({
+            title: "获取系统信息错误",
+            content: "请稍候再试！"
+          })
+          return
+        }
+        // 提交反馈信息
+        http.post({
+          url: "/user/feedback",
+          params: param
+        }).then(
+          resp => {
+            if (resp.status == 0) {
+              wepy.showToast({
+                title: '成功',
+                icon: 'success',
+                duration: 2000
+              })
+              wepy.navigateBack({
+                delta: 1
+              })
+            } else {
+              wepy.showModal({
+                title: "提交反馈信息失败",
+                content: resp.msg
+              })
+            }
+          }
+        )
+      }
+    }
+    onLoad() {}
+    onShareAppMessage(options) {
+      return {}
+    }
+  }
 </script>
 <style lang="less">
-    @border: 1px solid #ddd;
-    page {
-        background: #eee;
+  @border: 1px solid #ddd;
+  page {
+    background: #eee;
+  }
+  form {
+    color: #333;
+    .info {
+      padding: 0.5rem;
+      display: block;
+      font-size: 0.8rem;
+      color: #999;
     }
-    form {
-        color: #333;
-        .info {
-            padding: 0.5rem;
-            display: block;
-            font-size: 0.8rem;
-            color: #999;
-        }
-        .help {
-            padding: 0.5rem;
-            font-size: 0.8rem;
-            color: #999;
-        }
-        .picker {
-            display: flex;
-            justify-content: space-between;
-            border-top: @border; // font-size: 0.8rem;
-            padding: 0.5rem;
-            background: #fff;
-        }
-        input {
-            border-top: @border;
-            padding: 0.5rem;
-            background: #fff;
-        }
-        textarea {
-            background: #fff;
-            border-top: @border;
-            padding: 0.5rem;
-            border-bottom: @border;
-            width: 100%;
-            height: 8rem;
-        }
-        button {
-            margin-top: 1rem;
-            background: #f06292;
-            color: #fff;
-        }
+    .help {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      color: #999;
     }
+    .picker {
+      display: flex;
+      justify-content: space-between;
+      border-top: @border; // font-size: 0.8rem;
+      padding: 0.5rem;
+      background: #fff;
+    }
+    input {
+      border-top: @border;
+      padding: 0.5rem;
+      background: #fff;
+    }
+    textarea {
+      background: #fff;
+      border-top: @border;
+      padding: 0.5rem;
+      border-bottom: @border;
+      width: 100%;
+      height: 8rem;
+    }
+    button {
+      margin-top: 1rem;
+      background: #f06292;
+      color: #fff;
+    }
+  }
 </style>
 

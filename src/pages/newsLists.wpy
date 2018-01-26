@@ -84,6 +84,9 @@
         this.$invoke('list', 'getNewDetails', 1)
       }
     }
+    onShareAppMessage(options) {
+      return {}
+    }
   }
 </script>
 <style lang="less">
@@ -103,7 +106,6 @@
     width: 100%;
     height: 100%;
   }
-
   .newsLists {
     height: 100%;
   }
