@@ -64,6 +64,7 @@
   import wepy from "wepy";
   import http from "../util/http";
   import gradeUtil from "../util/grade";
+  import util from "../util";
   export default class Grade extends wepy.page {
     config = {
       navigationBarTitleText: "我的成绩",
@@ -180,7 +181,7 @@
       // if (!grades){
       //     // 本地缓存没有成绩，从服务器拉取
       // }
-      this.getGrades()
+      if (util.jwcVerify()) this.getGrades()
     }
   }
 </script>

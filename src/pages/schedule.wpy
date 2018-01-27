@@ -7,7 +7,7 @@
           <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"> </view>
           <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
             <text class="address">
-                                           <text>{{item.building}}</text>
+                                             <text>{{item.building}}</text>
             <text>{{item.classroom}}</text>
             </text>
             <text class="course-name">{{item.course_name}}</text>
@@ -41,8 +41,10 @@
       }
     }
     onLoad() {
-      this.initData();
-      this.getSchedules()
+      if (util.jwcVerify()) {
+        this.initData();
+        this.getSchedules()
+      }
     }
     getSchedules() {
       let schedules = wepy.getStorageSync("schedules");
