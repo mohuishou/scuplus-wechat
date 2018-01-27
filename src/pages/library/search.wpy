@@ -4,7 +4,11 @@
     background: #eee;
   }
   .search-input {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
     background: @white;
+    width: calc(~"100% - 1rem");
     padding: 0.5rem;
     display: flex;
     border-bottom: 1px solid #ddd;
@@ -17,7 +21,7 @@
   }
   .results {
     width: 100%;
-    height: calc(~"100% - 3rem");
+    margin-top: 2rem;
     .result {
       margin-top: 0.5rem;
       background: @white;
@@ -26,6 +30,9 @@
       image {
         width: 4.5rem;
         height: 6rem;
+        background-image: url(https://scuplus.oss-cn-shenzhen.aliyuncs.com/book.jpg);
+        background-size: cover;
+        background-position: center;
       }
       .info {
         width: calc(~"100% - 5.5rem");
@@ -53,10 +60,10 @@
       <input @blur="change" placeholder="请输入图书名称" confirm-type="search" />
       <icon type="search" size="18" />
     </view>
-    <scroll-view class="results" @scrolltolower="nextPage" enable-back-to-top scroll-y>
+    <scroll-view style="height:{{height}}px;" class="results" @scrolltolower="next" enable-back-to-top scroll-y>
       <block wx:for="{{books}}" wx:key="index">
-        <view class="result">
-          <image class="cover" src="{{item.cover}}"></image>
+        <view @tap="show({{item}})" class="result">
+          <image lazy-load class="cover" src="{{item.cover}}"></image>
           <view class="info">
             <view class="row title">
               <view>{{item.title}}</view>
@@ -76,287 +83,37 @@
   import wepy from "wepy";
   import http from "../../util/http";
   export default class Search extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: "图书搜索",
+    };
     data = {
-      "books": [{
-        "author": "赵增敏",
-        "title": "PHP动态网站开发（第2版)",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-121-21465-3/cover",
-        "press": "电子工业出版社",
-        "publish_year": "8/1/",
-        "number": "",
-        "book_addresses": [{
-          "address": "江安馆订购",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "陈惠贞",
-        "title": "PHP 7\u0026MySQL跨设备网站开发",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-302-47376-3/cover",
-        "press": "清华大学出版社",
-        "publish_year": "2017",
-        "number": "TP312PH/7452P1",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "1"
-        }]
-      }, {
-        "author": "陈小龙",
-        "title": "PHP7实践指南 : O2O网站与App后台开发",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-302-47028-1/cover",
-        "press": "清华大学出版社",
-        "publish_year": "2017",
-        "number": "TP312PH/7494",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "房爱莲",
-        "title": "PHP动态网页设计与制作案例教程",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-301-28246-5/cover",
-        "press": "北京大学出版社",
-        "publish_year": "2017",
-        "number": "TP393.092.2/3024(2)",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "2"
-        }]
-      }, {
-        "author": "何俊斌",
-        "title": "从零开始学PHP",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-121-30105-6/cover",
-        "press": "电子工业出版社",
-        "publish_year": "2017",
-        "number": "TP312/2120(3)",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "侯赛因",
-        "title": "高性能PHP 7",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-121-30938-0/cover",
-        "press": "电子工业出版社",
-        "publish_year": "2017",
-        "number": "TP312PH/2736",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "2"
-        }]
-      }, {
-        "author": "黄迎久",
-        "title": "PHP动态网页设计教程",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-302-45189-1/cover",
-        "press": "清华大学出版社",
-        "publish_year": "2017",
-        "number": "TP393.092.2-43/4432",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "刘增杰",
-        "title": "PHP 7从入门到精通",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-302-45625-4/cover",
-        "press": "清华大学出版社",
-        "publish_year": "2017",
-        "number": "TP312PH/0244P",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "(美)大卫·斯克拉",
-        "title": "PHP学习手册",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-5198-0483-1/cover",
-        "press": "中国电力出版社",
-        "publish_year": "2017",
-        "number": "",
-        "book_addresses": [{
-          "address": "江安馆订购",
-          "number": "",
-          "all_count": "1",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "阮云兰",
-        "title": "PHP Web应用开发案例教程",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-313-17512-0/cover",
-        "press": "上海交通大学出版社",
-        "publish_year": "2017",
-        "number": "",
-        "book_addresses": [{
-          "address": "江安馆订购",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "山内",
-        "title": "Hack与HHVM权威指南",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-111-55484-4/cover",
-        "press": "机械工业出版社",
-        "publish_year": "2017",
-        "number": "TP312PH/2240",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "1",
-          "loan_count": "1"
-        }]
-      }, {
-        "author": "夏磊",
-        "title": "ThinkPHP实战",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-302-46652-9/cover",
-        "press": "清华大学出版社",
-        "publish_year": "2017",
-        "number": "TP312PH/1010T",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "1",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "张工厂",
-        "title": "PHP+MySQL动态网站开发从入门到精通",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-302-45451-9/cover",
-        "press": "清华大学出版社",
-        "publish_year": "2017",
-        "number": "TP312PH/1217",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "曹福凯",
-        "title": "PHP+MySQL企业项目开发案例教程",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-302-44291-2/cover",
-        "press": "清华大学出版社",
-        "publish_year": "2016",
-        "number": "TP312PH-43/5532",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "2"
-        }]
-      }, {
-        "author": "陈昊",
-        "title": "Laravel框架关键技术解析",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-121-29209-5/cover",
-        "press": "电子工业出版社",
-        "publish_year": "2016",
-        "number": "TP393.092.2/7460",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "2"
-        }]
-      }, {
-        "author": "陈益材",
-        "title": "PHP+MySQL+Dreamweaver动态网站开发从入门到精通",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-111-51961-4/cover",
-        "press": "机械工业出版社",
-        "publish_year": "2016",
-        "number": "TP312PH/7484(2)",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "2"
-        }]
-      }, {
-        "author": "程文彬",
-        "title": "PHP程序设计 : 慕课版",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-115-41765-7/cover",
-        "press": "人民邮电出版社",
-        "publish_year": "2016",
-        "number": "TP312PH/2604",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "1",
-          "loan_count": "1"
-        }, {
-          "address": "江安馆订购",
-          "number": "",
-          "all_count": "1",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "传智播客",
-        "title": "PHP+MySQL网站开发项目式教程",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-115-42729-8/cover",
-        "press": "人民邮电出版社",
-        "publish_year": "2016",
-        "number": "TP312PH/2853P2",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "传智播客高教产品研发部",
-        "title": "PHP+Ajax+jQuery网站开发项目式教程",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-115-41075-7/cover",
-        "press": "人民邮电出版社",
-        "publish_year": "2016",
-        "number": "TP312PH/2853P1",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "0"
-        }]
-      }, {
-        "author": "杜江",
-        "title": "PHP与MySQL高性能应用开发",
-        "cover": "http://202.112.150.126/index.php?client=libcode\u0026isbn=978-7-111-54796-9/cover",
-        "press": "机械工业出版社",
-        "publish_year": "2016",
-        "number": "TP312PH/4431P",
-        "book_addresses": [{
-          "address": "江安馆理工图书",
-          "number": "",
-          "all_count": "2",
-          "loan_count": "2"
-        }]
-      }],
-      "next_url": "http://opac.scu.edu.cn:8080/F/LSG6XFJ2B88IK4BUAQ79JVURLTBAVVXFXDPACE8BUGCRC3J9FK-20826?func=short-jump\u0026jump=21\u0026pag=now",
-      next_page: ""
+      books: [],
+      next_page: "",
+      height: 280,
+      loading: false,
     };
     methods = {
       change(e) {
         this.getBooks(e.detail.value, false)
       },
-      nextPage() {
+      next(e) {
         this.getBooks("", true)
+      },
+      show(item) {
+        let content = `索书号: ${item.number};\r\n`
+        item.book_addresses.forEach(e => {
+          content += `${e.address}: 馆藏 ${e.all_count},可借 ${e.loan_count};\r\n`
+        });
+        wepy.showModal({
+          title: item.title,
+          content: content,
+          showCancel: false
+        });
       }
     };
     getBooks(keyword, isNext) {
       let next_page = ""
+      if (this.loading) return;
       if (isNext) {
         next_page = this.next_page;
         if (next_page == "") {
@@ -367,6 +124,7 @@
           return
         }
       }
+      this.loading = true
       let self = this;
       http.post({
         url: "/library/search",
@@ -376,6 +134,7 @@
           next_page: next_page
         }
       }).then(resp => {
+        self.loading = false
         if (resp.status == 0) {
           if (resp.data.books.length == 0) {
             wepy.showModal({
@@ -387,7 +146,7 @@
           if (next_page == "") {
             self.books = resp.data.books;
           } else {
-            self.books.push(resp.data.books)
+            self.books = self.books.concat(resp.data.books)
           }
           self.next_page = resp.data.next_url;
           self.$apply();
@@ -398,6 +157,9 @@
           });
         }
       });
+    }
+    onLoad() {
+      this.height = wx.getSystemInfoSync().windowHeight - 36
     }
   }
 </script>
