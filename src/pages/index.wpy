@@ -273,7 +273,7 @@
       )
     }
     onLoad() {
-      // 设置swipe高度
+      // 设置swipe高度 2:1
       this.swiper_height = wx.getSystemInfoSync().windowWidth / 2
       this.getNotice()
       this.getTodaySchedules()
