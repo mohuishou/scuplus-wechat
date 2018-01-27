@@ -1,6 +1,6 @@
 <template>
-  <list2 :params.sync="params">
-  </list2>
+  <list :isTag.sync="isTag" :params.sync="params">
+  </list>
 </template>
 
 <script>
@@ -9,17 +9,19 @@
   export default class TagLists extends wepy.page {
     config = {}
     components = {
-      list2: list,
+      list: list,
     }
     data = {
       name: "",
       params: {
         tag_id: 1
       },
+      isTag: ""
     }
     async onLoad(option) {
       this.params.tag_id = option.id
       this.name = option.name
+      this.isTag = "true"
       wepy.setNavigationBarTitle({
         title: "#" + option.name
       })

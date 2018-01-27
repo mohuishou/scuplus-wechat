@@ -5,7 +5,7 @@
     background: #eee;
   }
   .lists {
-    margin-top: 2.5rem;
+    margin-top: 2rem;
     .list {
       padding: 0.5rem;
       background: #fff;
@@ -28,8 +28,8 @@
 </style>
 
 <template>
-  <scroll-view @scrolltolower="updateLists" enable-back-to-top scroll-y>
-    <view class="lists">
+  <scroll-view style="height:{{isTag != '' ? height : ''}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y>
+    <view style="{{isTag != '' ? 'margin-top: 0px;' : '' }}" class="lists">
       <block wx:for="{{details}}" wx:key="{{item.id}}">
         <view class="list">
           <view @tap="toDetail({{item.id}})" class="title">
@@ -60,12 +60,18 @@
         default: {
           category: ""
         }
+      },
+      isTag: {
+        type: String,
+        default: "",
+        twoWay: true
       }
     }
     data = {
       page: 1,
       page_size: 20,
       details: [],
+      height: 500,
     };
     methods = {
       scroll(e) {
@@ -133,10 +139,11 @@
       minute = minute < 10 ? ('0' + minute) : minute;
       return y + '-' + m + '-' + d + ' ' + h + ':' + minute;
     }
-    async onLoad() {
+    onLoad() {
       setTimeout(() => {
         this.getDetails()
       }, 100)
+      this.height = wx.getSystemInfoSync().windowHeight
     }
   }
 </script>
