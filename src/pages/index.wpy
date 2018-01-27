@@ -1,164 +1,3 @@
-<template>
-  <view>
-    <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
-    <swiper class="swiper" indicator-dots="true" autoplay="true" interval="4000" duration="1000">
-      <block wx:for="{{notices}}" wx:key="item">
-        <swiper-item>
-          <image @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
-        </swiper-item>
-      </block>
-    </swiper>
-
-    <!-- 功能区 -->
-    <view class="func">
-      <block wx:for="{{funcs}}" wx:key="item">
-        <view @tap="to({{item}})" class="icon-btn">
-          <view style="background: {{item.bg}};" class="iconfont icon-{{item.icon}}"></view>
-          <text>{{item.name}}</text>
-        </view>
-      </block>
-    </view>
-
-    <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
-    <view>
-      <!-- 课程表卡片 -->
-      <view class="card">
-        <view class="card-title">
-          <view class="iconfont icon-kechengbiao"></view>
-          <text>今日课表</text>
-        </view>
-        <view wx:if="{{todaySchedule.length}}" class="card-lists">
-          <block wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
-            <view class="card-list">
-              <view class="card-left">
-                <text class="class-name">{{item.course_name}}</text>
-                <text class="class-info">{{item.sessionArr[0]}}~{{item.sessionArr[item.flex-1]}}</text>
-              </view>
-              <view class="card-right">
-                <text>{{item.building}} {{item.classroom}}</text>
-              </view>
-            </view>
-          </block>
-        </view>
-        <view wx:if="{{todaySchedule.length}}" @tap="to({{ funcs[0] }})" class="card-foot">
-          <text>查看完整课表</text>
-        </view>
-        <view wx:else class="only">
-          <text>今日无课</text>
-        </view>
-      </view>
-      <!-- 课程表卡片 end -->
-    </view>
-
-  </view>
-</template>
-<script>
-  import wepy from "wepy";
-  import http from "../util/http";
-  export default class Index extends wepy.page {
-    config = {
-    };
-    data = {
-      notices: [{
-        cover: "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
-        id: 1
-      }],
-      funcs: [{
-          name: "课程表",
-          url: "schedule",
-          icon: "kechengbiao",
-          bg: "#eacdd1",
-          type: "jwc"
-        },
-        {
-          name: "成绩",
-          url: "grade",
-          icon: "chengji",
-          bg: "#99ccee",
-          type: "jwc"
-        },
-        {
-          name: "反馈",
-          url: "feedback",
-          icon: "fankui",
-          bg: "#569597",
-          type: "normal"
-        },
-        {
-          name: "自习",
-          url: "classroom",
-          icon: "building",
-          bg: "#90caaf",
-          type: "normal"
-        }
-      ],
-      jwcVerify: 0,
-      todaySchedule: [],
-    };
-    methods = {
-      noticeTo(id) {
-        wepy.navigateTo({
-          url: `details?id=${id}&&from=notice`
-        })
-      },
-      to(item) {
-        let url = item.url
-        if (item.type == "jwc" && this.$parent.globalData.jwc_verify == 0) {
-          wepy.showModal({
-            title: "账号信息错误",
-            content: "教务处账号未绑定或密码错误！是否前往绑定？",
-            success: function(res) {
-              if (res.confirm) {
-                wepy.navigateTo({
-                  url: 'bind'
-                });
-              } else if (res.cancel) {}
-            }
-          })
-          return
-        }
-        wepy.navigateTo({
-          url: url
-        });
-      }
-    };
-    getTodaySchedules() {
-      let schedules = wepy.getStorageSync("schedules");
-      if (!schedules) {
-        return
-      }
-      let today = new Date().getDay() || 7
-      schedules[today].forEach(e => {
-        if (e.course_name) {
-          this.todaySchedule.push(e)
-        }
-      });
-    }
-    getNotice() {
-      let self = this
-      http.get("/notices").then(
-        resp => {
-          if (resp.status == 0) {
-            self.notices = resp.data
-            self.$apply()
-          } else {
-            wepy.showModal({
-              title: "数据获取失败！",
-              content: resp.msg
-            });
-          }
-        }
-      )
-    }
-    onLoad() {
-      this.getNotice()
-      this.getTodaySchedules()
-    }
-    onShareAppMessage(options){
-      return {}
-    }
-  }
-</script>
 <style lang="less">
   @import "./src/icon/iconfont.less";
   @import "./src/img/index.less";
@@ -271,9 +110,176 @@
     }
   }
   .swiper {
+    width: 100%;
+    swiper-item{
+      width: 100%;
+    }
     image {
       width: 100%;
-      height: 15rem;
     }
   }
 </style>
+<template>
+  <view>
+    <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
+    <swiper style="height: {{swiper_height}}px;" class="swiper" indicator-dots="true" autoplay="true" interval="4000" duration="1000">
+      <block wx:for="{{notices}}" wx:key="item">
+        <swiper-item style="height: {{swiper_height}}px;">
+          <image style="height: {{swiper_height}}px;" @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <!-- 功能区 -->
+    <view class="func">
+      <block wx:for="{{funcs}}" wx:key="item">
+        <view @tap="to({{item}})" class="icon-btn">
+          <view style="background: {{item.bg}};" class="iconfont icon-{{item.icon}}"></view>
+          <text>{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+
+    <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
+    <view>
+      <!-- 课程表卡片 -->
+      <view class="card">
+        <view class="card-title">
+          <view class="iconfont icon-kechengbiao"></view>
+          <text>今日课表</text>
+        </view>
+        <view wx:if="{{todaySchedule.length}}" class="card-lists">
+          <block wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
+            <view class="card-list">
+              <view class="card-left">
+                <text class="class-name">{{item.course_name}}</text>
+                <text class="class-info">{{item.sessionArr[0]}}~{{item.sessionArr[item.flex-1]}}</text>
+              </view>
+              <view class="card-right">
+                <text>{{item.building}} {{item.classroom}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
+        <view wx:if="{{todaySchedule.length}}" @tap="to({{ funcs[0] }})" class="card-foot">
+          <text>查看完整课表</text>
+        </view>
+        <view wx:else class="only">
+          <text>今日无课</text>
+        </view>
+      </view>
+      <!-- 课程表卡片 end -->
+    </view>
+
+  </view>
+</template>
+<script>
+  import wepy from "wepy";
+  import http from "../util/http";
+  export default class Index extends wepy.page {
+    config = {
+    };
+    data = {
+      notices: [{
+        cover: "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
+        id: 1
+      }],
+      funcs: [{
+          name: "课程表",
+          url: "schedule",
+          icon: "kechengbiao",
+          bg: "#eacdd1",
+          type: "jwc"
+        },
+        {
+          name: "成绩",
+          url: "grade",
+          icon: "chengji",
+          bg: "#99ccee",
+          type: "jwc"
+        },
+        {
+          name: "反馈",
+          url: "feedback",
+          icon: "fankui",
+          bg: "#569597",
+          type: "normal"
+        },
+        {
+          name: "自习",
+          url: "classroom",
+          icon: "building",
+          bg: "#90caaf",
+          type: "normal"
+        }
+      ],
+      jwcVerify: 0,
+      todaySchedule: [],
+      swiper_height: 200,
+    };
+    methods = {
+      noticeTo(id) {
+        wepy.navigateTo({
+          url: `details?id=${id}&&from=notice`
+        })
+      },
+      to(item) {
+        let url = item.url
+        if (item.type == "jwc" && this.$parent.globalData.jwc_verify == 0) {
+          wepy.showModal({
+            title: "账号信息错误",
+            content: "教务处账号未绑定或密码错误！是否前往绑定？",
+            success: function(res) {
+              if (res.confirm) {
+                wepy.navigateTo({
+                  url: 'bind'
+                });
+              } else if (res.cancel) {}
+            }
+          })
+          return
+        }
+        wepy.navigateTo({
+          url: url
+        });
+      }
+    };
+    getTodaySchedules() {
+      let schedules = wepy.getStorageSync("schedules");
+      if (!schedules) {
+        return
+      }
+      let today = new Date().getDay() || 7
+      schedules[today].forEach(e => {
+        if (e.course_name) {
+          this.todaySchedule.push(e)
+        }
+      });
+    }
+    getNotice() {
+      let self = this
+      http.get("/notices").then(
+        resp => {
+          if (resp.status == 0) {
+            self.notices = resp.data
+            self.$apply()
+          } else {
+            wepy.showModal({
+              title: "数据获取失败！",
+              content: resp.msg
+            });
+          }
+        }
+      )
+    }
+    onLoad() {
+      // 设置swipe高度
+      this.swiper_height = wx.getSystemInfoSync().windowWidth / 2
+      this.getNotice()
+      this.getTodaySchedules()
+    }
+    onShareAppMessage(options){
+      return {}
+    }
+  }
+</script>
