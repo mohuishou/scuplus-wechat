@@ -24,7 +24,7 @@
         "pages/schedule",
         "pages/grade",
         "pages/details",
-        "pages/bindJwc"
+        "pages/bind"
       ],
       window: {
         navigationBarBackgroundColor: "#f06292",
@@ -86,7 +86,7 @@
                 this.globalData.jwc_verify = data.jwc_verify;
                 if (data.jwc_verify == 0) {
                   wepy.navigateTo({
-                    url: "bindJwc"
+                    url: "bind"
                   });
                 }
               } else {

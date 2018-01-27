@@ -7,7 +7,7 @@ function JwcVerify() {
       success: function (res) {
         if (res.confirm) {
           wx.navigateTo({
-            url: 'bindJwc'
+            url: 'bind'
           });
         } else if (res.cancel) {
           wx.navigateBack({delta: 1})

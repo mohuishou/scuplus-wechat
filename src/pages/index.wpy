@@ -110,7 +110,7 @@
             success: function(res) {
               if (res.confirm) {
                 wepy.navigateTo({
-                  url: 'bindJwc'
+                  url: 'bind'
                 });
               } else if (res.cancel) {}
             }
