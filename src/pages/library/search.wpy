@@ -119,7 +119,8 @@
         if (next_page == "") {
           wepy.showModal({
             title: "提示",
-            content: "已经到底了"
+            content: "已经到底了",
+            showCancel: false
           });
           return
         }
@@ -139,7 +140,8 @@
           if (resp.data.books.length == 0) {
             wepy.showModal({
               title: "没有搜索到图书",
-              content: "没有搜索到图书"
+              content: "没有搜索到图书",
+              showCancel: false
             });
             return
           }

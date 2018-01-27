@@ -5,9 +5,8 @@
 小程序采用wepy开发，参考了We重邮的界面设计
 
 ## 扫码体验
-> 可能还在审核当中
 
-![img/code.jpg](img/code.jpg)
+![img/qcode.jpg](img/qcode.jpg)
 
 ## 预览
 [点击查看-多图预警](https://github.com/mohuishou/scuplus-wechat/issues/1)
@@ -38,9 +37,10 @@
 - [ ] 图书借阅信息
  - [ ] 当前借阅
  - [ ] 历史借阅
-- [ ] 考表
+- [ ] 图书搜索
 
 ### Feature
+- [ ] 考表
 - [ ] 选课助手(基础版)
  - [ ] 课程排名(评价/成绩)
  - [ ] 教师排名(评价/综合)
