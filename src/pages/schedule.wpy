@@ -20,6 +20,7 @@
 <script>
   import wepy from "wepy";
   import http from "../util/http";
+  import util from "../util";
   export default class Schedule extends wepy.page {
     config = {
       navigationBarTitleText: "我的课表",

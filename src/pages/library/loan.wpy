@@ -1,0 +1,14 @@
+<style lang="less">
+
+</style>
+
+<template>
+
+</template>
+
+<script>
+  import wepy from "wepy";
+  import http from "../../util/http";
+  export default class Loan extends wepy.page {
+  }
+</script>

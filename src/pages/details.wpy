@@ -7,7 +7,9 @@
       <view class="info">
       </view>
     </view>
-    <htmlParser :parserName="name" :parserContent.sync="content" />
+    <view class="content">
+      <htmlParser :parserName="name" :parserContent.sync="content" />
+    </view>
     <view wx:if="{{url}}" class="footer">
       <view>
         原文：{{url}}
@@ -88,10 +90,6 @@
   page {
     background: #eee;
   }
-  .footer {
-    font-size: 0.6rem;
-    color: #888;
-  }
   .details {
     margin: 0.2rem;
     padding: 0.5rem;
@@ -99,8 +97,15 @@
     border: 1px solid #ddd;
     border-radius: 0.1rem;
   }
-  view {
-    line-height: 150% !important;
-    font-size: 0.8rem !important;
+  .content {
+    view {
+      line-height: 180% !important;
+      font-size: 1rem !important;
+    }
+  }
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.5rem;
+    color: #888;
   }
 </style>
