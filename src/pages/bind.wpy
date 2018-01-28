@@ -89,7 +89,7 @@
       </view>
       <view class="input-group" hover-class="active">
         <text class="input-label">密码</text>
-        <input name="password" type="password" placeholder="请输入您的" +{{model[activeModel].name}}+ "密码" />
+        <input name="password" type="password" placeholder="请输入您的{{model[activeModel].name}}密码" />
       </view>
       <button formType="submit">绑定</button>
     </form>
@@ -140,7 +140,8 @@
           });
           wepy.showModal({
             title: "绑定成功！",
-            content: res.msg
+            content: res.msg,
+            showCancel: false
           });
           wepy.navigateBack({
             delta: 1
@@ -148,7 +149,8 @@
         } else {
           wepy.showModal({
             title: "绑定失败！",
-            content: res.msg
+            content: res.msg,
+            showCancel: false
           });
         }
       });
