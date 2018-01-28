@@ -89,7 +89,7 @@
       </view>
       <view class="input-group" hover-class="active">
         <text class="input-label">密码</text>
-        <input name="password" type="password" placeholder="请输入您的密码" />
+        <input name="password" type="password" placeholder="请输入您的" +{{model[activeModel].name}}+ "密码" />
       </view>
       <button formType="submit">绑定</button>
     </form>
@@ -106,7 +106,7 @@
       model: [{
         url: "jwc",
         name: "教务处"
-      },{
+      }, {
         url: "library",
         name: "图书馆"
       }],
@@ -152,6 +152,9 @@
           });
         }
       });
+    }
+    onLoad(options) {
+      this.activeModel = options.active
     }
   }
 </script>
