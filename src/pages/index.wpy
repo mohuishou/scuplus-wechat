@@ -162,7 +162,7 @@
           <view class="iconfont icon-kechengbiao"></view>
           <text>今日课表</text>
         </view>
-        <view wx:if="{{todaySchedule.length}}" class="card-lists">
+        <view wx:if="{{todaySchedule.length && jwcVerify}}" class="card-lists">
           <block wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
             <view class="card-list">
               <view class="card-left">
@@ -175,20 +175,47 @@
             </view>
           </block>
         </view>
-        <view wx:if="{{todaySchedule.length}}" @tap="to({{ funcs[0] }})" class="card-foot">
+        <view wx:if="{{todaySchedule.length && jwcVerify}}" @tap="to({{ funcs[0][0] }})" class="card-foot">
           <text>查看完整课表</text>
         </view>
         <view wx:else class="only">
-          <text>今日无课</text>
+          <text wx:if="{{jwcVerify}}">今日无课</text>
+          <text wx:else>请先绑定教务处</text>
         </view>
       </view>
       <!-- 课程表卡片 end -->
+      <!-- 我的借阅卡片 -->
+      <view class="card">
+        <view class="card-title">
+          <view style="background: {{funcs[1][0].bg}}" class="iconfont icon-{{funcs[1][0].icon}}"></view>
+          <text>我的借阅</text>
+        </view>
+        <view wx:if="{{loan_books.length && libraryVerify}}" class="card-lists">
+          <block wx:for="{{loan_books}}" wx:key="{{index}}">
+            <view wx:if="{{item.title && index < 3}}" class="card-list">
+              <view class="card-left">
+                <text class="class-name">{{item.title}}</text>
+                <text class="class-info">到期: {{item.due_date}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
+        <view wx:if="{{loan_books.length && libraryVerify}}" @tap="to({{ funcs[1][0] }})" class="card-foot">
+          <text>查看所有书籍</text>
+        </view>
+        <view wx:else class="only">
+          <text wx:if="{{libraryVerify}}">暂无借阅书籍</text>
+          <text wx:else>请先绑定图书馆</text>
+        </view>
+      </view>
+      <!-- 我的借阅卡片 end -->
     </view>
   </view>
 </template>
 <script>
   import wepy from "wepy";
   import http from "../util/http";
+  import index from "../util/index/index";
   export default class Index extends wepy.page {
     config = {};
     data = {
@@ -196,70 +223,27 @@
         cover: "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
         id: 1
       }],
-      funcs: [
-        [{
-            name: "课程表",
-            url: "schedule",
-            icon: "kechengbiao",
-            bg: "#eacdd1",
-            type: "jwc"
-          },
-          {
-            name: "成绩",
-            url: "grade",
-            icon: "chengji",
-            bg: "#99ccee",
-            type: "jwc"
-          },
-          {
-            name: "反馈",
-            url: "feedback",
-            icon: "fankui",
-            bg: "#569597",
-            type: "normal"
-          },
-          {
-            name: "自习",
-            url: "classroom",
-            icon: "building",
-            bg: "#90caaf",
-            type: "normal"
-          },
-        ],
-        [{
-            name: "我的借阅",
-            url: "library/loan",
-            icon: "book",
-            bg: "#ab96c5",
-            type: "library"
-          }, {
-            name: "历史借阅",
-            url: "library/loan?type=history",
-            icon: "book1",
-            bg: "#eea5d1",
-            type: "library"
-          },
-          {
-            name: "图书搜索",
-            url: "library/search",
-            icon: "search",
-            bg: "#857e95",
-            type: "normal"
-          }
-        ]
-      ],
-      jwcVerify: 0,
+      funcs: index.funcs,
       todaySchedule: [],
       swiper_height: 200,
+      loan_books: []
     };
+    computed = {
+      jwcVerify() {
+        return wepy.getStorageSync("jwc_verify")
+      },
+      libraryVerify() {
+        return wepy.getStorageSync("library_verify")
+      }
+    }
     methods = {
       noticeTo(id) {
         wepy.navigateTo({
           url: `details?id=${id}&&from=notice`
-        })
+        });
       },
       to(item) {
-        let url = item.url
+        let url = item.url;
         if (item.type == "jwc" && this.$parent.globalData.jwc_verify == 0) {
           wepy.showModal({
             title: "账号信息错误",
@@ -267,25 +251,28 @@
             success: function(res) {
               if (res.confirm) {
                 wepy.navigateTo({
-                  url: 'bind'
+                  url: "bind"
                 });
               }
             }
-          })
-          return
-        } else if (item.type == "library" && wepy.getStorageSync("library_verify") == 0) {
+          });
+          return;
+        } else if (
+          item.type == "library" &&
+          wepy.getStorageSync("library_verify") == 0
+        ) {
           wepy.showModal({
             title: "账号信息错误",
             content: "图书馆账号未绑定或密码错误！是否前往绑定？",
             success: function(res) {
               if (res.confirm) {
                 wepy.navigateTo({
-                  url: 'bind?active=1'
+                  url: "bind?active=1"
                 });
               }
             }
-          })
-          return
+          });
+          return;
         }
         wepy.navigateTo({
           url: url
@@ -295,39 +282,38 @@
     getTodaySchedules() {
       let schedules = wepy.getStorageSync("schedules");
       if (!schedules) {
-        return
+        return;
       }
       let today = new Date().getDay() || 7;
       schedules[today].forEach(e => {
         if (e.course_name) {
-          this.todaySchedule.push(e)
+          this.todaySchedule.push(e);
         }
       });
     }
     getNotice() {
-      let self = this
-      http.get("/notices").then(
-        resp => {
-          if (resp.status == 0) {
-            self.notices = resp.data
-            self.$apply()
-          } else {
-            wepy.showModal({
-              title: "数据获取失败！",
-              content: resp.msg
-            });
-          }
+      let self = this;
+      http.get("/notices").then(resp => {
+        if (resp.status == 0) {
+          self.notices = resp.data;
+          self.$apply();
+        } else {
+          wepy.showModal({
+            title: "数据获取失败！",
+            content: resp.msg
+          });
         }
-      )
+      });
     }
     onLoad() {
       // 设置swipe高度 2:1
-      this.swiper_height = wx.getSystemInfoSync().windowWidth / 2
-      this.getNotice()
-      this.getTodaySchedules()
+      this.swiper_height = wx.getSystemInfoSync().windowWidth / 2;
+      this.getNotice();
+      this.getTodaySchedules();
+      this.loan_books = wepy.getStorageSync("loan_now");
     }
     onShareAppMessage(options) {
-      return {}
+      return {};
     }
   }
 </script>
