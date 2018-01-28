@@ -16,8 +16,9 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        "pages/library/search",   
-        "pages/index",        
+        "pages/library/loan",
+        "pages/library/search",
+        "pages/index",
         "pages/newsLists",
         "pages/tagLists",
         "pages/classroom",
@@ -82,6 +83,10 @@
                 wepy.setStorage({
                   key: "jwc_verify",
                   data: data.jwc_verify
+                });
+                wepy.setStorage({
+                  key: "library_verify",
+                  data: data.library_verify
                 });
                 this.globalData.token = data.token;
                 this.globalData.jwc_verify = data.jwc_verify;

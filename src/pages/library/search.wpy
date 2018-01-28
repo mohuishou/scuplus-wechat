@@ -163,5 +163,10 @@
     onLoad() {
       this.height = wx.getSystemInfoSync().windowHeight - 36
     }
+    onShareAppMessage(options) {
+      return {
+        title: "搜索书籍"
+      }
+    }
   }
 </script>

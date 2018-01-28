@@ -106,6 +106,9 @@
       model: [{
         url: "jwc",
         name: "教务处"
+      },{
+        url: "library",
+        name: "图书馆"
       }],
       activeModel: 0
     }

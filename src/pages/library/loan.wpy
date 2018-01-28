@@ -1,10 +1,47 @@
 <style lang="less">
-
+  page {
+    background: #eee;
+  }
+  @import url("../../less/config");
+  .book {
+    color: #333;
+    margin: 0.5rem 0.5rem 0rem 0.5rem;
+    background: @white;
+    border-radius: 0.1rem;
+    padding: 0.5rem;
+    display: flex;
+    align-content: space-between;
+    height: 4.5rem;
+    flex-wrap: wrap;
+    >view {
+      width: 100%;
+    }
+    .info {
+      justify-content: space-between;
+      align-items: center;
+      display: flex;
+      color: #666;
+      font-size: 0.8rem;
+    }
+    .warn {
+      color: @base-color;
+    }
+  }
 </style>
 
 <template>
   <view>
-    
+    <block wx:for="{{loan_books}}" wx:key="{{index}}">
+      <view class="book">
+        <view class="title">{{item.title}}-{{item.author}}</view>
+        <view class="info">
+          <view>到期: {{item.due_date}}</view>
+          <view wx:if="{{item.arrearage>0}}" class="warn">欠费: {{item.arrearage}}</view>
+          <view wx:if="{{loan_type=='now'}}" class="btn warn" @tap="loan({{item.book_id}})">续借</view>
+          <view wx:if="{{loan_type=='history'}}">归还: {{item.return_date}}</view>
+        </view>
+      </view>
+    </block>
   </view>
 </template>
 
@@ -12,5 +49,98 @@
   import wepy from "wepy";
   import http from "../../util/http";
   export default class Loan extends wepy.page {
-  }
+      config = {
+        navigationBarTitleText: "我的借阅"
+      };
+      data = {
+        loan_books: [],
+        loan_type: "now" // history
+      };
+      methods = {
+        loan(book_id) {
+          let self = this;
+          if (this.verifyBind()) {
+            http.post({
+                url: "/library/loan",
+                params: {
+                  book_id: book_id
+                }).then(resp => {
+                if (resp.status == 0) {
+                  self.getBooks()
+                  wepy.showModal({
+                    title: "续借成功",
+                    content: resp.msg
+                  });
+                } else {
+                  if (resp.data === 0) {
+                    wepy.setStorageSync("library_verify", 0)
+                    self.verifyBind()
+                  }
+                }
+              });
+            }
+          }
+        };
+        verifyBind() {
+          let library_verify = wepy.getStorageSync("library_verify");
+          if (!library_verify) {
+            wepy.showModal({
+              title: "账号信息错误",
+              content: "图书馆账号未绑定或密码错误！是否前往绑定？",
+              success: function(res) {
+                if (res.confirm) {
+                  wepy.navigateTo({
+                    url: "/pages/bind?active=1"
+                  });
+                } else if (res.cancel) {
+                  wepy.navigateBack({
+                    delta: 1
+                  });
+                }
+              }
+            });
+            return false;
+          }
+          return true;
+        }
+        getBooks() {
+          let self = this;
+          if (this.verifyBind()) {
+            const t = this.loan_type == "now" ? 0 : 1;
+            http.get("/library/books?is_history=" + t).then(resp => {
+              if (resp.status == 0) {
+                self.loan_books = resp.data;
+                self.$apply();
+                wepy.setStorage({
+                  key: "loan_" + this.loan_type,
+                  data: resp.data
+                });
+              } else {
+                if (resp.data === 0) {
+                  wepy.setStorageSync("library_verify", 0)
+                  self.verifyBind()
+                } else {
+                  wepy.showModal({
+                    title: "获取数据失败",
+                    content: resp.msg
+                  });
+                }
+              }
+            });
+          }
+        }
+        onLoad(options) {
+          console.log(options);
+          if (options.type && options.type == "history") {
+            this.loan_type = options.type;
+            wepy.setNavigationBarTitle({
+              title: "历史借阅"
+            })
+          }
+          this.loan_books = wepy.getStorageSync("loan_" + this.loan_type);
+          if (this.loan_books.length == 0) {
+            this.getBooks();
+          }
+        }
+      }
 </script>
