@@ -13,12 +13,12 @@
     padding: 0.5rem;
     display: flex;
     align-content: space-between;
-    height: 4.5rem;
     flex-wrap: wrap;
     >view {
       width: 100%;
     }
     .info {
+      margin-top: 1rem;
       justify-content: space-between;
       align-items: center;
       display: flex;
@@ -86,12 +86,19 @@
               self.getBooks()
               wepy.showModal({
                 title: "续借成功",
-                content: resp.msg
+                content: resp.msg,
+                showCancel: false
               });
             } else {
               if (resp.data === 0) {
                 wepy.setStorageSync("library_verify", 0)
                 self.verifyBind()
+              } else {
+                wepy.showModal({
+                  title: "提示",
+                  content: resp.msg,
+                  showCancel: false
+                });
               }
             }
           });
@@ -139,7 +146,8 @@
             } else {
               wepy.showModal({
                 title: "获取数据失败",
-                content: resp.msg
+                content: resp.msg,
+                showCancel: false
               });
             }
           }

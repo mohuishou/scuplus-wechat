@@ -122,10 +122,10 @@
           });
           return;
         }
-        this.BindJwc(params)
+        this.Bind(params)
       }
     };
-    BindJwc(params) {
+    Bind(params) {
       let self = this
       const url = self.model[self.activeModel].url
       http.post({
