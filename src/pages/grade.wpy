@@ -64,13 +64,14 @@
   import wepy from "wepy";
   import http from "../util/http";
   import gradeUtil from "../util/grade";
+  import RequestMixin from "../mixins/request"
   import Verify from "../mixins/verify"
   export default class Grade extends wepy.page {
     config = {
       navigationBarTitleText: "我的成绩",
       enablePullDownRefresh: true
     };
-    mixins = [Verify];
+    mixins = [Verify, RequestMixin];
     data = {
       grades: null,
       avg: null
@@ -176,13 +177,15 @@
         }
       )
     }
-    async onLoad() {
+    onLoad() {
       // 获取本地缓存的成绩
       // let grades = wepy.wx.getStorageSync("grades")
       // if (!grades){
       //     // 本地缓存没有成绩，从服务器拉取
       // }
-      if (this.verify()) this.getGrades()
+      if (this.verify()) {
+        this.getGrades()
+      }
     }
   }
 </script>

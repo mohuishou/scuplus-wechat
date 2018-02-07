@@ -28,7 +28,7 @@
     border-bottom: @border;
     padding: 0.3rem;
     padding-bottom: 0;
-    &.card-library{
+    &.card-library {
       background-image: url("https://scuplus.oss-cn-shenzhen.aliyuncs.com/card-library.png");
     }
     .only {
@@ -47,7 +47,9 @@
       border-bottom: @border;
       .iconfont {
         margin-left: 0.2rem;
-        .icon(1.3rem, 0.7rem, #99ccee);
+        .icon(1.3rem,
+        0.7rem,
+        #99ccee);
       }
       text {
         margin-left: 0.2rem;
@@ -187,7 +189,7 @@
       </view>
       <!-- 课程表卡片 end -->
       <!-- 我的借阅卡片 -->
-      <view  class="card card-library">
+      <view class="card card-library">
         <view class="card-title">
           <view style="background: {{funcs[1][0].bg}}" class="iconfont icon-{{funcs[1][0].icon}}"></view>
           <text>我的借阅</text>
@@ -235,6 +237,26 @@
         return wepy.getStorageSync("verify")
       },
     }
+    navigate(item) {
+      let url = item.url;
+      if (item.type == "login" && this.verify == 0) {
+        wepy.showModal({
+          title: "账号信息错误",
+          content: "教务处账号未绑定或密码错误！是否前往绑定？",
+          success: function(res) {
+            if (res.confirm) {
+              wepy.navigateTo({
+                url: "bind"
+              });
+            }
+          }
+        });
+        return;
+      }
+      wepy.navigateTo({
+        url: url
+      });
+    }
     methods = {
       noticeTo(id) {
         wepy.navigateTo({
@@ -242,24 +264,7 @@
         });
       },
       to(item) {
-        let url = item.url;
-        if (item.type == "login" && this.$parent.globalData.verify == 0) {
-          wepy.showModal({
-            title: "账号信息错误",
-            content: "教务处账号未绑定或密码错误！是否前往绑定？",
-            success: function(res) {
-              if (res.confirm) {
-                wepy.navigateTo({
-                  url: "bind"
-                });
-              }
-            }
-          });
-          return;
-        }
-        wepy.navigateTo({
-          url: url
-        });
+        navigate(item)
       }
     };
     getTodaySchedules() {

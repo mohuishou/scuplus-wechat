@@ -44,6 +44,7 @@ function request(method, requestHandler) {
         wx.showModal({
           title: "网络错误",
           content: "网络错误",
+          showCancel: false
         });
         reject('Network request failed')
       },
