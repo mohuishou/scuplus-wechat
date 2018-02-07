@@ -64,12 +64,13 @@
   import wepy from "wepy";
   import http from "../util/http";
   import gradeUtil from "../util/grade";
-  import util from "../util";
+  import Verify from "../mixins/verify"
   export default class Grade extends wepy.page {
     config = {
       navigationBarTitleText: "我的成绩",
       enablePullDownRefresh: true
     };
+    mixins = [Verify];
     data = {
       grades: null,
       avg: null
@@ -181,7 +182,7 @@
       // if (!grades){
       //     // 本地缓存没有成绩，从服务器拉取
       // }
-      if (util.jwcVerify()) this.getGrades()
+      if (this.verify()) this.getGrades()
     }
   }
 </script>

@@ -4,14 +4,14 @@ const funcs = [
       url: "schedule",
       icon: "kechengbiao",
       bg: "#eacdd1",
-      type: "jwc"
+      type: "login"
     },
     {
       name: "成绩",
       url: "grade",
       icon: "chengji",
       bg: "#99ccee",
-      type: "jwc"
+      type: "login"
     },
     {
       name: "反馈",
@@ -33,13 +33,13 @@ const funcs = [
       url: "library/loan",
       icon: "book",
       bg: "#ab96c5",
-      type: "library"
+      type: "login"
     }, {
       name: "历史借阅",
       url: "library/loan?type=history",
       icon: "book1",
       bg: "#eea5d1",
-      type: "library"
+      type: "login"
     },
     {
       name: "图书搜索",

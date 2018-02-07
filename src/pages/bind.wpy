@@ -3,17 +3,23 @@
   page {
     height: 100%;
   }
-  .active {
-    border: 1px solid @base-color;
+  .help {
+    font-size: 0.7rem;
+    color: #888;
+    padding: 0 3%;
   }
   .input-group {
+    &:hover {
+      transition: all 1s;
+      border: 2px solid @base-color;
+    }
     display: flex;
     align-items: center;
     padding: 25rpx 10rpx;
     margin: 40rpx 3%;
     background: #fff;
     border-radius: 5px;
-    border: 1px solid #f4f4f4;
+    border: 2px solid #f4f4f4;
     .input-label {
       color: #888;
       font-size: 13pt;
@@ -22,8 +28,7 @@
       padding: 0 25rpx;
       border-right: 1px solid #d8d8d8;
     }
-    input,
-    picker {
+    input {
       flex: 1;
       font-size: 13pt;
       min-height: 52rpx;
@@ -42,14 +47,14 @@
       width: 100%;
       display: flex;
       justify-content: center;
-      height: 40%;
+      height: 30%;
       flex-wrap: wrap;
       background: @base-color;
       color: #fff;
       font-size: 2rem;
       text-align: center;
       view {
-        margin-top: calc(~"20% - 2rem");
+        margin-top: calc(~"15% - 1rem");
       }
       text {
         display: block;
@@ -79,17 +84,20 @@
     <view id="title">
       <view>
         <text>We川大</text>
-        <text style="font-size: 1rem;">{{model[activeModel].name}}绑定</text>
       </view>
     </view>
     <form @submit="bind">
       <view class="input-group" hover-class="active">
         <text class="input-label">学号</text>
-        <input name="student_id" focus type="number" placeholder="请输入您的学号" />
+        <input name="student_id" type="number" placeholder="请输入您的学号/工号" />
       </view>
       <view class="input-group" hover-class="active">
         <text class="input-label">密码</text>
-        <input name="password" type="password" placeholder="请输入您的{{model[activeModel].name}}密码" />
+        <input name="password" type="password" placeholder="请输入您的密码" />
+      </view>
+      <view class="help">
+        <view>密码为统一身份认证平台(即EDU邮箱)的密码，默认密码为身份证后六位</view>
+        <view>忘记密码可以访问 my.scu.edu.cn 找回</view>
       </view>
       <button formType="submit">绑定</button>
     </form>
@@ -98,20 +106,12 @@
 <script>
   import wepy from "wepy";
   import http from "../util/http";
+  import GlobalDataMixin from "../mixins/globalData"
   export default class BindJwc extends wepy.page {
     config = {
       navigationBarTitleText: "",
     };
-    data = {
-      model: [{
-        url: "jwc",
-        name: "教务处"
-      }, {
-        url: "library",
-        name: "图书馆"
-      }],
-      activeModel: 0
-    }
+    mixins = [GlobalDataMixin]
     methods = {
       bind(e) {
         let params = e.detail.value;
@@ -126,18 +126,13 @@
       }
     };
     Bind(params) {
-      let self = this
-      const url = self.model[self.activeModel].url
+      const self = this
       http.post({
-        url: "/bind-" + url,
+        url: "/bind",
         params: params
       }).then(res => {
         if (res.status == 0) {
-          self.$parent.globalData[`${url}_verify`] = 1;
-          wepy.setStorage({
-            key: `${url}_verify`,
-            data: 1
-          });
+          self.SetData("verify", 1)
           wepy.showModal({
             title: "绑定成功！",
             content: res.msg,
@@ -155,9 +150,7 @@
         }
       });
     }
-    onLoad(options) {
-      this.activeModel = options.active
-    }
+    onLoad() {}
   }
 </script>
 

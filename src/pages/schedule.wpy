@@ -7,7 +7,7 @@
           <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"> </view>
           <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
             <text class="address">
-                                             <text>{{item.building}}</text>
+                                               <text>{{item.building}}</text>
             <text>{{item.classroom}}</text>
             </text>
             <text class="course-name">{{item.course_name}}</text>
@@ -20,12 +20,13 @@
 <script>
   import wepy from "wepy";
   import http from "../util/http";
-  import util from "../util";
+  import Verify from "../mixins/verify"
   export default class Schedule extends wepy.page {
     config = {
       navigationBarTitleText: "我的课表",
       enablePullDownRefresh: true
     };
+    mixins = [Verify];
     data = {
       dataArr: [
         ["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -42,7 +43,7 @@
       }
     }
     onLoad() {
-      if (util.jwcVerify()) {
+      if (this.verify()) {
         this.initData();
         this.getSchedules()
       }

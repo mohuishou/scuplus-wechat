@@ -164,7 +164,7 @@
           <view class="iconfont icon-kechengbiao"></view>
           <text>今日课表</text>
         </view>
-        <view wx:if="{{todaySchedule.length && jwcVerify}}" class="card-lists">
+        <view wx:if="{{todaySchedule.length && verify}}" class="card-lists">
           <block wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
             <view class="card-list">
               <view class="card-left">
@@ -177,12 +177,12 @@
             </view>
           </block>
         </view>
-        <view wx:if="{{todaySchedule.length && jwcVerify}}" @tap="to({{ funcs[0][0] }})" class="card-foot">
+        <view wx:if="{{todaySchedule.length && verify}}" @tap="to({{ funcs[0][0] }})" class="card-foot">
           <text>查看完整课表</text>
         </view>
         <view wx:else class="only">
-          <text wx:if="{{jwcVerify}}">今日无课</text>
-          <text wx:else>请先绑定教务处</text>
+          <text wx:if="{{verify}}">今日无课</text>
+          <text wx:else>请先绑定</text>
         </view>
       </view>
       <!-- 课程表卡片 end -->
@@ -192,7 +192,7 @@
           <view style="background: {{funcs[1][0].bg}}" class="iconfont icon-{{funcs[1][0].icon}}"></view>
           <text>我的借阅</text>
         </view>
-        <view wx:if="{{loan_books.length && libraryVerify}}" class="card-lists">
+        <view wx:if="{{loan_books.length && verify}}" class="card-lists">
           <block wx:for="{{loan_books}}" wx:key="{{index}}">
             <view wx:if="{{item.title && index < 3}}" class="card-list">
               <view class="card-left">
@@ -202,12 +202,12 @@
             </view>
           </block>
         </view>
-        <view wx:if="{{loan_books.length && libraryVerify}}" @tap="to({{ funcs[1][0] }})" class="card-foot">
+        <view wx:if="{{loan_books.length && verify}}" @tap="to({{ funcs[1][0] }})" class="card-foot">
           <text>查看所有书籍</text>
         </view>
         <view wx:else class="only">
-          <text wx:if="{{libraryVerify}}">暂无借阅书籍</text>
-          <text wx:else>请先绑定图书馆</text>
+          <text wx:if="{{verify}}">暂无借阅书籍</text>
+          <text wx:else>请先绑定</text>
         </view>
       </view>
       <!-- 我的借阅卡片 end -->
@@ -231,12 +231,9 @@
       loan_books: []
     };
     computed = {
-      jwcVerify() {
-        return wepy.getStorageSync("jwc_verify")
+      verify() {
+        return wepy.getStorageSync("verify")
       },
-      libraryVerify() {
-        return wepy.getStorageSync("library_verify")
-      }
     }
     methods = {
       noticeTo(id) {
@@ -246,7 +243,7 @@
       },
       to(item) {
         let url = item.url;
-        if (item.type == "jwc" && this.$parent.globalData.jwc_verify == 0) {
+        if (item.type == "login" && this.$parent.globalData.verify == 0) {
           wepy.showModal({
             title: "账号信息错误",
             content: "教务处账号未绑定或密码错误！是否前往绑定？",
@@ -254,22 +251,6 @@
               if (res.confirm) {
                 wepy.navigateTo({
                   url: "bind"
-                });
-              }
-            }
-          });
-          return;
-        } else if (
-          item.type == "library" &&
-          wepy.getStorageSync("library_verify") == 0
-        ) {
-          wepy.showModal({
-            title: "账号信息错误",
-            content: "图书馆账号未绑定或密码错误！是否前往绑定？",
-            success: function(res) {
-              if (res.confirm) {
-                wepy.navigateTo({
-                  url: "bind?active=1"
                 });
               }
             }

@@ -1,96 +1,95 @@
 <style lang="less">
-  .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-  }
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
 </style>
 
 <script>
-  import wepy from "wepy";
-  import "wepy-async-function";
-  import http from "./util/http";
-  export default class extends wepy.app {
-    config = {
-      pages: [
-        "pages/index",
-        "pages/library/loan",
-        "pages/library/search",
-        "pages/newsLists",
-        "pages/tagLists",
-        "pages/classroom",
-        "pages/feedback",
-        "pages/schedule",
-        "pages/grade",
-        "pages/details",
-        "pages/bind"
-      ],
-      window: {
-        navigationBarBackgroundColor: "#f06292",
-        navigationBarTextStyle: "#fff",
-        navigationBarTitleText: "We川大",
-        backgroundColor: "#dddddd"
-      },
-      tabBar: {
-        selectedColor: "#f06292",
-        color: "#707070",
-        list: [{
-            pagePath: "pages/index",
-            text: "首页",
-            iconPath: "icon/home.png",
-            selectedIconPath: "icon/home@select.png",
-          },
-          {
-            pagePath: "pages/newsLists",
-            text: "资讯",
-            iconPath: "icon/news.png",
-            selectedIconPath: "icon/news@select.png",
-          }
-        ]
-      }
-    };
-    globalData = {
-      userInfo: null,
-      token: "",
-      jwc_verify: 0
-    };
-    constructor() {
-      super();
-      this.use("requestfix");
+import wepy from "wepy";
+import "wepy-async-function";
+import http from "./util/http";
+export default class extends wepy.app {
+  config = {
+    pages: [
+      "pages/index",
+      "pages/library/loan",
+      "pages/library/search",
+      "pages/newsLists",
+      "pages/tagLists",
+      "pages/classroom",
+      "pages/feedback",
+      "pages/schedule",
+      "pages/grade",
+      "pages/details",
+      "pages/bind"
+    ],
+    window: {
+      navigationBarBackgroundColor: "#f06292",
+      navigationBarTextStyle: "#fff",
+      navigationBarTitleText: "We川大",
+      backgroundColor: "#dddddd"
+    },
+    tabBar: {
+      selectedColor: "#f06292",
+      color: "#707070",
+      list: [
+        {
+          pagePath: "pages/index",
+          text: "首页",
+          iconPath: "icon/home.png",
+          selectedIconPath: "icon/home@select.png"
+        },
+        {
+          pagePath: "pages/newsLists",
+          text: "资讯",
+          iconPath: "icon/news.png",
+          selectedIconPath: "icon/news@select.png"
+        }
+      ]
     }
-    onLaunch() {
-      this.getToken();
-    }
-    login() {
-      wepy.login({
-        success: function(res) {
-          if (res.code) {
-            http.post({
+  };
+  setGlobalData(key, value) {
+    this.globalData[key] = value;
+    wepy.setStorage({
+      key: key,
+      data: value
+    });
+  }
+  globalData = {
+    userInfo: null,
+    token: "",
+    verify: 0
+  };
+  constructor() {
+    super();
+    this.use("requestfix");
+  }
+  onLaunch() {
+    this.getToken();
+  }
+  login() {
+    const self = this;
+    wepy.login({
+      success: function(res) {
+        if (res.code) {
+          http
+            .post({
               url: "/login",
               params: {
                 code: res.code
               }
-            }).then(res => {
+            })
+            .then(res => {
               if (res.status == 0) {
                 let data = res.data;
-                wepy.setStorage({
-                  key: "token",
-                  data: data.token
-                });
-                wepy.setStorage({
-                  key: "jwc_verify",
-                  data: data.jwc_verify
-                });
-                wepy.setStorage({
-                  key: "library_verify",
-                  data: data.library_verify
-                });
-                this.globalData.token = data.token;
-                this.globalData.jwc_verify = data.jwc_verify;
-                if (data.jwc_verify == 0) {
+                self.setGlobalData("token", data.token);
+                self.setGlobalData("verify", data.verify);
+                if (data.verify == 0) {
                   wepy.navigateTo({
                     url: "bind"
                   });
@@ -103,34 +102,34 @@
                 });
               }
             });
-          } else {
-            wepy.showToast({
-              title: "获取用户登录态失败！",
-              icon: "error",
-              duration: 2000
-            });
-            console.log("获取用户登录态失败！" + res.errMsg);
-          }
+        } else {
+          wepy.showToast({
+            title: "获取用户登录态失败！",
+            icon: "error",
+            duration: 2000
+          });
+          console.log("获取用户登录态失败！" + res.errMsg);
+        }
+      }
+    });
+  }
+  getToken() {
+    let token = wepy.getStorageSync("token");
+    let verify = wepy.getStorageSync("verify");
+    let _this = this;
+    if (!token) {
+      this.login();
+    } else {
+      wepy.checkSession({
+        success: function() {
+          _this.globalData.token = token;
+          _this.globalData.verify = verify;
+        },
+        fail: function() {
+          _this.login();
         }
       });
     }
-    getToken() {
-      let token = wepy.getStorageSync("token");
-      let jwc_verify = wepy.getStorageSync("jwc_verify");
-      let _this = this;
-      if (!token) {
-        this.login();
-      } else {
-        wepy.checkSession({
-          success: function() {
-            _this.globalData.token = token;
-            _this.globalData.jwc_verify = jwc_verify;
-          },
-          fail: function() {
-            _this.login();
-          }
-        });
-      }
-    }
   }
+}
 </script>
