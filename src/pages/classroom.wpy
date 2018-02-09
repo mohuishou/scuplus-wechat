@@ -4,11 +4,13 @@
     background: #fffafa;
     color: #555;
   }
+
   .picker {
     padding: 0.5rem;
     display: flex;
     justify-content: space-between;
   }
+
   .table {
     padding: 0.5rem;
     .row {
@@ -45,7 +47,8 @@
 
 <template>
   <view class="classroom">
-    <picker mode="multiSelector" range-key="name" @change="changeBuilding" @columnchange="columnchange" value="{{index}}" range="{{buildings}}">
+    <picker mode="multiSelector" range-key="name" @change="changeBuilding" @columnchange="columnchange"
+            value="{{index}}" range="{{buildings}}">
       <view class="picker">
         <view>当前选择：{{building.addr}}-{{building.name}}</view>
         <view>
@@ -71,122 +74,124 @@
             </view>
           </block>
         </view>
+      </block>
     </view>
-    </block>
-  </view>
   </view>
 </template>
 
 <script>
-  import wepy from "wepy";
-  import http from "../util/http";
-  export default class Classroom extends wepy.page {
+  import wepy from 'wepy'
+  import {POST} from '../util/http'
+  import ModalMixin from '../mixins/modal'
+
+export default class Classroom extends wepy.page {
     config = {
-      navigationBarTitleText: "我要自习"
+      navigationBarTitleText: '我要自习'
     };
     data = {
       JA: [{
-          name: "一教A座",
-          value: "yjA"
-        },
-        {
-          name: "一教B座",
-          value: "yjB"
-        },
-        {
-          name: "一教C座",
-          value: "yjC"
-        },
-        {
-          name: "一教D座",
-          value: "yjD"
-        },
-        {
-          name: "综合楼B座",
-          value: "zongB"
-        },
-        {
-          name: "综合楼C座",
-          value: "zongC"
-        },
-        {
-          name: "文科楼一区",
-          value: "wen1"
-        },
-        {
-          name: "文科楼二区",
-          value: "wen2"
-        }, {
-          name: "文科楼三区",
-          value: "wen3"
-        },
+        name: '一教A座',
+        value: 'yjA'
+      },
+      {
+        name: '一教B座',
+        value: 'yjB'
+      },
+      {
+        name: '一教C座',
+        value: 'yjC'
+      },
+      {
+        name: '一教D座',
+        value: 'yjD'
+      },
+      {
+        name: '综合楼B座',
+        value: 'zongB'
+      },
+      {
+        name: '综合楼C座',
+        value: 'zongC'
+      },
+      {
+        name: '文科楼一区',
+        value: 'wen1'
+      },
+      {
+        name: '文科楼二区',
+        value: 'wen2'
+      }, {
+        name: '文科楼三区',
+        value: 'wen3'
+      }
       ],
       WJ: [{
-          name: "东二教",
-          value: "WJdong2"
-        },
-        {
-          name: "东三教",
-          value: "WJdong3"
-        },
-        {
-          name: "基教楼A座",
-          value: "WJjijiaoA"
-        },
-        {
-          name: "基教楼C座",
-          value: "WJjijiaoC"
-        },
+        name: '东二教',
+        value: 'WJdong2'
+      },
+      {
+        name: '东三教',
+        value: 'WJdong3'
+      },
+      {
+        name: '基教楼A座',
+        value: 'WJjijiaoA'
+      },
+      {
+        name: '基教楼C座',
+        value: 'WJjijiaoC'
+      }
       ],
       HX: [{
-          name: "九教",
-          value: "HX9"
-        },
-        {
-          name: "十教",
-          value: "HX10"
-        },
+        name: '九教',
+        value: 'HX9'
+      },
+      {
+        name: '十教',
+        value: 'HX10'
+      }
       ],
       building: {
-        addr: "望江",
-        name: "东二教",
-        value: "WJdong2"
+        addr: '望江',
+        name: '东二教',
+        value: 'WJdong2'
       },
       buildings: [
         [{
-            name: "望江",
-            value: "WJ"
-          },
-          {
-            name: "江安",
-            value: "JA"
-          },
-          {
-            name: "华西",
-            value: "HX"
-          },
+          name: '望江',
+          value: 'WJ'
+        },
+        {
+          name: '江安',
+          value: 'JA'
+        },
+        {
+          name: '华西',
+          value: 'HX'
+        }
         ],
         [{
-            name: "东二教",
-            value: "WJdong2"
-          },
-          {
-            name: "东三教",
-            value: "WJdong3"
-          },
-          {
-            name: "基教楼A座",
-            value: "WJjijiaoA"
-          },
-          {
-            name: "基教楼C座",
-            value: "WJjijiaoC"
-          },
+          name: '东二教',
+          value: 'WJdong2'
+        },
+        {
+          name: '东三教',
+          value: 'WJdong3'
+        },
+        {
+          name: '基教楼A座',
+          value: 'WJjijiaoA'
+        },
+        {
+          name: '基教楼C座',
+          value: 'WJjijiaoC'
+        }
         ]
       ],
       index: [0, 0],
       rooms: []
     }
+    mixins = [ModalMixin]
     methods = {
       changeBuilding(e) {
         this.index = e.detail.value
@@ -195,7 +200,7 @@
         this.getClassroom(this.building.value)
       },
       columnchange(e) {
-        if (e.detail.column != 0) {
+        if (e.detail.column !== 0) {
           return
         }
         let building = this.buildings[0][e.detail.value].value
@@ -204,48 +209,36 @@
       show(item, i) {
         wepy.showModal({
           title: this.building.name + item.roomName,
-          content: `座位数: ${item.roomZws}, 第${i+1}大节: ${item.classUse[i].kcm || "空闲" }`,
+          content: `座位数: ${item.roomZws}, 第${i + 1}大节: ${item.classUse[i].kcm || '空闲'}`,
           showCancel: false
         })
       }
     }
-    getClassroom(classroom) {
-      const self = this
-      http.post({
-        url: "/classroom",
-        params: {
-          classroom: classroom
-        }
-      }).then(
-        resp => {
-          if (resp.status == 0) {
-            self.rooms = JSON.parse(resp.data).roomdata
-            self.$apply()
-            wepy.setStorage({
-              key: "classroom",
-              data: self.building
-            })
-          } else {
-            wepy.showModal({
-              title: "自习教室获取错误",
-              content: resp.msg,
-              showCancel: false
-            })
-          }
-        }
-      )
+
+    async getClassroom(classroom) {
+      const resp = await POST('/classroom', {classroom: classroom})
+      if (resp.status === 0) {
+        this.rooms = JSON.parse(resp.data).roomdata
+        this.$apply()
+        wepy.setStorage({
+          key: 'classroom',
+          data: this.building
+        })
+      } else {
+        this.Alert(resp.msg)
+      }
     }
+
     async onLoad() {
-      this.building = wepy.getStorageSync("classroom") || this.building
+      this.building = wepy.getStorageSync('classroom') || this.building
       // 获取教室
-      this.getClassroom(this.building.value || "WJdong2")
+      this.getClassroom(this.building.value || 'WJdong2')
     }
+
     onShareAppMessage(options) {
       return {
-        title: "一起来自习" 
+        title: '一起来自习'
       }
     }
   }
 </script>
-
-

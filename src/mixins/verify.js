@@ -1,15 +1,13 @@
-import wepy from 'wepy';
+import wepy from 'wepy'
 
 export default class VerifyMixin extends wepy.mixin {
-  verify(){
-    const data = this.$root.$parent.globalData
-    console.log(data.verify);
-    
-    if (data.verify == 0) {
+  verify() {
+    const v = wx.getStorageSync('verify')
+    if (v === 0) {
       wepy.navigateTo({
-        url: "/pages/bind"
-      });
+        url: '/pages/bind'
+      })
     }
-    return data.verify;
+    return v
   }
 }

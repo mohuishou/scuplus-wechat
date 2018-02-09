@@ -1,8 +1,10 @@
 <style lang="less">
   @import url("../../less/config");
+
   page {
     background: #eee;
   }
+
   .search-input {
     position: fixed;
     z-index: 9999;
@@ -19,6 +21,7 @@
       width: calc(~"100% - 20px");
     }
   }
+
   .results {
     width: 100%;
     margin-top: 2rem;
@@ -57,8 +60,8 @@
 <template>
   <view>
     <view class="search-input">
-      <input @blur="change" placeholder="请输入图书名称" confirm-type="search" />
-      <icon type="search" size="18" />
+      <input @blur="change" placeholder="请输入图书名称" confirm-type="search"/>
+      <icon type="search" size="18"/>
     </view>
     <scroll-view style="height:{{height}}px;" class="results" @scrolltolower="next" enable-back-to-top scroll-y>
       <block wx:for="{{books}}" wx:key="index">
@@ -80,92 +83,86 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import http from "../../util/http";
+  import wepy from 'wepy'
+  import {POST} from '../../util/http'
+  import ModalMixin from '../../mixins/modal'
+
   export default class Search extends wepy.page {
+    mixins = [ModalMixin]
     config = {
-      navigationBarTitleText: "图书搜索",
+      navigationBarTitleText: '图书搜索'
     };
     data = {
       books: [],
-      next_page: "",
+      next_page: '',
       height: 280,
-      loading: false,
+      loading: false
     };
     methods = {
       change(e) {
         this.getBooks(e.detail.value, false)
       },
       next(e) {
-        this.getBooks("", true)
+        this.getBooks('', true)
       },
       show(item) {
         let content = `索书号: ${item.number};\r\n`
         item.book_addresses.forEach(e => {
           content += `${e.address}: 馆藏 ${e.all_count},可借 ${e.loan_count};\r\n`
-        });
+        })
         wepy.showModal({
           title: item.title,
           content: content,
           showCancel: false
-        });
+        })
       }
     };
-    getBooks(keyword, isNext) {
-      let next_page = ""
-      if (this.loading) return;
+
+    async getBooks(keyword, isNext) {
+      let nextPage = ''
+      if (this.loading) return
       if (isNext) {
-        next_page = this.next_page;
-        if (next_page == "") {
+        nextPage = this.next_page
+        if (nextPage === '') {
           wepy.showModal({
-            title: "提示",
-            content: "已经到底了",
+            title: '提示',
+            content: '已经到底了',
             showCancel: false
-          });
+          })
           return
         }
       }
       this.loading = true
-      let self = this;
-      http.post({
-        url: "/library/search",
-        params: {
-          keyword: keyword,
-          key_type: "WRD",
-          next_page: next_page
+      const resp = await POST('/library/search', {
+        keyword: keyword,
+        key_type: 'WRD',
+        next_page: nextPage
+      })
+      this.loading = false
+      if (resp.status === 0) {
+        if (resp.data.books.length === 0) {
+          this.Alert('没有搜索到图书')
+          return
         }
-      }).then(resp => {
-        self.loading = false
-        if (resp.status == 0) {
-          if (resp.data.books.length == 0) {
-            wepy.showModal({
-              title: "没有搜索到图书",
-              content: "没有搜索到图书",
-              showCancel: false
-            });
-            return
-          }
-          if (next_page == "") {
-            self.books = resp.data.books;
-          } else {
-            self.books = self.books.concat(resp.data.books)
-          }
-          self.next_page = resp.data.next_url;
-          self.$apply();
+        if (nextPage === '') {
+          this.books = resp.data.books
         } else {
-          wepy.showModal({
-            title: "获取失败",
-            content: res.msg
-          });
+          this.books = this.books.concat(resp.data.books)
         }
-      });
+        this.next_page = resp.data.next_url
+        this.$apply()
+      } else {
+        this.Alert(resp.msg)
+      }
     }
+
     onLoad() {
       this.height = wx.getSystemInfoSync().windowHeight - 36
     }
+
     onShareAppMessage(options) {
       return {
-        title: "搜索书籍"
+        title: '搜索书籍'
       }
     }
   }

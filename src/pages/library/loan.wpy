@@ -4,6 +4,7 @@
     width: 100%;
     height: 100%;
   }
+
   @import url("../../less/config");
   .book {
     color: #333;
@@ -14,7 +15,7 @@
     display: flex;
     align-content: space-between;
     flex-wrap: wrap;
-    >view {
+    > view {
       width: 100%;
     }
     .info {
@@ -29,6 +30,7 @@
       color: @base-color;
     }
   }
+
   .none {
     display: flex;
     justify-content: center;
@@ -61,92 +63,61 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import http from "../../util/http";
-  import Verify from "../../mixins/verify"
+  import wepy from 'wepy'
+  import {PostB, GetB} from '../../util/http'
+  import Verify from '../../mixins/verify'
+
   export default class Loan extends wepy.page {
     config = {
-      navigationBarTitleText: "我的借阅",
+      navigationBarTitleText: '我的借阅',
       enablePullDownRefresh: true
     };
     mixins = [Verify]
     data = {
       loan_books: [],
-      loan_type: "now" // history
+      loan_type: 'now' // history
     };
     methods = {
-      loan(book_id) {
-        let self = this;
-        if (this.verify()) {
-          http.post({
-            url: "/library/loan",
-            params: {
-              book_id: book_id
-            }
-          }).then(resp => {
-            if (resp.status == 0) {
-              self.getBooks()
-              wepy.showModal({
-                title: "续借成功",
-                content: resp.msg,
-                showCancel: false
-              });
-            } else {
-              if (resp.data === 0) {
-                wepy.setStorageSync("library_verify", 0)
-                self.verifyBind()
-              } else {
-                wepy.showModal({
-                  title: "提示",
-                  content: resp.msg,
-                  showCancel: false
-                });
-              }
-            }
-          });
+      async loan(bookID) {
+        const resp = await PostB('/library/loan', {book_id: bookID})
+        if (resp.status === 0) {
+          this.getBooks()
+          this.Alert('续借成功')
+        } else {
+          this.Alert(resp.msg)
         }
       }
-    };
-    getBooks() {
-      let self = this;
-      if (this.verify()) {
-        const t = this.loan_type == "now" ? 0 : 1;
-        http.get("/library/books?is_history=" + t).then(resp => {
-          if (resp.status == 0) {
-            self.loan_books = resp.data;
-            self.$apply();
-            wepy.setStorage({
-              key: "loan_" + this.loan_type,
-              data: resp.data
-            });
-          } else {
-            if (resp.data === 0) {
-              wepy.setStorageSync("library_verify", 0)
-              self.verifyBind()
-            } else {
-              wepy.showModal({
-                title: "获取数据失败",
-                content: resp.msg,
-                showCancel: false
-              });
-            }
-          }
-        });
+    }
+
+    async getBooks() {
+      const t = this.loan_type === 'now' ? 0 : 1
+      const resp = await GetB('/library/books?is_history=' + t)
+      if (resp.status === 0) {
+        this.loan_books = resp.data
+        this.$apply()
+        wepy.setStorage({
+          key: 'loan_' + this.loan_type,
+          data: resp.data
+        })
+      } else {
+        this.Alert(resp.msg)
       }
     }
+
     onPullDownRefresh() {
       this.getBooks()
     }
+
     onLoad(options) {
-      if (options.type && options.type == "history") {
-        this.loan_type = options.type;
+      if (options.type && options.type === 'history') {
+        this.loan_type = options.type
         wepy.setNavigationBarTitle({
-          title: "历史借阅"
+          title: '历史借阅'
         })
       }
-      this.loan_books = wepy.getStorageSync("loan_" + this.loan_type);
-      if (this.loan_books.length == 0) {
-        this.getBooks();
+      this.loan_books = wepy.getStorageSync('loan_' + this.loan_type)
+      if (this.loan_books.length === 0) {
+        this.getBooks()
       }
     }
   }

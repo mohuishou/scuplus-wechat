@@ -217,14 +217,14 @@
   </view>
 </template>
 <script>
-  import wepy from "wepy";
-  import http from "../util/http";
-  import index from "../util/index/index";
-  export default class Index extends wepy.page {
+  import wepy from 'wepy'
+import {GET} from '../util/http'
+import index from '../util/index/index'
+export default class Index extends wepy.page {
     config = {};
     data = {
       notices: [{
-        cover: "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
+        cover: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
         id: 1
       }],
       funcs: index.funcs,
@@ -234,74 +234,74 @@
     };
     computed = {
       verify() {
-        return wepy.getStorageSync("verify")
-      },
+        return wepy.getStorageSync('verify')
+      }
     }
     navigate(item) {
-      let url = item.url;
-      if (item.type == "login" && this.verify == 0) {
+      let url = item.url
+      if (item.type == 'login' && this.verify == 0) {
         wepy.showModal({
-          title: "账号信息错误",
-          content: "教务处账号未绑定或密码错误！是否前往绑定？",
+          title: '账号信息错误',
+          content: '教务处账号未绑定或密码错误！是否前往绑定？',
           success: function(res) {
             if (res.confirm) {
               wepy.navigateTo({
-                url: "bind"
-              });
+                url: 'bind'
+              })
             }
           }
-        });
-        return;
+        })
+        return
       }
       wepy.navigateTo({
         url: url
-      });
+      })
     }
     methods = {
       noticeTo(id) {
         wepy.navigateTo({
           url: `details?id=${id}&&from=notice`
-        });
+        })
       },
       to(item) {
-        navigate(item)
+        this.navigate(item)
       }
     };
     getTodaySchedules() {
-      let schedules = wepy.getStorageSync("schedules");
+      let schedules = wepy.getStorageSync('schedules')
       if (!schedules) {
-        return;
+        return
       }
-      let today = new Date().getDay() || 7;
+      let today = new Date().getDay() || 7
       schedules[today].forEach(e => {
         if (e.course_name) {
-          this.todaySchedule.push(e);
+          this.todaySchedule.push(e)
         }
-      });
+      })
     }
     getNotice() {
-      let self = this;
-      http.get("/notices").then(resp => {
-        if (resp.status == 0) {
-          self.notices = resp.data;
-          self.$apply();
+      let self = this
+      GET('/notices').then(resp => {
+        if (resp.status === 0) {
+          self.notices = resp.data
+          self.$apply()
         } else {
           wepy.showModal({
-            title: "数据获取失败！",
+            title: '数据获取失败！',
             content: resp.msg
-          });
+          })
         }
-      });
+      })
     }
     onLoad() {
       // 设置swipe高度 2:1
-      this.swiper_height = wx.getSystemInfoSync().windowWidth / 2;
-      this.getNotice();
-      this.getTodaySchedules();
-      this.loan_books = wepy.getStorageSync("loan_now");
+      this.swiper_height = wepy.getSystemInfoSync().windowWidth / 2
+      this.getNotice()
+      this.getTodaySchedules()
+      this.loan_books = wepy.getStorageSync('loan_now')
     }
     onShareAppMessage(options) {
-      return {};
+      return {}
     }
   }
 </script>

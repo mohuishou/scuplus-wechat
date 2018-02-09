@@ -10,61 +10,66 @@
 </style>
 
 <script>
-  import wepy from "wepy";
-  import "wepy-async-function";
-  import http from "./util/http";
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  import POST from './util/http'
+
   export default class extends wepy.app {
     config = {
       pages: [
-        "pages/index",
-        "pages/library/loan",
-        "pages/library/search",
-        "pages/newsLists",
-        "pages/tagLists",
-        "pages/classroom",
-        "pages/feedback",
-        "pages/schedule",
-        "pages/grade",
-        "pages/details",
-        "pages/bind"
+        'pages/index',
+        'pages/library/loan',
+        'pages/library/search',
+        'pages/newsLists',
+        'pages/tagLists',
+        'pages/classroom',
+        'pages/feedback',
+        'pages/schedule',
+        'pages/grade',
+        'pages/details',
+        'pages/bind'
       ],
       window: {
-        navigationBarBackgroundColor: "#f06292",
-        navigationBarTextStyle: "#fff",
-        navigationBarTitleText: "We川大",
-        backgroundColor: "#dddddd"
+        navigationBarBackgroundColor: '#f06292',
+        navigationBarTextStyle: '#fff',
+        navigationBarTitleText: 'We川大',
+        backgroundColor: '#dddddd'
       },
       tabBar: {
-        selectedColor: "#f06292",
-        color: "#707070",
+        selectedColor: '#f06292',
+        color: '#707070',
         list: [{
-            pagePath: "pages/index",
-            text: "首页",
-            iconPath: "icon/home.png",
-            selectedIconPath: "icon/home@select.png"
-          },
-          {
-            pagePath: "pages/newsLists",
-            text: "资讯",
-            iconPath: "icon/news.png",
-            selectedIconPath: "icon/news@select.png"
-          }
+          pagePath: 'pages/index',
+          text: '首页',
+          iconPath: 'icon/home.png',
+          selectedIconPath: 'icon/home@select.png'
+        },
+        {
+          pagePath: 'pages/newsLists',
+          text: '资讯',
+          iconPath: 'icon/news.png',
+          selectedIconPath: 'icon/news@select.png'
+        }
         ]
       }
     };
+
     setGlobalData(key, value) {
       wepy.setStorage({
         key: key,
         data: value
-      });
+      })
     }
+
     constructor() {
-      super();
-      this.use("requestfix");
+      super()
+      this.use('requestfix')
     }
+
     onLaunch() {
-      this.getToken();
+      this.getToken()
     }
+
     // 微信登录
     wxLogin() {
       return new Promise((resolve, reject) => {
@@ -80,39 +85,38 @@
         })
       })
     }
+
     async login() {
       try {
         // 微信登录
         const res = await this.wxLogin()
         // 登录服务器
-        const resp = await http.post({
-          url: "/login",
-          params: {
-            code: res.code
-          }
+        const resp = await POST('/login', {
+          code: res.code
         })
-        if (resp.status == 0) {
-          const data = resp.data;
+        if (resp.status === 0) {
+          const data = resp.data
           wepy.setStorage({
-            key: "token",
+            key: 'token',
             data: data.token
           })
           wepy.setStorage({
-            key: "verify",
+            key: 'verify',
             data: data.verify
           })
-          if (data.verify == 0) {
+          if (data.verify === 0) {
             wepy.navigateTo({
-              url: "bind"
+              url: 'bind'
             })
           }
         } else {
-          throw "用户登录失败！";
+          throw '用户登录失败！'
         }
       } catch (err) {
-        console.log("err", err);
+        console.log('err', err)
       }
     }
+
     checkSession() {
       return new Promise((resolve, reject) => {
         wepy.checkSession({
@@ -121,16 +125,16 @@
         })
       })
     }
+
     async getToken() {
-      let token = wepy.getStorageSync("token");
-      let verify = wepy.getStorageSync("verify");
+      let token = wepy.getStorageSync('token')
       if (!token) {
-        this.login();
+        this.login()
       } else {
         try {
           await this.checkSession()
         } catch (error) {
-          this.login();
+          this.login()
         }
       }
     }

@@ -8,7 +8,7 @@
       </view>
     </view>
     <view class="content">
-      <htmlParser :parserName="name" :parserContent.sync="content" />
+      <htmlParser :parserName="name" :parserContent.sync="content"/>
     </view>
     <view wx:if="{{url}}" class="footer">
       <view>
@@ -20,65 +20,64 @@
 <script>
   import wepy from 'wepy'
   import htmlParser from '../components/htmlParser'
-  import http from "../util/http";
+  import {GET} from '../util/http'
+
   export default class Details extends wepy.page {
     config = {}
     components = {
-      htmlParser: htmlParser,
+      htmlParser: htmlParser
     }
     data = {
-      title: "",
-      content: "",
-      name: "123",
-      url: ""
+      title: '',
+      content: '',
+      name: '123',
+      url: ''
     }
-    getDetail(id) {
-      let self = this
-      http.get("/detail/" + id).then(
-        resp => {
-          if (resp.status == 0) {
-            let title = resp.data.title
-            if (resp.data.category == "scuinfo") {
-              title = resp.data.author
-              resp.data.content = resp.data.content.replace(/\n/g, "<br />")
-            }
-            self.content = resp.data.content
-            wepy.setNavigationBarTitle({
-              title: title
-            })
-            self.title = title
-            self.url = resp.data.url
-            self.$apply()
-            self.$invoke('htmlParser', 'htmlParserNotice')
-          }
+
+    async getDetail(id) {
+      const resp = await GET(`/detail/${id}`)
+      if (resp.status === 0) {
+        let title = resp.data.title
+        if (resp.data.category === 'scuinfo') {
+          title = resp.data.author
+          resp.data.content = resp.data.content.replace(/\n/g, '<br />')
         }
-      )
-    }
-    getNotice(id) {
-      let self = this
-      http.get("/notice/" + id).then(
-        resp => {
-          if (resp.status == 0) {
-            self.content = resp.data.content
-            wepy.setNavigationBarTitle({
-              title: resp.data.title
-            })
-            self.$apply()
-            self.$invoke('htmlParser', 'htmlParserNotice')
-          }
-        }
-      )
-    }
-    async onLoad(option) {
-      switch (option.from) {
-        case "notice":
-          this.getNotice(option.id)
-          break;
-        default:
-          this.getDetail(option.id)
-          break;
+        this.content = resp.data.content
+        wepy.setNavigationBarTitle({
+          title: title
+        })
+        this.title = title
+        this.url = resp.data.url
+        this.$apply()
+        this.$invoke('htmlParser', 'htmlParserNotice')
       }
     }
+
+    async getNotice(id) {
+      const resp = await GET(`/notice/${id}`)
+      if (resp.status === 0) {
+        this.content = resp.data.content
+        wepy.setNavigationBarTitle({
+          title: resp.data.title
+        })
+        this.$apply()
+        this.$invoke('htmlParser', 'htmlParserNotice')
+      }
+    }
+
+    async onLoad(option) {
+      switch (option.from) {
+        case 'notice':
+          await
+            this.getNotice(option.id)
+          break
+        default:
+          await
+            this.getDetail(option.id)
+          break
+      }
+    }
+
     onShareAppMessage(options) {
       return {
         title: this.title
@@ -90,6 +89,7 @@
   page {
     background: #eee;
   }
+
   .details {
     margin: 0.2rem;
     padding: 0.5rem;
@@ -97,12 +97,14 @@
     border: 1px solid #ddd;
     border-radius: 0.1rem;
   }
+
   .content {
     view {
       line-height: 180% !important;
       font-size: 1rem !important;
     }
   }
+
   .footer {
     margin-top: 2rem;
     font-size: 0.5rem;

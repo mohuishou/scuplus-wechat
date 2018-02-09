@@ -21,7 +21,7 @@ export default class ModalMixin extends wepy.mixin {
       wepy.showModal({
         title: title,
         content: content,
-        showCancel: false,
+        showCancel: true,
         success: function (res) {
           if (res.confirm) {
             resolve()

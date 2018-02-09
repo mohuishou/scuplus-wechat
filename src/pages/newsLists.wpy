@@ -16,7 +16,6 @@
 <script>
   import list from "../components/list"
   import wepy from "wepy";
-  import http from "../util/http";
   export default class NewsLists extends wepy.page {
     config = {
       navigationBarTitleText: "最新资讯",

@@ -61,17 +61,18 @@
   </view>
 </template>
 <script>
-  import wepy from "wepy";
-  import http from "../util/http";
-  import gradeUtil from "../util/grade";
-  import RequestMixin from "../mixins/request"
-  import Verify from "../mixins/verify"
+  import wepy from 'wepy'
+  import {GetB, PostB} from '../util/http'
+  import gradeUtil from '../util/grade'
+  import ModalMixin from '../mixins/modal'
+  import Verify from '../mixins/verify'
+
   export default class Grade extends wepy.page {
     config = {
-      navigationBarTitleText: "我的成绩",
+      navigationBarTitleText: '我的成绩',
       enablePullDownRefresh: true
     };
-    mixins = [Verify, RequestMixin];
+    mixins = [Verify, ModalMixin];
     data = {
       grades: null,
       avg: null
@@ -88,7 +89,7 @@
           credit: 0,
           gpa: 0
         }
-      };
+      }
       let avg = {
         all: {
           grade: 0,
@@ -106,11 +107,11 @@
         sum.required.grade += g.sum.required.grade
         sum.required.credit += g.sum.required.credit
         sum.required.gpa += g.sum.required.gpa
-      });
-      avg.all.gpa = (sum.all.gpa / sum.all.credit).toFixed(3);
-      avg.all.grade = (sum.all.grade / sum.all.credit).toFixed(3);
-      avg.required.gpa = (sum.required.gpa / sum.required.credit).toFixed(3);
-      avg.required.grade = (sum.required.grade / sum.required.credit).toFixed(3);
+      })
+      avg.all.gpa = (sum.all.gpa / sum.all.credit).toFixed(3)
+      avg.all.grade = (sum.all.grade / sum.all.credit).toFixed(3)
+      avg.required.gpa = (sum.required.gpa / sum.required.credit).toFixed(3)
+      avg.required.grade = (sum.required.grade / sum.required.credit).toFixed(3)
       this.avg = avg
       this.$apply()
     }
@@ -119,64 +120,51 @@
         this.updateGrade()
       }
     }
-    updateGrade() {
-      let self = this
-      http.post({
-        url: "/user/grade"
-      }).then(
-        resp => {
-          if (resp.status == 0) {
-            let grades = []
-            resp.data.forEach(e => {
-              if (!grades[e.term]) {
-                grades[e.term] = []
-              }
-              grades[e.term].push(e)
-            });
-            grades = gradeUtil.cal(grades)
-            grades = grades.reverse()
-            self.grades = grades
-            self.calAllGrades()
-            self.$apply()
-          } else {
-            wepy.showModal({
-              title: "数据获取失败！",
-              content: resp.msg
-            });
+    async updateGrade() {
+      const resp = await PostB('/user/grade')
+      if (resp.status === 0) {
+        let grades = []
+        resp.data.forEach(e => {
+          if (!grades[e.term]) {
+            grades[e.term] = []
           }
-          wepy.stopPullDownRefresh()
-        }
-      )
+          grades[e.term].push(e)
+        })
+        grades = gradeUtil.cal(grades)
+        grades = grades.reverse()
+        this.grades = grades
+        this.calAllGrades()
+        this.$apply()
+      } else {
+        this.Alert(resp.msg)
+      }
+      wepy.stopPullDownRefresh()
     }
+
     onPullDownRefresh() {
       this.updateGrade()
     }
-    getGrades() {
-      let self = this
-      http.get("/user/grade").then(
-        resp => {
-          if (resp.status == 0) {
-            let grades = []
-            resp.data.forEach(e => {
-              if (!grades[e.term]) {
-                grades[e.term] = []
-              }
-              grades[e.term].push(e)
-            });
-            grades = gradeUtil.cal(grades)
-            grades = grades.reverse()
-            self.grades = grades
-            self.$apply()
-            this.calAllGrades()
-          } else {
-            wepy.showModal({
-              title: "数据获取失败！",
-              content: resp.msg
-            });
+
+    async getGrades() {
+      const resp = await GetB('/user/grade')
+      if (resp.status === 0) {
+        let grades = []
+        resp.data.forEach(e => {
+          if (!grades[e.term]) {
+            grades[e.term] = []
           }
-        }
-      )
+          grades[e.term].push(e)
+        })
+        grades = gradeUtil.cal(grades)
+        grades = grades.reverse()
+        this.grades = grades
+        this.calAllGrades()
+        this.$apply()
+      } else {
+        this.Alert(resp.msg)
+      }
     }
+
     onLoad() {
       // 获取本地缓存的成绩
       // let grades = wepy.wx.getStorageSync("grades")
@@ -192,12 +180,15 @@
 <style lang="less">
   @import "./src/icon/iconfont.less";
   @import "./src/less/config.less";
+
   page {
     background: #eee;
   }
+
   .grade {
     margin: 0.5rem;
   }
+
   .header {
     .none {
       text-align: center;
@@ -211,6 +202,7 @@
       }
     }
   }
+
   .grade-header {
     margin-top: 0.5rem;
     background: @base-color;
@@ -227,6 +219,7 @@
       padding-top: 0.5rem;
     }
   }
+
   .grade-lists {
     background: #fff;
     border-radius: 0.2rem;

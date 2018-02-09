@@ -52,8 +52,12 @@
 
 <script>
   import wepy from "wepy";
-  import http from "../util/http";
+  import {
+    GET
+  } from "../util/http";
+  import ModalMixin from "../mixins/modal"
   export default class List extends wepy.page {
+    mixins = [ModalMixin]
     props = {
       params: {
         type: Object,
@@ -98,34 +102,26 @@
         }, 100)
       }
     }
-    getDetails() {
-      let self = this
-      http.get({
-        url: "/details",
-        params: Object.assign({
+    async getDetails() {
+      try {
+        const resp = await GET("/details", Object.assign({
           page: this.page,
-          page_size: self.page_size,
-        }, self.params)
-      }).then(
-        resp => {
-          if (resp.status == 0) {
-            for (let i = 0; i < resp.data.data.length; i++) {
-              resp.data.data[i].created_at = self.timeParser(resp.data.data[i].created_at)
-            }
-            if (self.page != 1) {
-              self.details = self.details.concat(resp.data.data)
-            } else {
-              self.details = resp.data.data
-            }
-            self.$apply();
-          } else {
-            wepy.showModal({
-              title: "数据获取失败！",
-              content: res.msg
-            });
+          page_size: this.page_size,
+        }, this.params))
+        if (resp.status == 0) {
+          for (let i = 0; i < resp.data.data.length; i++) {
+            resp.data.data[i].created_at = this.timeParser(resp.data.data[i].created_at)
           }
+          if (this.page != 1) {
+            this.details = this.details.concat(resp.data.data)
+          } else {
+            this.details = resp.data.data
+          }
+          this.$apply();
+        } else {
+          this.Alert(res.msg)
         }
-      )
+      } catch (err) {}
     }
     timeParser(t) {
       let date = new Date(Date.parse(t))
