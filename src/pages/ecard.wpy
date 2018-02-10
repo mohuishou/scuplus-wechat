@@ -102,7 +102,7 @@
   import {
     GET
   } from '../util/http'
-  export default class Index extends wepy.page {
+  export default class Ecard extends wepy.page {
     config = {
       navigationBarTitleText: '我的校园卡',
       navigationBarBackgroundColor: '#b92c18',

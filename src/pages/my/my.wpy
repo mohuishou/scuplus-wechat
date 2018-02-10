@@ -1,0 +1,15 @@
+<style lang="less">
+
+</style>
+
+<template>
+
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import {
+    GET
+  } from '../../util/http'
+  export default class My extends wepy.page {}
+</script>

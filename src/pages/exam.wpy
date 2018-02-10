@@ -1,0 +1,116 @@
+<style lang="less">
+  @black: #202020;
+  @white: #fff;
+  @dark-grey: #808080;
+  @light-grey: #d9d9d9;
+  @purple: #B97CFC;
+  @pink: #F93B69;
+  @green: #B0E8E2;
+  @orange: #EB8B6E;
+  .timeline {
+    .pink {
+      color: @pink;
+    }
+    .green {
+      color: @green;
+    }
+    .orange {
+      color: @orange;
+    }
+    .ul {
+      padding: 1rem 0 0 2rem;
+      margin: 0;
+      list-style: none;
+      position: relative;
+      &::before {
+        content: " ";
+        height: 100%;
+        width: 1px;
+        background-color: @light-grey;
+        position: absolute;
+        top: 0;
+        left: 2.5rem;
+        z-index: -1;
+      }
+    }
+    .li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .bullet {
+      width: 1rem;
+      height: 1rem;
+      background: @white;
+      margin-right: 1rem;
+    }
+    .time {
+      font-size: 0.75rem;
+      padding-top: 0.25rem;
+      width: 25%;
+    }
+    .desc {
+      width: 50%;
+      overflow: hidden;
+    }
+    .site {
+      width: 20%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-right: 1rem;
+    }
+    .h3 {
+      font-size: 0.9rem;
+      font-weight: 400;
+      margin: 0;
+    }
+    .h4 {
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: @dark-grey;
+    }
+    .people .img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+  }
+</style>
+
+<template>
+  <view>
+    <view class="timeline">
+      <view class="ul">
+        <view class="li">
+          <view class="bullet pink iconfont icon-shijian"></view>
+          <view class="time">
+            <view>2018-12-13</view>
+            <view class="h4">19:00 ~ 21:00</view>
+          </view>
+          <view class="desc">
+            <view class="h3">ssssssssssssssssssssssssssssss</view>
+            <view class="h4">江安综合楼C03</view>
+          </view>
+          <view class="site">
+            <view class="iconfont icon-site pink"></view>
+            <view>12</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from "wepy";
+  import {
+    GET
+  } from "../util/http";
+  export default class Exam extends wepy.page {
+    config = {};
+  }
+</script>
