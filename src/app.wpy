@@ -27,7 +27,8 @@
         'pages/schedule',
         'pages/grade',
         'pages/details',
-        'pages/bind'
+        'pages/bind',
+        'pages/ecard'
       ],
       window: {
         navigationBarBackgroundColor: '#f06292',

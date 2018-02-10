@@ -13,19 +13,19 @@
     font-size: @font-size;
   }
   @border: 1px solid #eee;
-  /* 函数变量 END */
   page {
     background: #eee;
   }
   .card {
     background: #fff;
+    margin: 0.5rem 0;
+    box-shadow: #ddd 0px 0px 0.3rem;
+    border-radius: 0.2rem;
     background-image: url("https://scuplus.oss-cn-shenzhen.aliyuncs.com/card-kb.png");
     background-position: center;
     background-size: cover;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-top: @border;
-    border-bottom: @border;
+    // border-top: @border;
+    // border-bottom: @border;
     padding: 0.3rem;
     padding-bottom: 0;
     &.card-library {
@@ -89,6 +89,9 @@
   }
   .func {
     background: #fff;
+    // margin: 0.5rem;    
+    box-shadow: #ddd 0px 0px 0.3rem;
+    // border-radius: 0.2rem;
     .func-row {
       display: flex;
       justify-content: space-around;
@@ -127,6 +130,8 @@
   }
   .swiper {
     width: 100%;
+    z-index: 1000;
+    top: 0;
     swiper-item {
       width: 100%;
     }
@@ -135,6 +140,7 @@
     }
   }
 </style>
+
 <template>
   <view>
     <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
@@ -216,11 +222,14 @@
     </view>
   </view>
 </template>
+
 <script>
   import wepy from 'wepy'
-import {GET} from '../util/http'
-import index from '../util/index/index'
-export default class Index extends wepy.page {
+  import {
+    GET
+  } from '../util/http'
+  import index from '../util/index/index'
+  export default class Index extends wepy.page {
     config = {};
     data = {
       notices: [{
