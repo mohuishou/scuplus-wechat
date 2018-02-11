@@ -13,7 +13,7 @@
 <script>
   import wepy from 'wepy'
   import 'wepy-async-function'
-  import POST from './util/http'
+  import {POST} from './util/http'
   export default class extends wepy.app {
     config = {
       pages: [
@@ -29,7 +29,8 @@
         'pages/details',
         'pages/bind',
         'pages/ecard',
-        'pages/exam'
+        'pages/exam',
+        'pages/my/my',
       ],
       window: {
         navigationBarBackgroundColor: '#f06292',
@@ -74,7 +75,7 @@
         wepy.login({
           success: res => {
             if (res.code) {
-              resolve(code)
+              resolve(res.code)
             } else {
               reject(res.errMsg)
             }
@@ -86,10 +87,10 @@
     async login() {
       try {
         // 微信登录
-        const res = await this.wxLogin()
+        const code = await this.wxLogin()
         // 登录服务器
         const resp = await POST('/login', {
-          code: res.code
+          code: code
         })
         if (resp.status === 0) {
           const data = resp.data

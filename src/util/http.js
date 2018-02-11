@@ -1,7 +1,6 @@
 import {
   domain
 } from '../config'
-import Modal from '../mixins/modal'
 
 function GetWithBind(url, params = {}, handler = {}) {
   return requestWithBind('GET', url, params, handler)

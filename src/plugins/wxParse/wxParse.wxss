@@ -120,7 +120,6 @@ view{
     margin: 10rpx 0;
 }
 .wxParse-li-text{
-    
     align-items: center;
     line-height: 20px;
 }
@@ -178,10 +177,13 @@ view{
     height:16px;
 }
 .wxParse-tr{
-	display: flex;
-	border-right:1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-around;
+    /* align-items: center; */
+    flex-wrap: wrap;
+	/* border-right:1px solid #e0e0e0;
 	border-bottom:1px solid #e0e0e0;
-	border-top:1px solid #e0e0e0;
+	border-top:1px solid #e0e0e0; */
 }
 .wxParse-th,
 .wxParse-td{
