@@ -82,7 +82,9 @@
 </style>
 
 <template>
-  <view>
+  <empty wx:if="data">
+  </empty>
+  <view wx:else>
     <view class="timeline">
       <view class="ul">
         <view class="li">
@@ -110,7 +112,11 @@
   import {
     GET
   } from "../util/http";
+  import Empty from "../components/empty"
   export default class Exam extends wepy.page {
     config = {};
+    components = {
+      empty: Empty
+    }
   }
 </script>
