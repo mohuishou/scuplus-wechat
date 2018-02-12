@@ -1,0 +1,56 @@
+<!--suppress ALL -->
+<style lang="less" unscoped>
+  .hide {
+    margin-top: -100rpx;
+  }
+  #toast{
+    transition: all 1s;
+    position: absolute;
+    top: 10rpx;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    #toast-content{
+      padding: 10rpx;
+      &.error{
+        background: red;
+      }
+      &.success{
+        background: lightseagreen;
+      }
+      background: red;
+      color: #fff;
+      z-index: 9999;
+      font-size: 28rpx;
+      border-radius: 6rpx;
+    }
+  }
+</style>
+
+<template>
+  <view id="toast" class="{{show ? '' : 'hide'}}">
+    <view id="toast-content" class="{{toastType}}">
+      {{msg}}
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Toast extends wepy.component {
+    props = {
+      msg: {
+        type: String,
+        default: '提示'
+      },
+      show: {
+        type: Boolean,
+        default: false
+      },
+      toastType: {
+        type: String,
+        default: 'success'
+      }
+    }
+  }
+</script>
