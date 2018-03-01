@@ -1,4 +1,4 @@
-let domain = 'http://localhost:8880'
+let domain = 'https://test.api.scuplus.cn'
 let version = '0.4.0'
 export {
   domain,

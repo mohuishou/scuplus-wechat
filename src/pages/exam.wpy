@@ -3,10 +3,10 @@
   @white: #fff;
   @dark-grey: #808080;
   @light-grey: #d9d9d9;
-  @purple: #B97CFC;
-  @pink: #F93B69;
-  @green: #B0E8E2;
-  @orange: #EB8B6E;
+  @purple: #b97cfc;
+  @pink: #f93b69;
+  @green: #b0e8e2;
+  @orange: #eb8b6e;
   .timeline {
     .pink {
       color: @pink;
@@ -79,12 +79,19 @@
       border-radius: 50%;
     }
   }
+  .test {
+    height: 20px;
+    width: 100%;
+  }
 </style>
 
 <template>
   <empty wx:if="{{data}}">
   </empty>
   <view wx:else>
+    <mview @mtap.user="test" :args.sync="t" class="test">
+      <view slot="content">test</view>
+    </mview>
     <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="timeline">
       <view class="ul">
@@ -112,17 +119,26 @@
   import wepy from 'wepy'
   import Empty from '../components/empty'
   import Toast from '../components/toast'
+  import MView from '../components/mview'
   import ExamMixin from '../mixins/exam'
   import HttpMixin from '../mixins/http'
   import ToastMixin from '../mixins/toast'
-
   export default class Exam extends wepy.page {
     config = {};
     components = {
       empty: Empty,
-      toast: Toast
+      toast: Toast,
+      mview: MView,
     }
     mixins = [ExamMixin, HttpMixin, ToastMixin]
+    data = {
+      t: [12,3]
+    }
+    methods = {
+      test(p,q) {
+        console.log("sahkbska",p,q);
+      }
+    }
     onLoad() {
       this.GetExam()
     }

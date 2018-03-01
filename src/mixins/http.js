@@ -1,16 +1,18 @@
 import wepy from 'wepy'
-import {domain} from '../config'
+import {
+  domain
+} from '../config'
 
 export default class HttpMixin extends wepy.mixin {
-  GetWithBind(url, params = {}, handler = {}) {
-    return this.requestWithBind('GET', url, params, handler)
+  GetWithBind(url, params = {}, showToast = true, handler = {}) {
+    return this.requestWithBind('GET', url, params, showToast, handler)
   }
 
-  PostWithBind(url, params = {}, handler = {}) {
-    return this.requestWithBind('POST', url, params, handler)
+  PostWithBind(url, params = {}, showToast = true, handler = {}) {
+    return this.requestWithBind('POST', url, params, showToast, handler)
   }
 
-  async requestWithBind(method, url, params = {}, handler = {}) {
+  async requestWithBind(method, url, params = {}, showToast = true, handler = {}) {
     if (wepy.getStorageSync('verify') === 0) {
       wepy.showModal({
         title: '绑定',
@@ -29,21 +31,21 @@ export default class HttpMixin extends wepy.mixin {
       })
       throw '未绑定账号'
     } else {
-      return this.request(method, url, params, handler)
+      return this.request(method, url, params, showToast, handler)
     }
   }
 
   // GET请求
-  GET(url, params = {}, handler = {}) {
-    return this.request('GET', url, params, handler)
+  GET(url, params = {}, showToast = true, handler = {}) {
+    return this.request('GET', url, params, showToast, handler)
   }
 
   // POST请求
-  POST(url, params = {}, handler = {}) {
-    return this.request('POST', url, params, handler)
+  POST(url, params = {}, showToast = true, handler = {}) {
+    return this.request('POST', url, params, showToast, handler)
   }
 
-  request(method, url, params = {}, handler = {}) {
+  request(method, url, params = {}, showToast = true, handler = {}) {
     handler.url = domain + url
     handler.data = params
     handler.header = {
@@ -54,25 +56,27 @@ export default class HttpMixin extends wepy.mixin {
       handler.header['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     }
 
-    wepy.showLoading && wepy.showLoading({
+    if (showToast) wepy.showLoading && wepy.showLoading({
       title: '加载中...'
     })
 
     return new Promise((resolve, reject) => {
       handler.success = res => {
         if (res.data.status === 0) {
-          this.ShowToast(res.data.msg, 'success')
+          if (showToast) this.ShowToast(res.data.msg, 'success')
           resolve(res.data)
         } else {
-          this.ShowToast(res.data.msg)
+          if (showToast) this.ShowToast(res.data.msg)
           reject(res)
         }
       }
       handler.fail = () => {
-        this.ShowToast('网络错误', 'error', 3000)
+        if (showToast) this.ShowToast('网络错误', 'error', 3000)
         reject('Network request failed')
       }
-      handler.complete = () => wepy.hideLoading && wepy.hideLoading()
+      handler.complete = () => {
+        if (showToast) wepy.hideLoading && wepy.hideLoading()
+      }
       wepy.request(handler)
     })
   }

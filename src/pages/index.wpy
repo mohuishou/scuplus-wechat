@@ -19,12 +19,11 @@
   .card {
     background: #fff;
     margin: 0.5rem 0;
-    box-shadow: #ddd 0px 0px 0.3rem;
+    // box-shadow: #ddd 0px 0px 0.3rem;
     border-radius: 0.2rem;
     background-image: url("https://scuplus.oss-cn-shenzhen.aliyuncs.com/card-kb.png");
     background-position: center;
-    background-size: cover;
-    // border-top: @border;
+    background-size: cover; // border-top: @border;
     // border-bottom: @border;
     padding: 0.3rem;
     padding-bottom: 0;
@@ -88,18 +87,18 @@
     }
   }
   .func {
-    background: #fff;
-    // margin: 0.5rem;    
-    box-shadow: #ddd 0px 0px 0.3rem;
-    // border-radius: 0.2rem;
+    background: #fff; // margin: 0.5rem;    
+    // box-shadow: #ddd 0px 0px 0.3rem; // border-radius: 0.2rem;
     .func-row {
       display: flex;
       justify-content: space-around;
-      padding-top: 0.7rem;
-      padding-bottom: 0.7rem;
-      border-bottom: 1px solid #eee;
       flex-wrap: wrap;
     }
+  }
+  .mview {
+    padding-top: 0.7rem;
+    width: 25%;
+    border-bottom: 1px solid #eee;
   }
   .icon-btn {
     text-align: center;
@@ -107,8 +106,7 @@
     align-items: center;
     justify-content: center;
     align-content: space-between;
-    flex-wrap: wrap;
-    width: 4rem;
+    flex-wrap: wrap; // width: 25%;
     .iconfont {
       @size: 2.7rem;
       width: @size;
@@ -153,16 +151,16 @@
     </swiper>
     <!-- 功能区 -->
     <view class="func">
-      <block wx:for="{{funcs}}" wx:for-item="items" wx:key="index">
-        <view class="func-row">
-          <block wx:for="{{items}}" wx:key="index">
-            <view @tap="to({{item}})" class="icon-btn">
+      <view class="func-row">
+        <repeat for="{{funcs}}" item="item" key="index">
+          <mview @mtap.user="to" class="mview" :arg.sync="item">
+            <view class="icon-btn" slot="content">
               <view style="background: {{item.bg}};" class="iconfont icon-{{item.icon}}"></view>
               <text>{{item.name}}</text>
             </view>
-          </block>
-        </view>
-      </block>
+          </mview>
+        </repeat>
+      </view>
     </view>
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
     <view>
@@ -229,8 +227,12 @@
     GET
   } from '../util/http'
   import index from '../util/index/index'
+  import MView from '../components/mview'
   export default class Index extends wepy.page {
     config = {};
+    components = {
+      mview: MView,
+    }
     data = {
       notices: [{
         cover: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
@@ -273,6 +275,7 @@
         })
       },
       to(item) {
+        console.log("aaa", item)
         this.navigate(item)
       }
     };

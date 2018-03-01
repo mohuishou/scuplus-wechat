@@ -1,5 +1,4 @@
-const funcs = [
-  [{
+const funcs = [{
     name: '课程表',
     url: 'schedule',
     icon: 'kechengbiao',
@@ -26,9 +25,8 @@ const funcs = [
     icon: 'building',
     bg: '#90caaf',
     type: 'normal'
-  }
-  ],
-  [{
+  },
+  {
     name: '我的借阅',
     url: 'library/loan',
     icon: 'book',
@@ -48,7 +46,7 @@ const funcs = [
     bg: '#857e95',
     type: 'normal'
   }
-  ]
+
 ]
 
 module.exports = {

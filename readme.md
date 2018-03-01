@@ -13,39 +13,4 @@
 
 ## Feature && ChangeLog
 
-### 0.1.0 Feature
-
-- [x] 基础框架
-- [x] 最新图文资讯(基础版)
-  - [x] 青春川大
-  - [x] scuinfo
-  - [x] 学工部
-  - [x] 教务处
-  - [x] 川大在线
-  - [x] 社团联[暂未在tab显示]
-
-- [x] 课程表
-- [x] 成绩(基础版)
-
-### 0.2.0 Feature
-
-- [x] 反馈
-- [x] 我要自习
-- [x] tagList
-
-### 0.3.0 Feature
-- [x] 图书借阅信息
- - [x] 当前借阅
- - [x] 历史借阅
-- [x] 图书搜索
-
-### 0.4.0 Feature
-- [ ] 考表
-- [ ] 个人中心
-- [ ] 校历
-- [ ] 课程表优化
-
-### Feature
-- [ ] 选课助手(基础版)
- - [ ] 课程排名(评价/成绩)
- - [ ] 教师排名(评价/综合)
+[ChangeLog](https://github.com/mohuishou/scuplus-go/blob/master/ChangeLog.md)
