@@ -1,142 +1,181 @@
 <style lang="less">
-  @black: #202020;
-  @white: #fff;
-  @dark-grey: #808080;
-  @light-grey: #d9d9d9;
-  @purple: #b97cfc;
-  @pink: #f93b69;
-  @green: #b0e8e2;
-  @orange: #eb8b6e;
-  .timeline {
-    .pink {
-      color: @pink;
-    }
-    .green {
-      color: @green;
-    }
-    .orange {
-      color: @orange;
-    }
-    .ul {
-      padding: 1rem 0 0 2rem;
-      margin: 0;
-      list-style: none;
-      position: relative;
-      &::before {
-        content: " ";
-        height: 100%;
-        width: 1px;
-        background-color: @light-grey;
-        position: absolute;
-        top: 0;
-        left: 2.5rem;
-        z-index: -1;
+  @import "./src/icon/iconfont.less";
+  @import "./src/less/config.less";
+  page {
+    background: #f8f8f5;
+  }
+  .exam {
+    background: #fff;
+    overflow: hidden;
+    margin: 20rpx;
+    padding: 20rpx;
+    border-radius: 10rpx;
+    box-shadow: 4rpx 4rpx 20rpx #c4c3cb;
+    .header {
+      display: flex;
+      .name {
+        color: #555;
+        &.active {
+          color: @base-color;
+        }
+      }
+      .info {
+        margin-top: 10rpx;
+        color: #999;
+        font-size: 30rpx;
+      }
+      .left {
+        width: calc(~"100% - 60rpx");
+      }
+      .right {
+        width: 60rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 40rpx;
+        color: #999;
+        transition: all 0.5s;
+        &.active {
+          transform: rotate(180deg);
+          transition: all 0.5s;
+        }
       }
     }
-    .li {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1rem;
-      text-align: center;
+    .content {
+      height: 0;
+      color: #555;
+      transition: all 0.5s;
+      margin-top: 10rpx;
+      &.active {
+        height: 400rpx;
+        transition: all 0.5s;
+        .list {
+          border-bottom: 3rpx dashed #eee;
+          &:first-child {
+            border-top: 3rpx dashed #eee;
+          }
+        }
+      }
+      .list {
+        display: flex;
+        height: 80rpx;
+        align-items: center;
+        .title {
+          flex: 1;
+        }
+        .data {
+          flex: 4;
+        }
+      }
     }
-    .bullet {
-      width: 1rem;
-      height: 1rem;
-      background: @white;
-      margin-right: 1rem;
-    }
-    .time {
-      font-size: 0.75rem;
-      padding-top: 0.25rem;
-      width: 25%;
-    }
-    .desc {
-      width: 50%;
-      overflow: hidden;
-    }
-    .site {
-      width: 20%;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      margin-right: 1rem;
-    }
-    .h3 {
-      font-size: 0.9rem;
-      font-weight: 400;
-      margin: 0;
-    }
-    .h4 {
-      margin: 0;
-      font-size: 0.7rem;
-      font-weight: 400;
-      color: @dark-grey;
-    }
-    .people .img {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-    }
-  }
-  .test {
-    height: 20px;
-    width: 100%;
   }
 </style>
 
 <template>
   <view wx:if="{{exams.length > 0}}">
     <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
-    <view class="timeline">
-      <view class="ul">
-        <view class="li">
-          <view class="bullet pink iconfont icon-shijian"></view>
-          <view class="time">
-            <view>2018-12-13</view>
-            <view class="h4">19:00 ~ 21:00</view>
+    <block wx:for="{{exams}}">
+      <view @tap="active({{index}})" class="exam">
+        <view class="header">
+          <view class="left">
+            <view class="name  {{item.active ? 'active' : ''}}">
+              {{item.course_name}}
+            </view>
+            <view class="info">
+              {{item.time_info}} （{{item.time}}）{{item.campus}} {{item.building}}
+            </view>
           </view>
-          <view class="desc">
-            <view class="h3">ssssssssssssssssssssssssssssss</view>
-            <view class="h4">江安综合楼C03</view>
+          <view class="right {{item.active ? 'active' : ''}}">
+            <view class="iconfont icon-jiantouarrow483"></view>
           </view>
-          <view class="site">
-            <view class="iconfont icon-site pink"></view>
-            <view>12</view>
+        </view>
+        <view class="content {{item.active ? 'active' : ''}}">
+          <view class="list">
+            <view class="title">类型</view>
+            <view class="data">{{item.name}}</view>
+          </view>
+          <view class="list">
+            <view class="title">日期</view>
+            <view class="data">{{item.date}}</view>
+          </view>
+          <view class="list">
+            <view class="title">时间</view>
+            <view class="data">{{item.time}}</view>
+          </view>
+          <view class="list">
+            <view class="title">地点</view>
+            <view class="data">{{item.campus}} {{item.building}} {{item.classroom}}</view>
+          </view>
+          <view class="list">
+            <view class="title">座位号</view>
+            <view class="data">{{item.site}}</view>
           </view>
         </view>
       </view>
-    </view>
+    </block>
   </view>
   <empty wx:else msg="暂无考试信息">
   </empty>
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import Empty from '../components/empty'
-  import Toast from '../components/toast'
-  import ExamMixin from '../mixins/exam'
-  import HttpMixin from '../mixins/http'
-  import ToastMixin from '../mixins/toast'
+  import wepy from "wepy";
+  import Empty from "../components/empty";
+  import Toast from "../components/toast";
+  import ExamMixin from "../mixins/exam";
+  import HttpMixin from "../mixins/http";
+  import ToastMixin from "../mixins/toast";
   export default class Exam extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '考试安排',
+      enablePullDownRefresh: true
+    };
     components = {
       empty: Empty,
-      toast: Toast,
-    }
-    mixins = [ExamMixin, HttpMixin, ToastMixin]
+      toast: Toast
+    };
+    mixins = [ExamMixin, HttpMixin, ToastMixin];
     data = {
-      t: [12, 3],
       exams: []
-    }
+    };
     methods = {
-      test(p, q) {
-        console.log("sahkbska", p, q);
+      active(i) {
+        this.exams[i].active = !this.exams[i].active;
+        this.$apply();
       }
+    };
+    async onPullDownRefresh() {
+      try {
+        await this.UpdateExam()
+        await this.get()
+      } catch (error) {
+        console.log(error);
+      }
+      wepy.stopPullDownRefresh()
     }
-    onLoad() {
-      // this.GetExam()
+    async get() {
+      let exams = await this.GetExam();
+      for (let i = 0; i < exams.length; i++) {
+        const e = exams[i];
+        const start = Date.parse(e.start_time);
+        const now = new Date().getTime();
+        if (start - now < 0) {
+          exams[i].time_info = "已经考过啦";
+        } else {
+          let t = Math.floor((start - now) / 1000 / 3600 / 24);
+          if (t == 0) {
+            exams[i].time_info = "今天就要考试了";
+          } else {
+            exams[i].time_info = `还有不到${t}天考试`;
+          }
+        }
+        exams[i].active = false;
+      }
+      this.exams = exams;
+      this.$apply();
+    }
+    async onLoad() {
+      this.get()
     }
   }
 </script>

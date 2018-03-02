@@ -9,7 +9,6 @@ export default class ExamMixin extends wepy.mixin {
   async UpdateExam() {
     try {
       await this.PostWithBind('/user/exam')
-      return this.GetExam()
     } catch (error) {
       console.log(error)
     }

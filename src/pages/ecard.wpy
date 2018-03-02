@@ -82,7 +82,7 @@
         <view>消费</view>
         <view>余额</view>
       </view>
-      <block wx:for="{{trans}}">
+      <block wx:for="{{trans}}" wx:key="{{index}}">
         <view class="tr">
           <view>{{item.trans_time}}</view>
           <view>{{item.addr}}</view>

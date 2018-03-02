@@ -50,7 +50,7 @@ const funcs = [{
     name: '一卡通',
     url: 'ecard',
     icon: 'card',
-    bg: '#7ba1a8',
+    bg: '#b92c18',
     type: 'login'
   },
   {
