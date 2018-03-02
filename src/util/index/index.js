@@ -45,6 +45,20 @@ const funcs = [{
     icon: 'search',
     bg: '#857e95',
     type: 'normal'
+  },
+  {
+    name: '一卡通',
+    url: 'ecard',
+    icon: 'card',
+    bg: '#7ba1a8',
+    type: 'login'
+  },
+  {
+    name: '考表',
+    url: 'exam',
+    icon: 'exam',
+    bg: '#2578b5',
+    type: 'login'
   }
 
 ]

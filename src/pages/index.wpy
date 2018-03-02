@@ -13,7 +13,7 @@
   }
   .mview {
     padding-top: 0.7rem;
-    width: 25%;
+    width: 20%;
     border-bottom: 1px solid #eee;
   }
   .icon-btn {
@@ -79,7 +79,7 @@
       </view>
     </view>
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
-    <view>
+    <view wx:if="{{verify > 0}}">
       <schedule-card icon="kechengbiao" title="今日课表" :isShow.sync="todaySchedule" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
         <block slot="content" wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
           <view class="card-list">
@@ -104,6 +104,7 @@
         </block>
       </book-card>
     </view>
+    <empty wx:else msg="尚未绑定账号"></empty>
   </view>
 </template>
 
@@ -115,12 +116,14 @@
   import index from '../util/index/index'
   import MView from '../components/mview'
   import Card from '../components/card'
+  import Empty from '../components/empty'
   export default class Index extends wepy.page {
     config = {};
     components = {
       "mview": MView,
       "schedule-card": Card,
-      "book-card": Card
+      "book-card": Card,
+      "empty": Empty
     }
     data = {
       notices: [{
@@ -164,7 +167,6 @@
         })
       },
       to(item) {
-        console.log("aaa", item)
         this.navigate(item)
       }
     };

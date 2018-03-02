@@ -49,7 +49,7 @@
       }
       view {
         &:nth-child(1) {
-          flex: 3;
+          flex: 2;
         }
         &:nth-child(2) {
           flex: 2;
@@ -62,12 +62,13 @@
 
 <template>
   <view>
+    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="title">
       余额
     </view>
     <view style="height: calc({{height}}px - 1.5rem);" class="card">
       <view class="money">
-        ￥20.00
+        ￥{{balance}}
       </view>
     </view>
     <view class="title">
@@ -81,37 +82,53 @@
         <view>消费</view>
         <view>余额</view>
       </view>
-      <view class="tr">
-        <view>2018-01-25 15:20</view>
-        <view>望江开水房</view>
-        <view>1.00</view>
-        <view>21.00</view>
-      </view>
-      <view class="tr">
-        <view>2018-01-25 15:21</view>
-        <view>望江开水房</view>
-        <view>1.00</view>
-        <view>20.00</view>
-      </view>
+      <block wx:for="{{trans}}">
+        <view class="tr">
+          <view>{{item.trans_time}}</view>
+          <view>{{item.addr}}</view>
+          <view>{{item.money}}</view>
+          <view>{{item.balance}}</view>
+        </view>
+      </block>
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import {
-    GET
-  } from '../util/http'
+  import Toast from '../components/toast'
+  import EcardMixin from '../mixins/ecard'
+  import HttpMixin from '../mixins/http'
+  import ToastMixin from '../mixins/toast'
   export default class Ecard extends wepy.page {
     config = {
       navigationBarTitleText: '我的校园卡',
       navigationBarBackgroundColor: '#b92c18',
     }
-    data = {
-      height: 0
+    mixins = [EcardMixin, HttpMixin, ToastMixin]
+    components = {
+      "toast": Toast
     }
-    onLoad(){
+    data = {
+      height: 0,
+      trans: []
+    }
+    computed = {
+      balance() {
+        if (this.trans.length > 0 && "balance" in this.trans[0]) {
+          return this.trans[0].balance
+        }
+        return "无数据"
+      }
+    }
+    async onLoad() {
       this.height = wx.getSystemInfoSync().windowWidth / 1.6
+      let trans = await this.GetECard();
+      for (let i = 0; i < trans.length; i++) {
+        trans[i].trans_time = new Date(trans[i].trans_time * 1000).toLocaleDateString()
+      }
+      this.trans = trans
+      this.$apply()
     }
   }
 </script>

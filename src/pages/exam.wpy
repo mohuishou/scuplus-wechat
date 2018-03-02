@@ -86,9 +86,7 @@
 </style>
 
 <template>
-  <empty wx:if="{{data}}">
-  </empty>
-  <view wx:else>
+  <view wx:if="{{exams.length > 0}}">
     <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="timeline">
       <view class="ul">
@@ -110,6 +108,8 @@
       </view>
     </view>
   </view>
+  <empty wx:else msg="暂无考试信息">
+  </empty>
 </template>
 
 <script>
@@ -127,15 +127,16 @@
     }
     mixins = [ExamMixin, HttpMixin, ToastMixin]
     data = {
-      t: [12,3]
+      t: [12, 3],
+      exams: []
     }
     methods = {
-      test(p,q) {
-        console.log("sahkbska",p,q);
+      test(p, q) {
+        console.log("sahkbska", p, q);
       }
     }
     onLoad() {
-      this.GetExam()
+      // this.GetExam()
     }
   }
 </script>

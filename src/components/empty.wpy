@@ -1,12 +1,8 @@
 <style lang="less">
-  page {
-    width: 100%;
-    height: 100%;
-    background: #efefef;
-  }
   #empty {
     width: 100%;
     height: 100%;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
