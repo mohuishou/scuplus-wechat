@@ -1,5 +1,5 @@
 let domain = 'https://test.api.scuplus.cn'
-let version = '0.4.0'
+let version = '0.5.0'
 export {
   domain,
   version

@@ -1,94 +1,10 @@
 <style lang="less">
   @import "./src/icon/iconfont.less";
-  /* 函数变量 */
-  .icon(@size, @font-size, @background) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: @size;
-    height: @size;
-    background: @background;
-    border-radius: @size*0.5rem;
-    color: #fff;
-    font-size: @font-size;
-  }
-  @border: 1px solid #eee;
   page {
     background: #eee;
   }
-  .card {
-    background: #fff;
-    margin: 0.5rem 0;
-    // box-shadow: #ddd 0px 0px 0.3rem;
-    border-radius: 0.2rem;
-    background-image: url("https://scuplus.oss-cn-shenzhen.aliyuncs.com/card-kb.png");
-    background-position: center;
-    background-size: cover; // border-top: @border;
-    // border-bottom: @border;
-    padding: 0.3rem;
-    padding-bottom: 0;
-    &.card-library {
-      background-image: url("https://scuplus.oss-cn-shenzhen.aliyuncs.com/card-library.png");
-    }
-    .only {
-      text-align: center;
-      color: #999;
-      font-size: 1.5rem;
-      height: 5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .card-title {
-      display: flex;
-      align-items: baseline;
-      padding-bottom: 0.3rem;
-      border-bottom: @border;
-      .iconfont {
-        margin-left: 0.2rem;
-        .icon(1.3rem,
-        0.7rem,
-        #99ccee);
-      }
-      text {
-        margin-left: 0.2rem;
-        font-size: 0.7rem;
-        color: #888;
-      }
-    }
-    .card-list {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px dashed #eee;
-      padding-bottom: 0.4rem;
-      text {
-        color: #666;
-        font-size: 0.8rem;
-      }
-      .card-left {
-        display: inline-block;
-        text-align: center;
-        text {
-          display: block;
-          padding-top: 0.3rem;
-          &.class-info {
-            color: #999;
-            font-size: 0.7rem;
-          }
-        }
-      }
-    }
-    .card-foot {
-      text-align: center;
-      padding: 0.3rem;
-      font-size: 0.8rem;
-      color: #666;
-    }
-  }
   .func {
     background: #fff; // margin: 0.5rem;    
-    // box-shadow: #ddd 0px 0px 0.3rem; // border-radius: 0.2rem;
     .func-row {
       display: flex;
       justify-content: space-around;
@@ -164,59 +80,29 @@
     </view>
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
     <view>
-      <!-- 课程表卡片 -->
-      <view class="card">
-        <view class="card-title">
-          <view class="iconfont icon-kechengbiao"></view>
-          <text>今日课表</text>
-        </view>
-        <view wx:if="{{todaySchedule.length && verify}}" class="card-lists">
-          <block wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
-            <view class="card-list">
-              <view class="card-left">
-                <text class="class-name">{{item.course_name}}</text>
-                <text class="class-info">{{item.sessionArr[0]}}~{{item.sessionArr[item.flex-1]}}</text>
-              </view>
-              <view class="card-right">
-                <text>{{item.building}} {{item.classroom}}</text>
-              </view>
+      <schedule-card icon="kechengbiao" title="今日课表" :isShow.sync="todaySchedule" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
+        <block slot="content" wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
+          <view class="card-list">
+            <view class="card-left">
+              <text class="class-name">{{item.course_name}}</text>
+              <text class="class-info">{{item.sessionArr[0]}}~{{item.sessionArr[item.flex-1]}}</text>
             </view>
-          </block>
-        </view>
-        <view wx:if="{{todaySchedule.length && verify}}" @tap="to({{ funcs[0][0] }})" class="card-foot">
-          <text>查看完整课表</text>
-        </view>
-        <view wx:else class="only">
-          <text wx:if="{{verify}}">今日无课</text>
-          <text wx:else>请先绑定</text>
-        </view>
-      </view>
-      <!-- 课程表卡片 end -->
-      <!-- 我的借阅卡片 -->
-      <view class="card card-library">
-        <view class="card-title">
-          <view style="background: {{funcs[1][0].bg}}" class="iconfont icon-{{funcs[1][0].icon}}"></view>
-          <text>我的借阅</text>
-        </view>
-        <view wx:if="{{loan_books.length && verify}}" class="card-lists">
-          <block wx:for="{{loan_books}}" wx:key="{{index}}">
-            <view wx:if="{{item.title && index < 3}}" class="card-list">
-              <view class="card-left">
-                <text class="class-name">{{item.title}}</text>
-                <text class="class-info">到期: {{item.due_date}}</text>
-              </view>
+            <view class="card-right">
+              <text>{{item.building}} {{item.classroom}}</text>
             </view>
-          </block>
-        </view>
-        <view wx:if="{{loan_books.length && verify}}" @tap="to({{ funcs[1][0] }})" class="card-foot">
-          <text>查看所有书籍</text>
-        </view>
-        <view wx:else class="only">
-          <text wx:if="{{verify}}">暂无借阅书籍</text>
-          <text wx:else>请先绑定</text>
-        </view>
-      </view>
-      <!-- 我的借阅卡片 end -->
+          </view>
+        </block>
+      </schedule-card>
+      <book-card icon="book" bg="card-library.png" title="我的借阅" :isShow.sync="loan_books" footText="查看所有借阅" url="/pages/library/loan" noneText="无借阅书籍">
+        <block slot="content" wx:for="{{loan_books}}" wx:key="{{index}}">
+          <view wx:if="{{item.title && index < 3}}" class="card-list">
+            <view class="card-left">
+              <text class="class-name">{{item.title}}</text>
+              <text class="class-info">到期: {{item.due_date}}</text>
+            </view>
+          </view>
+        </block>
+      </book-card>
     </view>
   </view>
 </template>
@@ -228,10 +114,13 @@
   } from '../util/http'
   import index from '../util/index/index'
   import MView from '../components/mview'
+  import Card from '../components/card'
   export default class Index extends wepy.page {
     config = {};
     components = {
-      mview: MView,
+      "mview": MView,
+      "schedule-card": Card,
+      "book-card": Card
     }
     data = {
       notices: [{

@@ -89,9 +89,6 @@
   <empty wx:if="{{data}}">
   </empty>
   <view wx:else>
-    <mview @mtap.user="test" :args.sync="t" class="test">
-      <view slot="content">test</view>
-    </mview>
     <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="timeline">
       <view class="ul">
@@ -119,7 +116,6 @@
   import wepy from 'wepy'
   import Empty from '../components/empty'
   import Toast from '../components/toast'
-  import MView from '../components/mview'
   import ExamMixin from '../mixins/exam'
   import HttpMixin from '../mixins/http'
   import ToastMixin from '../mixins/toast'
@@ -128,7 +124,6 @@
     components = {
       empty: Empty,
       toast: Toast,
-      mview: MView,
     }
     mixins = [ExamMixin, HttpMixin, ToastMixin]
     data = {
