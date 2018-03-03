@@ -4,7 +4,13 @@
     background: #eee;
   }
   .func {
-    background: #fff; // margin: 0.5rem;    
+    background: #fff;
+    margin: 20rpx;  
+    margin-top: -40rpx;
+    position: relative;
+    border-radius: 10rpx;
+    box-shadow: 0rpx 4rpx 10rpx #ddd;
+    z-index: 999;
     .func-row {
       display: flex;
       justify-content: space-around;
@@ -44,12 +50,14 @@
   }
   .swiper {
     width: 100%;
-    z-index: 1000;
+    z-index: 10;
     top: 0;
     swiper-item {
+      z-index: 20;
       width: 100%;
     }
     image {
+      z-index: 30;
       width: 100%;
     }
   }
@@ -96,9 +104,11 @@
       <book-card icon="book" bg="card-library.png" title="我的借阅" :isShow.sync="loan_books" footText="查看所有借阅" url="/pages/library/loan" noneText="无借阅书籍">
         <block slot="content" wx:for="{{loan_books}}" wx:key="{{index}}">
           <view wx:if="{{item.title && index < 3}}" class="card-list">
-            <view class="card-left">
+            <view class="card-left" >
               <text class="class-name">{{item.title}}</text>
-              <text class="class-info">到期: {{item.due_date}}</text>
+            </view>
+            <view class="card-right">
+              <text>{{item.due_date}}</text>
             </view>
           </view>
         </block>

@@ -11,10 +11,11 @@
     color: #fff;
     font-size: @font-size;
   }
-  .card._7h9jrf{
+  .card._7h9jrf {
     background: #fff;
-    margin: 0.5rem 0;
-    border-radius: 0.2rem;
+    margin: 20rpx;
+    box-shadow: 4rpx 4rpx 10rpx #ddd;
+    border-radius: 10rpx;
     background-position: center;
     background-size: cover;
     padding: 0.3rem;
@@ -35,9 +36,7 @@
       border-bottom: @border;
       .iconfont {
         margin-left: 0.2rem;
-        .icon(1.3rem,
-        0.7rem,
-        #99ccee);
+        .icon(1.3rem, 0.7rem, #99ccee);
       }
       text {
         margin-left: 0.2rem;
