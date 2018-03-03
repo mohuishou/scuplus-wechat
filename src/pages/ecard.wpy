@@ -3,10 +3,9 @@
     background: #efefef;
   }
   .card {
-    // width: 100%;
     margin: 0 1.5rem;
     border-radius: 0.5rem;
-    box-shadow: #bbb 0px 0px 0.5rem;
+    box-shadow:  4rpx 4rpx 20rpx #a82413;
     background-image: url("https://scuplus.oss-cn-shenzhen.aliyuncs.com/ecard/1.jpg");
     background-position: center;
     background-size: cover;
@@ -27,7 +26,7 @@
   }
   .trans {
     border-radius: 0.5rem;
-    box-shadow: #bbb 0px 0px 0.5rem;
+    box-shadow: 2rpx 2rpx 20rpx #ccc;
     margin: 0 1.5rem;
     font-size: 0.8rem;
     text-align: center;
@@ -104,6 +103,7 @@
     config = {
       navigationBarTitleText: '我的校园卡',
       navigationBarBackgroundColor: '#b92c18',
+      enablePullDownRefresh: true
     }
     mixins = [EcardMixin, HttpMixin, ToastMixin]
     components = {
@@ -121,14 +121,26 @@
         return "无数据"
       }
     }
-    async onLoad() {
-      this.height = wx.getSystemInfoSync().windowWidth / 1.6
+    async onPullDownRefresh() {
+      try {
+        await this.UpdateECard()
+        await this.get()
+      } catch (error) {
+        console.log(error);
+      }
+      wepy.stopPullDownRefresh()
+    }
+    async  get() {
       let trans = await this.GetECard();
       for (let i = 0; i < trans.length; i++) {
         trans[i].trans_time = new Date(trans[i].trans_time * 1000).toLocaleDateString()
       }
       this.trans = trans
       this.$apply()
+    }
+    async onLoad() {
+      this.height = wx.getSystemInfoSync().windowWidth / 1.6
+      this.get()
     }
   }
 </script>
