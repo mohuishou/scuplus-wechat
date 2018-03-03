@@ -36,7 +36,16 @@
       border-bottom: @border;
       .iconfont {
         margin-left: 0.2rem;
-        .icon(1.3rem, 0.7rem, #99ccee);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @size: 1.3rem;
+        width: @size;
+        height: @size;
+        background: #99ccee;
+        border-radius: @size*0.5rem;
+        color: #fff;
+        font-size: 0.7rem;
       }
       text {
         margin-left: 0.2rem;
@@ -79,13 +88,13 @@
 <template>
   <view class="card _7h9jrf" style="background-image: url(https://scuplus.oss-cn-shenzhen.aliyuncs.com/{{bg}});">
     <view class="card-title">
-      <view class="iconfont icon-{{icon}}"></view>
+      <view class="iconfont icon-{{icon}}" style="background: {{iconBg}};"></view>
       <text>{{title}}</text>
     </view>
-    <view wx:if="{{isShow}}" class="card-lists">
+    <view wx:if="{{isShow.length > 0}}" class="card-lists">
       <slot name="content"></slot>
     </view>
-    <view wx:if="{{isShow}}" @tap="to" class="card-foot">
+    <view wx:if="{{isShow.length > 0}}" @tap="to" class="card-foot">
       <text>{{footText}}</text>
     </view>
     <view wx:else class="only">
@@ -100,8 +109,12 @@
     props = {
       icon: String,
       title: String,
-      isShow: Boolean,
+      isShow: Array,
       url: String,
+      iconBg: {
+        type: String,
+        default: "#99ccee"
+      },
       noneText: {
         type: String,
         default: "暂无数据"

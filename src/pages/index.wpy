@@ -1,7 +1,8 @@
 <style lang="less">
   @import "./src/icon/iconfont.less";
+  @import "./src/less/config.less";
   page {
-    background: #eee;
+    background: @bg-color;
   }
   .func {
     background: #fff;
@@ -61,6 +62,15 @@
       width: 100%;
     }
   }
+  .ecard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: @base-color;
+    font-size: 70rpx;
+    height: 150rpx;
+    border-bottom: 2rpx dashed #fff;
+  }
 </style>
 
 <template>
@@ -88,7 +98,7 @@
     </view>
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
     <view wx:if="{{verify > 0}}">
-      <schedule-card icon="kechengbiao" title="今日课表" :isShow.sync="todaySchedule" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
+      <schedule-card iconBg="#eacdd1" icon="kechengbiao" title="今日课表" :isShow.sync="todaySchedule" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
         <block slot="content" wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
           <view class="card-list">
             <view class="card-left">
@@ -101,7 +111,7 @@
           </view>
         </block>
       </schedule-card>
-      <book-card icon="book" bg="card-library.png" title="我的借阅" :isShow.sync="loan_books" footText="查看所有借阅" url="/pages/library/loan" noneText="无借阅书籍">
+      <book-card iconBg="#ab96c5" icon="book" bg="card-library.png" title="我的借阅" :isShow.sync="loan_books" footText="查看所有借阅" url="/pages/library/loan" noneText="无借阅书籍">
         <block slot="content" wx:for="{{loan_books}}" wx:key="{{index}}">
           <view wx:if="{{item.title && index < 3}}" class="card-list">
             <view class="card-left">
@@ -113,6 +123,24 @@
           </view>
         </block>
       </book-card>
+      <ecard :isShow.sync="ecardBalance" footText="查看交易流水" icon="card" bg="card-library.png" title="一卡通余额" url="/pages/ecard" iconBg="#b92c18">
+        <view class="ecard" slot="content">
+          {{ecardBalance[0]}}
+        </view>
+      </ecard>
+      <exam-card iconBg="#2578b5" icon="exam" title="考表" :isShow.sync="exams" footText="查看完整考表" url="/pages/exam" noneText="近期没有考试">
+        <block slot="content" wx:for="{{exams}}" wx:key="{{index}}">
+          <view class="card-list">
+            <view class="card-left">
+              <text class="class-name">{{item.course_name}}</text>
+              <text class="class-info">time: {{item.date}} {{item.time}} site: {{item.site}}</text>
+            </view>
+            <view class="card-right">
+              <text>{{item.building}} {{item.classroom}}</text>
+            </view>
+          </view>
+        </block>
+      </exam-card>
     </view>
     <empty wx:else msg="尚未绑定账号"></empty>
   </view>
@@ -127,6 +155,7 @@
   import MView from '../components/mview'
   import Card from '../components/card'
   import Empty from '../components/empty'
+  import db from "../util/db"
   export default class Index extends wepy.page {
     config = {};
     components = {
@@ -150,6 +179,22 @@
     computed = {
       verify() {
         return wepy.getStorageSync('verify')
+      },
+      ecardBalance() {
+        const trans = db.Get("trans")
+        if (trans.length > 0) {
+          return [trans[0].balance]
+        } else {
+          return []
+        }
+      },
+      exams() {
+        let arr = db.Get("exams")
+        let data = []
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].t >= 0) data.push(e)
+        }
+        return data
       }
     }
     navigate(item) {
