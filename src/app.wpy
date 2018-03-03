@@ -5,7 +5,10 @@
 <script>
   import wepy from 'wepy'
   import 'wepy-async-function'
-  import {POST} from './util/http'
+  import {
+    POST
+  } from './util/http'
+  import db from './util/db'
   export default class extends wepy.app {
     config = {
       pages: [
@@ -48,12 +51,6 @@
         ]
       }
     };
-    setGlobalData(key, value) {
-      wepy.setStorage({
-        key: key,
-        data: value
-      })
-    }
     constructor() {
       super()
       this.use('requestfix')

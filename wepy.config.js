@@ -35,6 +35,7 @@ module.exports = {
         'transform-decorators-legacy',
         'transform-object-rest-spread',
         'transform-export-extensions',
+        'transform-node-env-inline',
       ]
     }
   },

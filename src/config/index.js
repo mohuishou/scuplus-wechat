@@ -1,11 +1,8 @@
-let domain = 'https://test.api.scuplus.cn'
-let version = '0.5.0'
-export {
-  domain,
-  version
+const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
+const domains = {
+  dev: 'https://test.api.scuplus.cn',
+  prod: 'https://api.scuplus.cn'
 }
-// module.exports = {
-//   // domain: "https://api.scuplus.cn",
-//   domain: "http://localhost:8880",
-//   version: "0.3.0"
-// }
+export const domain = domains[env]
+export const version = '0.5.0'
+

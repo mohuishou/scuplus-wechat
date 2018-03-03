@@ -5,7 +5,7 @@
   }
   .func {
     background: #fff;
-    margin: 20rpx;  
+    margin: 20rpx;
     margin-top: -40rpx;
     position: relative;
     border-radius: 10rpx;
@@ -104,7 +104,7 @@
       <book-card icon="book" bg="card-library.png" title="我的借阅" :isShow.sync="loan_books" footText="查看所有借阅" url="/pages/library/loan" noneText="无借阅书籍">
         <block slot="content" wx:for="{{loan_books}}" wx:key="{{index}}">
           <view wx:if="{{item.title && index < 3}}" class="card-list">
-            <view class="card-left" >
+            <view class="card-left">
               <text class="class-name">{{item.title}}</text>
             </view>
             <view class="card-right">
@@ -133,6 +133,8 @@
       "mview": MView,
       "schedule-card": Card,
       "book-card": Card,
+      "ecard": Card,
+      "exam-card": Card,
       "empty": Empty
     }
     data = {

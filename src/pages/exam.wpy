@@ -74,7 +74,7 @@
 <template>
   <view wx:if="{{exams.length > 0}}">
     <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
-    <block wx:for="{{exams}}">
+    <block wx:for="{{exams}}" wx:key="{{index}}">
       <view @tap="active({{index}})" class="exam">
         <view class="header">
           <view class="left">
@@ -125,6 +125,8 @@
   import ExamMixin from "../mixins/exam";
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
+  import DataMixin from "../mixins/data";
+  import db from "../util/db"
   export default class Exam extends wepy.page {
     config = {
       navigationBarTitleText: '考试安排',
@@ -134,7 +136,7 @@
       empty: Empty,
       toast: Toast
     };
-    mixins = [ExamMixin, HttpMixin, ToastMixin];
+    mixins = [ExamMixin, HttpMixin, ToastMixin, DataMixin];
     data = {
       exams: []
     };
@@ -161,8 +163,10 @@
         const now = new Date().getTime();
         if (start - now < 0) {
           exams[i].time_info = "已经考过啦";
+          exams[i].t = -1
         } else {
           let t = Math.floor((start - now) / 1000 / 3600 / 24);
+          exams[i].t = t
           if (t == 0) {
             exams[i].time_info = "今天就要考试了";
           } else {
@@ -173,9 +177,10 @@
       }
       this.exams = exams;
       this.$apply();
+      this.InitSet("exams", exams)
     }
     async onLoad() {
-      this.get()
+      this.Init("exams")
     }
   }
 </script>
