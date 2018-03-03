@@ -98,8 +98,8 @@
     </view>
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
     <view wx:if="{{verify > 0}}">
-      <schedule-card iconBg="#eacdd1" icon="kechengbiao" title="今日课表" :isShow.sync="todaySchedule" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
-        <block slot="content" wx:for="{{todaySchedule}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
+      <schedule-card iconBg="#eacdd1" icon="kechengbiao" title="今日课表" :isShow.sync="todaySchedules" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
+        <block slot="content" wx:for="{{todaySchedules}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
           <view class="card-list">
             <view class="card-left">
               <text class="class-name">{{item.course_name}}</text>
@@ -172,7 +172,6 @@
         id: 1
       }],
       funcs: index.funcs,
-      todaySchedule: [],
       swiper_height: 200,
       loan_books: []
     };
@@ -195,6 +194,23 @@
           if (arr[i].t >= 0) data.push(e)
         }
         return data
+      },
+      loanBooks() {
+        return db.Get("loan_now")
+      },
+      todaySchedules() {
+        let schedules = db.Get('schedules')
+        if (!schedules) {
+          return
+        }
+        const todaySchedule = []
+        let today = new Date().getDay() || 7
+        schedules[today].forEach(e => {
+          if (e.course_name) {
+            todaySchedule.push(e)
+          }
+        })
+        return todaySchedule
       }
     }
     navigate(item) {
@@ -227,18 +243,6 @@
         this.navigate(item)
       }
     };
-    getTodaySchedules() {
-      let schedules = wepy.getStorageSync('schedules')
-      if (!schedules) {
-        return
-      }
-      let today = new Date().getDay() || 7
-      schedules[today].forEach(e => {
-        if (e.course_name) {
-          this.todaySchedule.push(e)
-        }
-      })
-    }
     getNotice() {
       let self = this
       GET('/notices').then(resp => {
@@ -257,7 +261,6 @@
       // 设置swipe高度 2:1
       this.swiper_height = wepy.getSystemInfoSync().windowWidth / 2
       this.getNotice()
-      this.getTodaySchedules()
       this.loan_books = wepy.getStorageSync('loan_now')
     }
     onShareAppMessage(options) {

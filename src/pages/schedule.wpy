@@ -1,150 +1,33 @@
-<template>
-  <view class="contanier">
-    <block wx:for="{{dataArr}}" wx:key="{{index}}" wx:for-item="items" wx:for-index="i">
-      <view class="col">
-        <block wx:for="{{items}}" wx:key="{{j}}" wx:for-item="item" wx:for-index="j">
-          <view class="row title" wx:if="{{i == 0 || j==0}}">{{item}}</view>
-          <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"></view>
-          <view class="row item"
-                style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};"
-                wx:elif="{{item.flex > 0}}">
-            <text class="address">
-              <text>{{item.building}}</text>
-              <text>{{item.classroom}}</text>
-            </text>
-            <text class="course-name">{{item.course_name}}</text>
-          </view>
-        </block>
-      </view>
-    </block>
-  </view>
-</template>
-<script>
-  import wepy from 'wepy'
-  import {
-    GetB,
-    PostB
-  } from '../util/http'
-  import Verify from '../mixins/verify'
-  import ModalMixin from '../mixins/modal'
-
-  export default class Schedule extends wepy.page {
-    mixins = [ModalMixin]
-    config = {
-      navigationBarTitleText: '我的课表',
-      enablePullDownRefresh: true
-    };
-    mixins = [Verify];
-    data = {
-      dataArr: [
-        ['', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-      ],
-      schedules: []
-    };
-    watch = {
-      schedules(oldVal, newVal) {
-        this.initSchedules()
-        wepy.setStorage({
-          key: 'schedules',
-          data: this.dataArr
-        })
-      }
-    };
-
-    onLoad() {
-      if (this.verify()) {
-        this.initData()
-        this.getSchedules()
-      }
-    }
-
-    async getSchedules() {
-      let schedules = wepy.getStorageSync('schedules')
-      if (schedules) {
-        this.dataArr = schedules
-        return
-      }
-      const resp = await GetB('/user/schedule')
-      if (resp.status === 0) {
-        this.schedules = resp.data
-        this.$apply()
-      } else {
-        this.Alert(resp.msg)
-      }
-    }
-
-    async onPullDownRefresh() {
-      const resp = await PostB('/user/schedule')
-      if (resp.status === 0) {
-        this.schedules = resp.data
-        this.$apply()
-      } else {
-        this.Alert(resp.msg)
-      }
-      wepy.stopPullDownRefresh()
-    }
-
-    initSchedules() {
-      let colors = ['#009966', '#99CC99', '#0099CC', '#339999', '#FF9999']
-      for (let e of this.schedules) {
-        e.flex = 0
-        e.sessionArr = []
-        if (e.session !== '') {
-          e.sessionArr = e.session.split(',')
-          e.flex = e.sessionArr.length
-        }
-        // 生成随机背景色
-        let ridx = Math.round(Math.random() * (colors.length - 1))
-        e.color = colors[ridx]
-        // 替换原矩阵值
-        e.sessionArr.forEach(element => {
-          this.dataArr[e.day - 0][element].flex = 0
-        })
-        this.dataArr[e.day - 0][e.sessionArr[0]] = e
-      }
-    }
-
-    initData() {
-      // 初始化data
-      let title = ['一', '二', '三', '四', '五', '六', '日']
-      for (let i = 0; i < 7; i++) {
-        let tmpData = []
-        for (let j = 0; j < 13; j++) {
-          if (j === 0) {
-            tmpData[j] = title[i]
-            continue
-          }
-          tmpData[j] = {
-            course_name: '',
-            flex: 1
-          }
-        }
-        this.dataArr.push(tmpData)
-      }
-    }
-  }
-</script>
 <style lang="less">
+  page,
+  scroll-view {
+    width: 100%;
+    height: 100%;
+  }
   .contanier {
     display: flex;
+    width: auto;
+    height: 100%;
   }
-
   .col {
     display: flex;
+    height: 100%;
     flex-direction: column;
-    width: 5rem;
+    min-width: 180rpx;
+    &.title {
+      min-width: 80rpx;
+    }
     flex-wrap: wrap;
   }
-
   .row {
     text-align: center;
-    flex: 1;
-    height: 3rem;
+    flex: 1; // height: 150rpx;
     border-bottom: 1px solid #eee;
     border-right: 1px solid #eee;
     background: #fff;
     padding: 0 0.15rem;
     &.title {
+      // height: 80rpx;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -167,3 +50,117 @@
     }
   }
 </style>
+
+<template>
+  <scroll-view scroll-x scroll-into-view="day-{{day}}">
+    <view class="contanier">
+      <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
+      <block wx:for="{{schedules}}" wx:key="{{index}}" wx:for-item="items" wx:for-index="i">
+        <view class="col {{i==0 ? 'title' : ''}}" id="day-{{i}}">
+          <block wx:for="{{items}}" wx:key="{{j}}" wx:for-item="item" wx:for-index="j">
+            <view class="row title" wx:if="{{i == 0 || j==0}}">{{item}}</view>
+            <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"></view>
+            <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
+              <text class="address">
+                                        <text>{{item.building}}</text>
+              <text>{{item.classroom}}</text>
+              </text>
+              <text class="course-name">{{item.course_name}}</text>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import {
+    GetB,
+    PostB
+  } from '../util/http'
+  import Toast from "../components/toast";
+  import Verify from '../mixins/verify'
+  import ModalMixin from '../mixins/modal'
+  import HttpMixin from "../mixins/http";
+  import ToastMixin from "../mixins/toast";
+  import DataMixin from "../mixins/data";
+  import db from "../util/db"
+  export default class Schedule extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的课表',
+      enablePullDownRefresh: true
+    };
+    mixins = [Verify, ModalMixin, HttpMixin, ToastMixin, DataMixin];
+    components = {
+      toast: Toast
+    }
+    data = {
+      schedules: [
+        ['', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      ],
+      day: 0,
+    };
+    async onLoad() {
+      this.initData()
+      await this.Init("schedules")
+      this.day = (new Date()).getDay() || 7
+      this.$apply()
+    }
+    async get() {
+      const resp = await this.GetWithBind('/user/schedule')
+      this.initSchedules(resp.data)
+      this.$apply()
+      this.InitSet("schedules", this.schedules)
+    }
+    async onPullDownRefresh() {
+      try {
+        await PostWithBind('/user/schedule')
+        this.get()
+        wepy.stopPullDownRefresh()
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    initSchedules(schedules) {
+      let colors = ['#009966', '#99CC99', '#0099CC', '#339999', '#FF9999']
+      for (let e of schedules) {
+        e.flex = 0
+        e.sessionArr = []
+        if (e.session !== '') {
+          e.sessionArr = e.session.split(',')
+          e.flex = e.sessionArr.length
+        }
+        // 生成随机背景色
+        let ridx = Math.round(Math.random() * (colors.length - 1))
+        e.color = colors[ridx]
+        // 替换原矩阵值
+        e.sessionArr.forEach(element => {
+          this.schedules[e.day - 0][element].flex = 0
+        })
+        this.schedules[e.day - 0][e.sessionArr[0]] = e
+      }
+    }
+    initData() {
+      // 初始化data
+      let title = ['一', '二', '三', '四', '五', '六', '日']
+      for (let i = 0; i < 7; i++) {
+        let tmpData = []
+        for (let j = 0; j < 13; j++) {
+          if (j === 0) {
+            tmpData[j] = title[i]
+            continue
+          }
+          tmpData[j] = {
+            course_name: '',
+            flex: 1
+          }
+        }
+        this.schedules.push(tmpData)
+      }
+    }
+  }
+</script>
+
+
