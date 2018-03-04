@@ -1,25 +1,25 @@
 <style lang="less">
+  @import url("../../less/config");
   page {
-    background: #eee;
+    background: @bg-color;
     width: 100%;
     height: 100%;
   }
-
-  @import url("../../less/config");
   .book {
     color: #333;
-    margin: 0.5rem 0.5rem 0rem 0.5rem;
+    margin: 26rpx 26rpx 0 26rpx;
     background: @white;
-    border-radius: 0.1rem;
-    padding: 0.5rem;
+    border-radius: 4rpx;
+    box-shadow: 4rpx 4rpx 20rpx #ddd;
+    padding: 20rpx;
     display: flex;
     align-content: space-between;
     flex-wrap: wrap;
-    > view {
+    >view {
       width: 100%;
     }
     .info {
-      margin-top: 1rem;
+      margin-top: 10rpx;
       justify-content: space-between;
       align-items: center;
       display: flex;
@@ -30,7 +30,6 @@
       color: @base-color;
     }
   }
-
   .none {
     display: flex;
     justify-content: center;
@@ -44,6 +43,8 @@
 </style>
 
 <template>
+  <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
+  </toast>
   <view wx:if="{{loan_books.length!=0}}">
     <block wx:for="{{loan_books}}" wx:key="{{index}}">
       <view class="book">
@@ -57,57 +58,61 @@
       </view>
     </block>
   </view>
-  <view wx:else class="none">
-    暂无借阅，下拉刷新
-  </view>
+  <empty wx:else msg="暂无借阅数据">
+  </empty>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import {PostB, GetB} from '../../util/http'
-  import Verify from '../../mixins/verify'
-
+  import Empty from "../../components/empty";
+  import Toast from "../../components/toast";
+  import HttpMixin from "../../mixins/http";
+  import ToastMixin from "../../mixins/toast";
+  import DataMixin from "../../mixins/data";
+  import db from "../../util/db"
   export default class Loan extends wepy.page {
     config = {
       navigationBarTitleText: '我的借阅',
       enablePullDownRefresh: true
     };
-    mixins = [Verify]
+    components = {
+      empty: Empty,
+      toast: Toast
+    };
+    mixins = [HttpMixin, ToastMixin, DataMixin];
     data = {
       loan_books: [],
+      loan_now: [],
+      loan_history: [],
       loan_type: 'now' // history
     };
     methods = {
       async loan(bookID) {
-        const resp = await PostB('/library/loan', {book_id: bookID})
-        if (resp.status === 0) {
-          this.getBooks()
-          this.Alert('续借成功')
-        } else {
-          this.Alert(resp.msg)
-        }
-      }
-    }
-
-    async getBooks() {
-      const t = this.loan_type === 'now' ? 0 : 1
-      const resp = await GetB('/library/books?is_history=' + t)
-      if (resp.status === 0) {
-        this.loan_books = resp.data
-        this.$apply()
-        wepy.setStorage({
-          key: 'loan_' + this.loan_type,
-          data: resp.data
+        const resp = await this.PostWithBind('/library/loan', {
+          book_id: bookID
         })
-      } else {
-        this.Alert(resp.msg)
+        this.get()
+        this.ShowToast('续借成功', 'success')
       }
     }
-
-    onPullDownRefresh() {
-      this.getBooks()
+    watch={
+      loan_now(newVal,oldVal){
+        this.loan_books = newVal
+      },
+      loan_history(newVal,oldVal){
+        this.loan_books = newVal
+      }
     }
-
+    async get() {
+      const t = this.loan_type === 'now' ? 0 : 1
+      const resp = await this.GetWithBind('/library/books?is_history=' + t)
+      this.loan_books = resp.data
+      this.$apply()
+      this.InitSet('loan_' + this.loan_type, resp.data)
+    }
+    onPullDownRefresh() {
+      this.get()
+    }
     onLoad(options) {
       if (options.type && options.type === 'history') {
         this.loan_type = options.type
@@ -115,10 +120,7 @@
           title: '历史借阅'
         })
       }
-      this.loan_books = wepy.getStorageSync('loan_' + this.loan_type)
-      if (this.loan_books.length === 0) {
-        this.getBooks()
-      }
+      this.Init('loan_' + this.loan_type)
     }
   }
 </script>

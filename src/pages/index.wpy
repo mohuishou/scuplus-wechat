@@ -31,6 +31,7 @@
     align-content: space-between;
     flex-wrap: wrap; // width: 25%;
     .iconfont {
+      box-shadow: 2rpx 2rpx 0rpx #eee;
       @size: 2.7rem;
       width: @size;
       border-radius: @size*0.5;
@@ -111,8 +112,8 @@
           </view>
         </block>
       </schedule-card>
-      <book-card iconBg="#ab96c5" icon="book" bg="card-library.png" title="我的借阅" :isShow.sync="loan_books" footText="查看所有借阅" url="/pages/library/loan" noneText="无借阅书籍">
-        <block slot="content" wx:for="{{loan_books}}" wx:key="{{index}}">
+      <book-card iconBg="#ab96c5" icon="book" bg="card-library.png" title="我的借阅" :isShow.sync="loanBooks" footText="查看所有借阅" url="/pages/library/loan" noneText="无借阅书籍">
+        <block slot="content" wx:for="{{loanBooks}}" wx:key="{{index}}">
           <view wx:if="{{item.title && index < 3}}" class="card-list">
             <view class="card-left">
               <text class="class-name">{{item.title}}</text>
@@ -173,7 +174,6 @@
       }],
       funcs: index.funcs,
       swiper_height: 200,
-      loan_books: []
     };
     computed = {
       verify() {
@@ -261,7 +261,6 @@
       // 设置swipe高度 2:1
       this.swiper_height = wepy.getSystemInfoSync().windowWidth / 2
       this.getNotice()
-      this.loan_books = wepy.getStorageSync('loan_now')
     }
     onShareAppMessage(options) {
       return {}
