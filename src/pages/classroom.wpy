@@ -1,22 +1,22 @@
 <style lang="less">
+  @import "./src/less/config.less";
   page {
     font-size: 0.8rem;
-    background: #fffafa;
+    background: @bg-color;
     color: #555;
   }
-
   .picker {
     padding: 0.5rem;
     display: flex;
     justify-content: space-between;
   }
-
   .table {
     padding: 0.5rem;
     .row {
-      background: #eeeaea;
+      background: #efefef;
+      box-shadow: 4rpx 4rpx 8rpx #ddd;
       &:nth-child(1) {
-        background: #fffafa;
+        background: #efefef;
       }
       margin-top: 0.5rem;
       display: flex;
@@ -36,10 +36,12 @@
         }
       }
       .use {
+        box-shadow: 4rpx 4rpx 4rpx #ccc;
         background: red;
       }
       .not-use {
-        background: green;
+        box-shadow: 4rpx 4rpx 4rpx #ccc;
+        background: #008e59;
       }
     }
   }
@@ -47,8 +49,7 @@
 
 <template>
   <view class="classroom">
-    <picker mode="multiSelector" range-key="name" @change="changeBuilding" @columnchange="columnchange"
-            value="{{index}}" range="{{buildings}}">
+    <picker mode="multiSelector" range-key="name" @change="changeBuilding" @columnchange="columnchange" value="{{index}}" range="{{buildings}}">
       <view class="picker">
         <view>当前选择：{{building.addr}}-{{building.name}}</view>
         <view>
@@ -81,96 +82,52 @@
 
 <script>
   import wepy from 'wepy'
-  import {POST} from '../util/http'
+  import {
+    POST
+  } from '../util/http'
   import ModalMixin from '../mixins/modal'
-
-export default class Classroom extends wepy.page {
+  export default class Classroom extends wepy.page {
     config = {
       navigationBarTitleText: '我要自习'
     };
     data = {
       JA: [{
-        name: '一教A座',
-        value: 'yjA'
-      },
-      {
-        name: '一教B座',
-        value: 'yjB'
-      },
-      {
-        name: '一教C座',
-        value: 'yjC'
-      },
-      {
-        name: '一教D座',
-        value: 'yjD'
-      },
-      {
-        name: '综合楼B座',
-        value: 'zongB'
-      },
-      {
-        name: '综合楼C座',
-        value: 'zongC'
-      },
-      {
-        name: '文科楼一区',
-        value: 'wen1'
-      },
-      {
-        name: '文科楼二区',
-        value: 'wen2'
-      }, {
-        name: '文科楼三区',
-        value: 'wen3'
-      }
+          name: '一教A座',
+          value: 'yjA'
+        },
+        {
+          name: '一教B座',
+          value: 'yjB'
+        },
+        {
+          name: '一教C座',
+          value: 'yjC'
+        },
+        {
+          name: '一教D座',
+          value: 'yjD'
+        },
+        {
+          name: '综合楼B座',
+          value: 'zongB'
+        },
+        {
+          name: '综合楼C座',
+          value: 'zongC'
+        },
+        {
+          name: '文科楼一区',
+          value: 'wen1'
+        },
+        {
+          name: '文科楼二区',
+          value: 'wen2'
+        }, {
+          name: '文科楼三区',
+          value: 'wen3'
+        }
       ],
       WJ: [{
-        name: '东二教',
-        value: 'WJdong2'
-      },
-      {
-        name: '东三教',
-        value: 'WJdong3'
-      },
-      {
-        name: '基教楼A座',
-        value: 'WJjijiaoA'
-      },
-      {
-        name: '基教楼C座',
-        value: 'WJjijiaoC'
-      }
-      ],
-      HX: [{
-        name: '九教',
-        value: 'HX9'
-      },
-      {
-        name: '十教',
-        value: 'HX10'
-      }
-      ],
-      building: {
-        addr: '望江',
-        name: '东二教',
-        value: 'WJdong2'
-      },
-      buildings: [
-        [{
-          name: '望江',
-          value: 'WJ'
-        },
-        {
-          name: '江安',
-          value: 'JA'
-        },
-        {
-          name: '华西',
-          value: 'HX'
-        }
-        ],
-        [{
           name: '东二教',
           value: 'WJdong2'
         },
@@ -186,6 +143,51 @@ export default class Classroom extends wepy.page {
           name: '基教楼C座',
           value: 'WJjijiaoC'
         }
+      ],
+      HX: [{
+          name: '九教',
+          value: 'HX9'
+        },
+        {
+          name: '十教',
+          value: 'HX10'
+        }
+      ],
+      building: {
+        addr: '望江',
+        name: '东二教',
+        value: 'WJdong2'
+      },
+      buildings: [
+        [{
+            name: '望江',
+            value: 'WJ'
+          },
+          {
+            name: '江安',
+            value: 'JA'
+          },
+          {
+            name: '华西',
+            value: 'HX'
+          }
+        ],
+        [{
+            name: '东二教',
+            value: 'WJdong2'
+          },
+          {
+            name: '东三教',
+            value: 'WJdong3'
+          },
+          {
+            name: '基教楼A座',
+            value: 'WJjijiaoA'
+          },
+          {
+            name: '基教楼C座',
+            value: 'WJjijiaoC'
+          }
         ]
       ],
       index: [0, 0],
@@ -214,9 +216,10 @@ export default class Classroom extends wepy.page {
         })
       }
     }
-
     async getClassroom(classroom) {
-      const resp = await POST('/classroom', {classroom: classroom})
+      const resp = await POST('/classroom', {
+        classroom: classroom
+      })
       if (resp.status === 0) {
         this.rooms = JSON.parse(resp.data).roomdata
         this.$apply()
@@ -228,13 +231,11 @@ export default class Classroom extends wepy.page {
         this.Alert(resp.msg)
       }
     }
-
     async onLoad() {
       this.building = wepy.getStorageSync('classroom') || this.building
       // 获取教室
       this.getClassroom(this.building.value || 'WJdong2')
     }
-
     onShareAppMessage(options) {
       return {
         title: '一起来自习'
