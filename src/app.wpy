@@ -55,7 +55,6 @@
       super()
       this.use('requestfix')
     }
-    mixins = [HttpMixin]
     onLaunch() {
       this.getToken()
     }
