@@ -80,7 +80,7 @@
         // 登录服务器
         const resp = await POST('/login', {
           code: code
-        }, false)
+        })
         if (resp.status === 0) {
           const data = resp.data
           db.Set('token', data.token)

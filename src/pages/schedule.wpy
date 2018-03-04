@@ -62,7 +62,7 @@
             <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"></view>
             <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
               <text class="address">
-                                        <text>{{item.building}}</text>
+                                            <text>{{item.building}}</text>
               <text>{{item.classroom}}</text>
               </text>
               <text class="course-name">{{item.course_name}}</text>
@@ -77,8 +77,6 @@
 <script>
   import wepy from 'wepy'
   import Toast from "../components/toast";
-  import Verify from '../mixins/verify'
-  import ModalMixin from '../mixins/modal'
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
   import DataMixin from "../mixins/data";
@@ -88,7 +86,7 @@
       navigationBarTitleText: '我的课表',
       enablePullDownRefresh: true
     };
-    mixins = [Verify, ModalMixin, HttpMixin, ToastMixin, DataMixin];
+    mixins = [HttpMixin, ToastMixin, DataMixin];
     components = {
       toast: Toast
     }
