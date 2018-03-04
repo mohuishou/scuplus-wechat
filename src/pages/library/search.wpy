@@ -1,13 +1,11 @@
 <style lang="less">
   @import url("../../less/config");
-
   page {
     background: #eee;
   }
-
   .search-input {
     position: fixed;
-    z-index: 9999;
+    z-index: 1000;
     top: 0;
     background: @white;
     width: calc(~"100% - 1rem");
@@ -21,12 +19,12 @@
       width: calc(~"100% - 20px");
     }
   }
-
   .results {
     width: 100%;
     margin-top: 2rem;
     .result {
-      margin-top: 0.5rem;
+      // margin-top: 0.5rem;
+      border-bottom: 3rpx solid #eee;
       background: @white;
       display: flex;
       padding: 0.5rem;
@@ -58,10 +56,12 @@
 </style>
 
 <template>
+  <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
+  </toast>
   <view>
     <view class="search-input">
-      <input @blur="change" placeholder="请输入图书名称" confirm-type="search"/>
-      <icon type="search" size="18"/>
+      <input @blur="change" placeholder="请输入图书名称" confirm-type="search" />
+      <icon type="search" size="18" />
     </view>
     <scroll-view style="height:{{height}}px;" class="results" @scrolltolower="next" enable-back-to-top scroll-y>
       <block wx:for="{{books}}" wx:key="index">
@@ -84,11 +84,14 @@
 
 <script>
   import wepy from 'wepy'
-  import {POST} from '../../util/http'
-  import ModalMixin from '../../mixins/modal'
-
+  import Toast from "../../components/toast";
+  import HttpMixin from "../../mixins/http";
+  import ToastMixin from "../../mixins/toast";
   export default class Search extends wepy.page {
-    mixins = [ModalMixin]
+    mixins = [HttpMixin, ToastMixin]
+    components = {
+      toast: Toast
+    }
     config = {
       navigationBarTitleText: '图书搜索'
     };
@@ -117,49 +120,39 @@
         })
       }
     };
-
     async getBooks(keyword, isNext) {
       let nextPage = ''
       if (this.loading) return
       if (isNext) {
         nextPage = this.next_page
         if (nextPage === '') {
-          wepy.showModal({
-            title: '提示',
-            content: '已经到底了',
-            showCancel: false
-          })
+          this.ShowToast('已经到底了')
           return
         }
       }
       this.loading = true
-      const resp = await POST('/library/search', {
+      const resp = await this.POST('/library/search', {
         keyword: keyword,
         key_type: 'WRD',
         next_page: nextPage
       })
       this.loading = false
-      if (resp.status === 0) {
-        if (resp.data.books.length === 0) {
-          this.Alert('没有搜索到图书')
-          return
-        }
-        if (nextPage === '') {
-          this.books = resp.data.books
-        } else {
-          this.books = this.books.concat(resp.data.books)
-        }
-        this.next_page = resp.data.next_url
-        this.$apply()
-      } else {
-        this.Alert(resp.msg)
+      if (resp.data.books.length === 0) {
+        console.log("sadadas");
+        this.ShowToast('没有搜索到图书')
+        return
       }
+      if (nextPage === '') {
+        this.books = resp.data.books
+      } else {
+        this.books = this.books.concat(resp.data.books)
+      }
+      this.next_page = resp.data.next_url
+      this.$apply()
     }
-
     onLoad() {
       this.height = wx.getSystemInfoSync().windowHeight - 36
     }
-
     onShareAppMessage(options) {
       return {
         title: '搜索书籍'

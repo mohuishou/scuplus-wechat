@@ -1,17 +1,14 @@
 <!--suppress CssInvalidPropertyValue -->
 <style lang="less">
   @import url("../less/config");
-
   page {
     height: 100%;
   }
-
   .help {
     font-size: 0.7rem;
     color: #888;
     padding: 0 3%;
   }
-
   .input-group {
     &:hover {
       transition: all 1s;
@@ -45,7 +42,6 @@
       color: #ccc;
     }
   }
-
   #bind {
     height: 100%;
     #title {
@@ -84,7 +80,10 @@
     }
   }
 </style>
+
 <template>
+  <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
+  </toast>
   <view id="bind">
     <view id="title">
       <view>
@@ -94,11 +93,11 @@
     <form @submit="bind">
       <view class="input-group" hover-class="active">
         <text class="input-label">学号</text>
-        <input name="student_id" type="number" placeholder="请输入您的学号/工号"/>
+        <input name="student_id" type="number" placeholder="请输入您的学号/工号" />
       </view>
       <view class="input-group" hover-class="active">
         <text class="input-label">密码</text>
-        <input name="password" type="password" placeholder="请输入您的密码"/>
+        <input name="password" type="password" placeholder="请输入您的密码" />
       </view>
       <view class="help">
         <view>密码为统一身份认证平台(即EDU邮箱)的密码，默认密码为身份证后六位</view>
@@ -108,48 +107,39 @@
     </form>
   </view>
 </template>
+
 <script>
   import wepy from 'wepy'
-  import {POST} from '../util/http'
-  import ModalMixin from '../mixins/modal'
-
+  import Toast from "../components/toast";
+  import HttpMixin from "../mixins/http";
+  import ToastMixin from "../mixins/toast";
   export default class BindJwc extends wepy.page {
     config = {
       navigationBarTitleText: ''
     };
-    mixins = [ModalMixin]
+    mixins = [HttpMixin, ToastMixin]
+    components = {
+      toast: Toast
+    }
     methods = {
       bind(e) {
         let params = e.detail.value
         if (params.student_id == 0 || params.password == '') {
-          wepy.showToast({
-            title: '学号密码必填！',
-            icon: 'loading'
-          })
+          this.ShowToast('学号密码必填！')
           return
         }
         this.Bind(params)
       }
     };
-
     async Bind(params) {
-      const res = await POST('/bind', params)
-      if (res.status === 0) {
-        wepy.setStorageSync({
-          key: 'verify',
-          data: 1
-        })
-        wepy.showModal({
-          title: '绑定成功！',
-          content: res.msg,
-          showCancel: false
-        })
+      const res = await this.POST('/bind', params)
+      db.Set('verify', 1)
+      this.ShowToast('绑定成功！', 'success')
+      setTimeout(() => {
         wepy.navigateBack({
           delta: 1
         })
-      } else {
-        this.Alert(`绑定失败: ${res.msg}`)
-      }
+      }, 1000);
     }
   }
 </script>

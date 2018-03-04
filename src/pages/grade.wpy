@@ -1,5 +1,66 @@
+<style lang="less">
+  @import "./src/icon/iconfont.less";
+  @import "./src/less/config.less";
+  page {
+    background: #eee;
+  }
+  .grade {
+    margin: 0.5rem;
+  }
+  .header {
+    .none {
+      text-align: center;
+      background: #fff;
+    }
+    .grade-header {
+      border-radius: 0.2rem;
+      .title {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  .grade-header {
+    margin-top: 0.5rem;
+    background: @base-color;
+    color: #fff;
+    text-align: center;
+    padding: 0.5rem;
+    .title {
+      display: block;
+    }
+    .info {
+      font-size: 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 0.5rem;
+    }
+  }
+  .grade-lists {
+    background: #fff;
+    border-radius: 0.2rem;
+    display: block;
+    .grade-list {
+      display: flex;
+      border-bottom: 1px dashed #eee;
+      color: #666;
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+      text {
+        padding: 0.1rem;
+        display: table-cell;
+        flex: 1;
+        &:nth-child(1) {
+          flex: 4;
+        }
+      }
+    }
+  }
+</style>
+
 <template>
   <view class="grade">
+    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="header">
       <view wx:if="{{avg!=null}}" class="grade-header">
         <view class="title">
@@ -21,9 +82,8 @@
           </view>
         </view>
       </view>
-      <view @tap="updateGrades" wx:else class="none">
-        没有成绩，点击更新！
-      </view>
+      <empty wx:else msg="暂无成绩信息，下拉更新">
+      </empty>
     </view>
     <block wx:for="{{grades}}" wx:key="index">
       <view class="grade-lists">
@@ -60,19 +120,26 @@
     </block>
   </view>
 </template>
+
 <script>
   import wepy from 'wepy'
-  import {GetB, PostB} from '../util/http'
   import gradeUtil from '../util/grade'
-  import ModalMixin from '../mixins/modal'
-  import Verify from '../mixins/verify'
-
+  import Toast from "../components/toast";
+  import Empty from "../components/empty";
+  import HttpMixin from "../mixins/http";
+  import ToastMixin from "../mixins/toast";
+  import DataMixin from "../mixins/data";
+  import db from "../util/db"
   export default class Grade extends wepy.page {
     config = {
       navigationBarTitleText: '我的成绩',
       enablePullDownRefresh: true
     };
-    mixins = [Verify, ModalMixin];
+    components = {
+      empty: Empty,
+      toast: Toast
+    };
+    mixins = [HttpMixin, ToastMixin, DataMixin];
     data = {
       grades: null,
       avg: null
@@ -121,123 +188,32 @@
       }
     }
     async updateGrade() {
-      const resp = await PostB('/user/grade')
-      if (resp.status === 0) {
-        let grades = []
-        resp.data.forEach(e => {
-          if (!grades[e.term]) {
-            grades[e.term] = []
-          }
-          grades[e.term].push(e)
-        })
-        grades = gradeUtil.cal(grades)
-        grades = grades.reverse()
-        this.grades = grades
-        this.calAllGrades()
-        this.$apply()
-      } else {
-        this.Alert(resp.msg)
-      }
+      await this.PostWithBind('/user/grade')
+      this.get()
       wepy.stopPullDownRefresh()
     }
-
     onPullDownRefresh() {
       this.updateGrade()
     }
-
-    async getGrades() {
-      const resp = await GetB('/user/grade')
-      if (resp.status === 0) {
-        let grades = []
-        resp.data.forEach(e => {
-          if (!grades[e.term]) {
-            grades[e.term] = []
-          }
-          grades[e.term].push(e)
-        })
-        grades = gradeUtil.cal(grades)
-        grades = grades.reverse()
-        this.grades = grades
-        this.calAllGrades()
-        this.$apply()
-      } else {
-        this.Alert(resp.msg)
-      }
+    async get() {
+      const resp = await this.GetWithBind('/user/grade')
+      let grades = []
+      resp.data.forEach(e => {
+        if (!grades[e.term]) {
+          grades[e.term] = []
+        }
+        grades[e.term].push(e)
+      })
+      grades = gradeUtil.cal(grades)
+      grades = grades.reverse()
+      this.grades = grades
+      this.calAllGrades()
+      this.$apply()
+      this.InitSet("grades", grades)
     }
-
     onLoad() {
-      // 获取本地缓存的成绩
-      // let grades = wepy.wx.getStorageSync("grades")
-      // if (!grades){
-      //     // 本地缓存没有成绩，从服务器拉取
-      // }
-      if (this.verify()) {
-        this.getGrades()
-      }
+      this.Init("grades")
     }
   }
 </script>
-<style lang="less">
-  @import "./src/icon/iconfont.less";
-  @import "./src/less/config.less";
 
-  page {
-    background: #eee;
-  }
-
-  .grade {
-    margin: 0.5rem;
-  }
-
-  .header {
-    .none {
-      text-align: center;
-      background: #fff;
-    }
-    .grade-header {
-      border-radius: 0.2rem;
-      .title {
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-  }
-
-  .grade-header {
-    margin-top: 0.5rem;
-    background: @base-color;
-    color: #fff;
-    text-align: center;
-    padding: 0.5rem;
-    .title {
-      display: block;
-    }
-    .info {
-      font-size: 0.7rem;
-      display: flex;
-      justify-content: space-between;
-      padding-top: 0.5rem;
-    }
-  }
-
-  .grade-lists {
-    background: #fff;
-    border-radius: 0.2rem;
-    display: block;
-    .grade-list {
-      display: flex;
-      border-bottom: 1px dashed #eee;
-      color: #666;
-      font-size: 0.8rem;
-      padding: 0.2rem 0.5rem;
-      text {
-        padding: 0.1rem;
-        display: table-cell;
-        flex: 1;
-        &:nth-child(1) {
-          flex: 4;
-        }
-      }
-    }
-  }
-</style>

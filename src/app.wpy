@@ -55,6 +55,7 @@
       super()
       this.use('requestfix')
     }
+    mixins = [HttpMixin]
     onLaunch() {
       this.getToken()
     }
@@ -80,17 +81,11 @@
         // 登录服务器
         const resp = await POST('/login', {
           code: code
-        })
+        }, false)
         if (resp.status === 0) {
           const data = resp.data
-          wepy.setStorage({
-            key: 'token',
-            data: data.token
-          })
-          wepy.setStorage({
-            key: 'verify',
-            data: data.verify
-          })
+          db.Set('token', data.token)
+          db.Set('verify', data.verify)
           if (data.verify === 0) {
             wepy.navigateTo({
               url: 'bind'
@@ -112,7 +107,7 @@
       })
     }
     async getToken() {
-      let token = wepy.getStorageSync('token')
+      let token = db.Get('token')
       if (!token) {
         this.login()
       } else {

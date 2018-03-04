@@ -149,9 +149,7 @@
 
 <script>
   import wepy from 'wepy'
-  import {
-    GET
-  } from '../util/http'
+  import HttpMixin from "../mixins/http";
   import index from '../util/index/index'
   import MView from '../components/mview'
   import Card from '../components/card'
@@ -167,6 +165,7 @@
       "exam-card": Card,
       "empty": Empty
     }
+    mixins = [HttpMixin]
     data = {
       notices: [{
         cover: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
@@ -177,7 +176,7 @@
     };
     computed = {
       verify() {
-        return wepy.getStorageSync('verify')
+        return db.Get('verify')
       },
       ecardBalance() {
         const trans = db.Get("trans")
@@ -243,19 +242,10 @@
         this.navigate(item)
       }
     };
-    getNotice() {
-      let self = this
-      GET('/notices').then(resp => {
-        if (resp.status === 0) {
-          self.notices = resp.data
-          self.$apply()
-        } else {
-          wepy.showModal({
-            title: '数据获取失败！',
-            content: resp.msg
-          })
-        }
-      })
+    async getNotice() {
+      const resp = await this.GET('/notices', {}, false)
+      this.notices = resp.data
+      this.$apply()
     }
     onLoad() {
       // 设置swipe高度 2:1

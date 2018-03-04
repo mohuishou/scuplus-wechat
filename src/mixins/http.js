@@ -2,6 +2,7 @@ import wepy from 'wepy'
 import {
   domain
 } from '../config'
+import db from '../util/db'
 
 export default class HttpMixin extends wepy.mixin {
   GetWithBind(url, params = {}, showToast = true, handler = {}) {
@@ -13,7 +14,7 @@ export default class HttpMixin extends wepy.mixin {
   }
 
   async requestWithBind(method, url, params = {}, showToast = true, handler = {}) {
-    if (wepy.getStorageSync('verify') === 0) {
+    if (db.Get('verify') === 0) {
       wepy.showModal({
         title: '绑定',
         content: '统一认证平台未绑定或密码错误，是否跳转到绑定页面？',
@@ -49,7 +50,7 @@ export default class HttpMixin extends wepy.mixin {
     handler.url = domain + url
     handler.data = params
     handler.header = {
-      'Authorization': 'Bearer ' + wepy.getStorageSync('token')
+      'Authorization': 'Bearer ' + db.Get('token')
     }
     handler.method = method
     if (method === 'POST') {

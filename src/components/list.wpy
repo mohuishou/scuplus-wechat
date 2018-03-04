@@ -28,6 +28,8 @@
 </style>
 
 <template>
+  <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
+  </toast>
   <scroll-view style="height:{{isTag != '' ? height : ''}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y>
     <view style="{{isTag != '' ? 'margin-top: 0px;' : '' }}" class="lists">
       <block wx:for="{{details}}" wx:key="{{item.id}}">
@@ -52,12 +54,14 @@
 
 <script>
   import wepy from "wepy";
-  import {
-    GET
-  } from "../util/http";
-  import ModalMixin from "../mixins/modal"
+  import Toast from "../components/toast";
+  import HttpMixin from "../mixins/http";
+  import ToastMixin from "../mixins/toast";
   export default class List extends wepy.page {
-    mixins = [ModalMixin]
+    mixins = [HttpMixin, ToastMixin]
+    components = {
+      toast: Toast
+    }
     props = {
       params: {
         type: Object,
@@ -104,23 +108,19 @@
     }
     async getDetails() {
       try {
-        const resp = await GET("/details", Object.assign({
+        const resp = await this.GET("/details", Object.assign({
           page: this.page,
           page_size: this.page_size,
         }, this.params))
-        if (resp.status == 0) {
-          for (let i = 0; i < resp.data.data.length; i++) {
-            resp.data.data[i].created_at = this.timeParser(resp.data.data[i].created_at)
-          }
-          if (this.page != 1) {
-            this.details = this.details.concat(resp.data.data)
-          } else {
-            this.details = resp.data.data
-          }
-          this.$apply();
-        } else {
-          this.Alert(res.msg)
+        for (let i = 0; i < resp.data.data.length; i++) {
+          resp.data.data[i].created_at = this.timeParser(resp.data.data[i].created_at)
         }
+        if (this.page != 1) {
+          this.details = this.details.concat(resp.data.data)
+        } else {
+          this.details = resp.data.data
+        }
+        this.$apply();
       } catch (err) {}
     }
     timeParser(t) {

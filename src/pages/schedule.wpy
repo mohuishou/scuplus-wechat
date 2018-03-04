@@ -76,10 +76,6 @@
 
 <script>
   import wepy from 'wepy'
-  import {
-    GetB,
-    PostB
-  } from '../util/http'
   import Toast from "../components/toast";
   import Verify from '../mixins/verify'
   import ModalMixin from '../mixins/modal'

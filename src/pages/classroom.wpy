@@ -49,6 +49,8 @@
 
 <template>
   <view class="classroom">
+    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
+    </toast>
     <picker mode="multiSelector" range-key="name" @change="changeBuilding" @columnchange="columnchange" value="{{index}}" range="{{buildings}}">
       <view class="picker">
         <view>当前选择：{{building.addr}}-{{building.name}}</view>
@@ -82,10 +84,11 @@
 
 <script>
   import wepy from 'wepy'
-  import {
-    POST
-  } from '../util/http'
-  import ModalMixin from '../mixins/modal'
+  import Toast from "../components/toast";
+  import ExamMixin from "../mixins/exam";
+  import HttpMixin from "../mixins/http";
+  import ToastMixin from "../mixins/toast";
+  import db from "../util/db"
   export default class Classroom extends wepy.page {
     config = {
       navigationBarTitleText: '我要自习'
@@ -193,7 +196,10 @@
       index: [0, 0],
       rooms: []
     }
-    mixins = [ModalMixin]
+    mixins = [ExamMixin, HttpMixin, ToastMixin]
+    components = {
+      toast: Toast
+    }
     methods = {
       changeBuilding(e) {
         this.index = e.detail.value
@@ -216,25 +222,18 @@
         })
       }
     }
-    async getClassroom(classroom) {
-      const resp = await POST('/classroom', {
+    async get(classroom) {
+      const resp = await this.POST('/classroom', {
         classroom: classroom
       })
-      if (resp.status === 0) {
-        this.rooms = JSON.parse(resp.data).roomdata
-        this.$apply()
-        wepy.setStorage({
-          key: 'classroom',
-          data: this.building
-        })
-      } else {
-        this.Alert(resp.msg)
-      }
+      this.rooms = JSON.parse(resp.data).roomdata
+      this.$apply()
+      db.Set('classroom', this.building)
     }
     async onLoad() {
-      this.building = wepy.getStorageSync('classroom') || this.building
+      this.building = db.Get('classroom') || this.building
       // 获取教室
-      this.getClassroom(this.building.value || 'WJdong2')
+      this.get(this.building.value || 'WJdong2')
     }
     onShareAppMessage(options) {
       return {

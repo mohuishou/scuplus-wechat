@@ -1,5 +1,6 @@
 <template>
   <view class="details">
+    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="header">
       <view class="title">
         <text></text>
@@ -8,7 +9,7 @@
       </view>
     </view>
     <view class="content">
-      <htmlParser :parserName="name" :parserContent.sync="content"/>
+      <htmlParser :parserName="name" :parserContent.sync="content" />
     </view>
     <view wx:if="{{url}}" class="footer">
       <view>
@@ -17,15 +18,19 @@
     </view>
   </view>
 </template>
+
 <script>
   import wepy from 'wepy'
   import htmlParser from '../components/htmlParser'
-  import {GET} from '../util/http'
-
+  import Toast from "../components/toast";
+  import HttpMixin from "../mixins/http";
+  import ToastMixin from "../mixins/toast";
   export default class Details extends wepy.page {
     config = {}
+    mixins = [HttpMixin, ToastMixin]
     components = {
-      htmlParser: htmlParser
+      htmlParser: htmlParser,
+      toast: Toast
     }
     data = {
       title: '',
@@ -33,51 +38,41 @@
       name: '123',
       url: ''
     }
-
     async getDetail(id) {
-      const resp = await GET(`/detail/${id}`)
-      if (resp.status === 0) {
-        let title = resp.data.title
-        if (resp.data.category === 'scuinfo') {
-          title = resp.data.author
-          resp.data.content = resp.data.content.replace(/\n/g, '<br />')
-        }
-        this.content = resp.data.content
-        wepy.setNavigationBarTitle({
-          title: title
-        })
-        this.title = title
-        this.url = resp.data.url
-        this.$apply()
-        this.$invoke('htmlParser', 'htmlParserNotice')
+      const resp = await this.GET(`/detail/${id}`)
+      let title = resp.data.title
+      if (resp.data.category === 'scuinfo') {
+        title = resp.data.author
+        resp.data.content = resp.data.content.replace(/\n/g, '<br />')
       }
+      this.content = resp.data.content
+      wepy.setNavigationBarTitle({
+        title: title
+      })
+      this.title = title
+      this.url = resp.data.url
+      this.$apply()
+      this.$invoke('htmlParser', 'htmlParserNotice')
     }
-
     async getNotice(id) {
-      const resp = await GET(`/notice/${id}`)
-      if (resp.status === 0) {
-        this.content = resp.data.content
-        wepy.setNavigationBarTitle({
-          title: resp.data.title
-        })
-        this.$apply()
-        this.$invoke('htmlParser', 'htmlParserNotice')
-      }
+      const resp = await this.GET(`/notice/${id}`)
+      this.content = resp.data.content
+      wepy.setNavigationBarTitle({
+        title: resp.data.title
+      })
+      this.$apply()
+      this.$invoke('htmlParser', 'htmlParserNotice')
     }
-
     async onLoad(option) {
       switch (option.from) {
         case 'notice':
-          await
-            this.getNotice(option.id)
+          await this.getNotice(option.id)
           break
         default:
-          await
-            this.getDetail(option.id)
+          await this.getDetail(option.id)
           break
       }
     }
-
     onShareAppMessage(options) {
       return {
         title: this.title
@@ -85,11 +80,11 @@
     }
   }
 </script>
+
 <style lang="less">
   page {
     background: #eee;
   }
-
   .details {
     margin: 0.2rem;
     padding: 0.5rem;
@@ -97,14 +92,12 @@
     border: 1px solid #ddd;
     border-radius: 0.1rem;
   }
-
   .content {
     view {
       line-height: 180% !important;
       font-size: 1rem !important;
     }
   }
-
   .footer {
     margin-top: 2rem;
     font-size: 0.5rem;
