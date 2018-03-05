@@ -110,7 +110,7 @@
     }
     async onPullDownRefresh() {
       try {
-        await PostWithBind('/user/schedule')
+        await this.PostWithBind('/user/schedule')
         this.get()
         wepy.stopPullDownRefresh()
       } catch (error) {
