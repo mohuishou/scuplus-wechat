@@ -217,7 +217,7 @@
       if (item.type == 'login' && this.verify == 0) {
         wepy.showModal({
           title: '账号信息错误',
-          content: '教务处账号未绑定或密码错误！是否前往绑定？',
+          content: '统一身份认证账号未绑定或密码错误！是否前往绑定？',
           success: function(res) {
             if (res.confirm) {
               wepy.navigateTo({
