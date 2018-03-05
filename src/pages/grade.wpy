@@ -48,6 +48,12 @@
       color: #666;
       font-size: 0.8rem;
       padding: 0.2rem 0.5rem;
+      &.select {
+        background: #eee !important;
+      }
+      &:nth-child(2n+1) {
+        background-color: #f8f8f8;
+      }
       text {
         padding: 0.1rem;
         display: table-cell;
@@ -109,8 +115,8 @@
           <text>学分</text>
           <text>属性</text>
         </view>
-        <block wx:for="{{item.grades}}" wx:key="{{index}}" wx:for-item="grade">
-          <view class="grade-list">
+        <block wx:for="{{item.grades}}" wx:key="{{j}}" wx:for-item="grade" wx:for-index="j">
+          <view class="grade-list {{grade.selected ? 'select' : ''}}" @tap="select({{index}}, {{j}})">
             <text>{{grade.course_name}}</text>
             <text>{{grade.grade}}</text>
             <text>{{grade.gpa}}</text>
@@ -187,6 +193,10 @@
     methods = {
       updateGrades() {
         this.updateGrade()
+      },
+      select(i, j) {
+        this.grades[i].grades[j].selected = !this.grades[i].grades[j].selected
+        this.$apply()
       }
     }
     async updateGrade() {
@@ -212,18 +222,16 @@
           }
           grades[map[term_key]].push(e)
         })
-        console.log(grades);
         grades = gradeUtil.cal(grades)
         this.grades = grades
-        this.calAllGrades()
         this.$apply()
+        this.calAllGrades()
         this.InitSet("grades", grades)
       } catch (error) {
         console.log(error);
       }
     }
     async onLoad() {
-      // this.get()
       await this.Init("grades")
       this.calAllGrades()
     }
