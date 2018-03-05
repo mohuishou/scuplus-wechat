@@ -16,6 +16,13 @@
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
+      .login {
+        &.no-verify {
+          .iconfont {
+            background: #ccc !important;
+          }
+        }
+      }
     }
   }
   .mview {
@@ -88,7 +95,7 @@
     <view class="func">
       <view class="func-row">
         <repeat for="{{funcs}}" item="item" key="index">
-          <mview @mtap.user="to" class="mview" :arg.sync="item">
+          <mview @mtap.user="to" class="mview {{item.type}} {{verify === 1 ? '' : 'no-verify'}}" :arg.sync="item">
             <view class="icon-btn" slot="content">
               <view style="background: {{item.bg}};" class="iconfont icon-{{item.icon}}"></view>
               <text>{{item.name}}</text>
@@ -99,7 +106,7 @@
     </view>
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
     <view wx:if="{{verify > 0}}">
-      <schedule-card iconBg="#eacdd1" icon="kechengbiao" title="今日课表" :isShow.sync="todaySchedules" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
+      <schedule-card iconBg="#eacdd1" icon="kechengbiao" title="今日课表" bg="card-schedule.png" :isShow.sync="todaySchedules" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
         <block slot="content" wx:for="{{todaySchedules}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
           <view class="card-list">
             <view class="card-left">
@@ -124,12 +131,12 @@
           </view>
         </block>
       </book-card>
-      <ecard :isShow.sync="ecardBalance" footText="查看交易流水" icon="card" bg="card-library.png" title="一卡通余额" url="/pages/ecard" iconBg="#b92c18">
+      <ecard :isShow.sync="ecardBalance" footText="查看交易流水" icon="card" bg="card-ecard.png" title="一卡通余额" url="/pages/ecard" iconBg="#b92c18">
         <view class="ecard" slot="content">
           {{ecardBalance[0]}}
         </view>
       </ecard>
-      <exam-card iconBg="#2578b5" icon="exam" title="考表" :isShow.sync="exams" footText="查看完整考表" url="/pages/exam" noneText="近期没有考试">
+      <exam-card iconBg="#2578b5" bg="card-exam.png" icon="exam" title="考表" :isShow.sync="exams" footText="查看完整考表" url="/pages/exam" noneText="近期没有考试">
         <block slot="content" wx:for="{{exams}}" wx:key="{{index}}">
           <view class="card-list">
             <view class="card-left">

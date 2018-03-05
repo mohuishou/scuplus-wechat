@@ -61,11 +61,11 @@
             <view class="row title" wx:if="{{i == 0 || j==0}}">{{item}}</view>
             <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"></view>
             <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
-              <text class="address">
-                                            <text>{{item.building}}</text>
-              <text>{{item.classroom}}</text>
-              </text>
               <text class="course-name">{{item.course_name}}</text>
+              <text class="address">
+                <text>{{item.building}}</text>
+                <text>{{item.classroom}}</text>
+              </text>
             </view>
           </block>
         </view>
