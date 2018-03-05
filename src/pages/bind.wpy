@@ -113,6 +113,7 @@
   import Toast from "../components/toast";
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
+  import db from "../util/db"
   export default class BindJwc extends wepy.page {
     config = {
       navigationBarTitleText: ''
@@ -132,14 +133,16 @@
       }
     };
     async Bind(params) {
-      const res = await this.POST('/bind', params)
-      db.Set('verify', 1)
-      this.ShowToast('绑定成功！', 'success')
-      setTimeout(() => {
+      try {
+        const res = await this.POST('/bind', params)
+        db.Set('verify', 1)
+        this.ShowToast('绑定成功！', 'success')
         wepy.navigateBack({
           delta: 1
         })
-      }, 1000);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 </script>

@@ -95,11 +95,11 @@
         this.ShowToast('续借成功', 'success')
       }
     }
-    watch={
-      loan_now(newVal,oldVal){
+    watch = {
+      loan_now(newVal, oldVal) {
         this.loan_books = newVal
       },
-      loan_history(newVal,oldVal){
+      loan_history(newVal, oldVal) {
         this.loan_books = newVal
       }
     }
@@ -110,8 +110,13 @@
       this.$apply()
       this.InitSet('loan_' + this.loan_type, resp.data)
     }
-    onPullDownRefresh() {
-      this.get()
+    async onPullDownRefresh() {
+      try {
+        await this.get()
+        wepy.stopPullDownRefresh()
+      } catch (error) {
+        console.log(error);
+      }
     }
     onLoad(options) {
       if (options.type && options.type === 'history') {

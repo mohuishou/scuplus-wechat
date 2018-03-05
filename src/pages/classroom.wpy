@@ -205,7 +205,7 @@
         this.index = e.detail.value
         this.building = this.buildings[1][this.index[1]]
         this.building.addr = this.buildings[0][this.index[0]].name
-        this.getClassroom(this.building.value)
+        this.get(this.building.value)
       },
       columnchange(e) {
         if (e.detail.column !== 0) {
