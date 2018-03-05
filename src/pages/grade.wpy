@@ -196,23 +196,33 @@
       this.updateGrade()
     }
     async get() {
-      const resp = await this.GetWithBind('/user/grade')
-      let grades = []
-      resp.data.forEach(e => {
-        if (!grades[e.term]) {
-          grades[e.term] = []
-        }
-        grades[e.term].push(e)
-      })
-      grades = gradeUtil.cal(grades)
-      grades = grades.reverse()
-      this.grades = grades
-      this.calAllGrades()
-      this.$apply()
-      this.InitSet("grades", grades)
+      try {
+        const resp = await this.GetWithBind('/user/grade')
+        let grades = []
+        let map = {}
+        let i = 0
+        resp.data.forEach(e => {
+          const term_key = `${e.year}${e.term}`
+          if (!(term_key in map)) {
+            map[term_key] = i
+            i++
+            grades[map[term_key]] = []
+          }
+          grades[map[term_key]].push(e)
+        })
+        console.log(grades);
+        grades = gradeUtil.cal(grades)
+        this.grades = grades
+        this.calAllGrades()
+        this.$apply()
+        this.InitSet("grades", grades)
+      } catch (error) {
+        console.log(error);
+      }
     }
-    onLoad() {
-      this.Init("grades")
+    async onLoad() {
+      // this.get()
+      await this.Init("grades")
       this.calAllGrades()
     }
   }
