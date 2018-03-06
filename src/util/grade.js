@@ -1,7 +1,3 @@
-
-let grade = {
-};
-
 /**
  * calType: 成绩计算类型，0：表示使用原有方式计算，1:表示采用新方式
  */
@@ -62,7 +58,7 @@ const LEVLE_GRADE = {
  * 绩点计算器
  * @param {Object} data 带计算的数据
  */
-grade.cal = function (data) {
+let cal = function (data) {
   let grade = [];
   for (let k = 0; k < data.length; k++) {
     if (!data[k]) {
@@ -90,7 +86,7 @@ let setType = (term_name) => {
  * 计算一个学期的平均成绩与绩点
  * @param {Array} grades 
  */
-function calTermGrade(grades) {
+function calTermGrade(grades, init = true) {
   let sum = {
     all: {
       grade: 0,
@@ -117,10 +113,13 @@ function calTermGrade(grades) {
   let results = grades.map((obj, i) => {
     if (obj.course_id) {
       i == 0 && setType(obj.term_name)
-      obj.selected = false;
-      obj.gradeCal = lv2grade(obj.grade);
-      obj.gpa = grade2gpa(obj.gradeCal);
-      obj.credit = obj.credit - 0;
+      if (init) {
+        obj.selected = false;
+        obj.gradeCal = lv2grade(obj.grade);
+        obj.gpa = grade2gpa(obj.gradeCal);
+        obj.credit = obj.credit - 0;
+      }
+
       if (obj.course_type == "必修") {
         sum.required.grade += obj.gradeCal * obj.credit;
         sum.required.credit += obj.credit;
@@ -188,4 +187,7 @@ function lv2grade(g) {
   }
 }
 
-module.exports = grade;
+module.exports = {
+  cal,
+  calTermGrade
+};

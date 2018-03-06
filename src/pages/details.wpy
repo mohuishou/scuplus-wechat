@@ -8,7 +8,7 @@
       <view class="info">
       </view>
     </view>
-    <view class="content">
+    <view class="content {{from}}">
       <htmlParser :parserName="name" :parserContent.sync="content" />
     </view>
     <view wx:if="{{url}}" class="footer">
@@ -36,7 +36,8 @@
       title: '',
       content: '',
       name: '123',
-      url: ''
+      url: '',
+      from: 'news'
     }
     async getDetail(id) {
       const resp = await this.GET(`/detail/${id}`)
@@ -64,6 +65,7 @@
       this.$invoke('htmlParser', 'htmlParserNotice')
     }
     async onLoad(option) {
+      this.from = option.from
       switch (option.from) {
         case 'notice':
           await this.getNotice(option.id)
@@ -92,10 +94,33 @@
     border: 1px solid #ddd;
     border-radius: 0.1rem;
   }
-  .content {
+  .wxParse-tr {
+    height: auto !important;
+    border-bottom: 1px dashed #ccc !important;
+    align-items: flex-start !important;
+    .wxParse-td,
+    .wxParse-th {
+      border: none !important;
+      height: auto !important;
+    }
+  }
+  .wxParse-img {
+    margin: 0 auto;
+    width: 100%;
+    display: block;
+    background-color: transparent;
+  }
+  .content.news {
     view {
-      line-height: 180% !important;
+      line-height: 150% !important;
       font-size: 1rem !important;
+    }
+    .wxParse-img {
+      margin: 0 auto;
+      width: 100%;
+      display: block;
+      min-height: 400rpx;
+      background-color: transparent;
     }
   }
   .footer {

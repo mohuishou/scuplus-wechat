@@ -71,22 +71,4 @@
 
 <style lang="less">
   @import "../plugins/wxParse/wxParse.wxss";
-  
-  .wxParse-tr {
-    height: auto !important;
-    border-bottom: 1px dashed #ccc !important;
-    align-items: flex-start !important;
-    .wxParse-td,
-    .wxParse-th {
-      border: none !important;
-      height: auto !important;
-    }
-  }
-  .wxParse-img {
-    margin: 0 auto;
-    width: 100%;
-    min-height: ~"200rpx";
-    display: block;
-    background-color: transparent;
-  }
 </style>
