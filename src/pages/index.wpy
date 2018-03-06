@@ -59,10 +59,9 @@
   }
   .swiper {
     width: 100%;
-    z-index: 10;
+    z-index: 99;
     top: 0;
     swiper-item {
-      z-index: 20;
       width: 100%;
     }
     image {
@@ -84,9 +83,9 @@
 <template>
   <view>
     <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
-    <swiper style="height: {{swiper_height}}px;" class="swiper" indicator-dots="true" autoplay="true" interval="4000" duration="1000">
-      <block wx:for="{{notices}}" wx:key="item">
-        <swiper-item style="height: {{swiper_height}}px;">
+    <swiper style="height: {{swiper_height}}px;" class="swiper"  autoplay="true" interval="4000" duration="1000">
+      <block wx:for="{{notices}}" wx:key="{{index}}">
+        <swiper-item >
           <image style="height: {{swiper_height}}px;" @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
         </swiper-item>
       </block>
@@ -258,6 +257,7 @@
       // 设置swipe高度 2:1
       this.swiper_height = wepy.getSystemInfoSync().windowWidth / 2
       this.getNotice()
+      // this.notices = []
     }
     onShareAppMessage(options) {
       return {}

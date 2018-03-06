@@ -103,14 +103,14 @@
       this.$apply()
     }
     async get() {
-      const resp = await this.GetWithBind('/user/schedule')
+      const resp = await this.GetWithBind('/user/schedule',{term: 1})
       this.initSchedules(resp.data)
       this.$apply()
       this.InitSet("schedules", this.schedules)
     }
     async onPullDownRefresh() {
       try {
-        await this.PostWithBind('/user/schedule')
+        await this.PostWithBind('/user/schedule',{term: 1})
         await this.get()
         wepy.stopPullDownRefresh()
       } catch (error) {

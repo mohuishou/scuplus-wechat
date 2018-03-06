@@ -283,11 +283,9 @@
         const result = gradeUtil.calTermGrade(grades, false)
         wepy.showModal({
           title: "计算结果",
-          content: `
-            您共选择${grades.length}门课程, 学分共计: ${result.sum.all.credit}; \r\n
-            平均分: ${result.avg.all.grade}; \r\n
-            平均绩点: ${result.avg.all.gpa}; \r\n
-            `,
+          content: `您共选择${grades.length}门课程, 学分共计: ${result.sum.all.credit}; \r
+平均分: ${result.avg.all.grade}; \r
+平均绩点: ${result.avg.all.gpa}; \r`,
           showCancel: false
         })
       },
