@@ -23,7 +23,7 @@
         background-color: transparent;
       }
       view {
-        width: 100%;
+        // width: 100%;
         height: 100%;
       }
     }
@@ -33,15 +33,14 @@
 <template>
   <form @submit="cache" class="okokok" report-submit>
     <button formType="submit">
-                  <slot name="content"></slot>
-                  {{param.url}}
-                </button>
+      <slot name="content"></slot>
+    </button>
   </form>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import HttpMixin from '../mixins/http'
+  import HttpMixin from 'mixins/http'
   export default class MView extends wepy.component {
     props = {
       args: {
@@ -50,7 +49,6 @@
       },
       arg: {
         type: Object,
-        twoWay: true
       }
     }
     mixins = [HttpMixin]

@@ -1,0 +1,12 @@
+<style lang="less">
+
+</style>
+<template>
+  <view>
+
+  </view>
+</template>
+<script>
+import wepy from "wepy";
+export default class FeedBackList extends wepy.page {}
+</script>

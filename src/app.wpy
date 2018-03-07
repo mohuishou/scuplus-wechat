@@ -18,7 +18,6 @@
         'pages/newsLists',
         'pages/tagLists',
         'pages/classroom',
-        'pages/feedback',
         'pages/schedule',
         'pages/grade',
         'pages/details',
@@ -26,6 +25,8 @@
         'pages/ecard',
         'pages/exam',
         'pages/my/my',
+        'pages/my/feedback',
+        'pages/my/feedbackList',
       ],
       window: {
         navigationBarBackgroundColor: '#f06292',
