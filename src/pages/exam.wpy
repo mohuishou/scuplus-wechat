@@ -120,13 +120,13 @@
 
 <script>
   import wepy from "wepy";
-  import Empty from "../components/empty";
-  import Toast from "../components/toast";
-  import ExamMixin from "../mixins/exam";
-  import HttpMixin from "../mixins/http";
-  import ToastMixin from "../mixins/toast";
-  import DataMixin from "../mixins/data";
-  import db from "../util/db"
+  import Empty from "components/empty";
+  import Toast from "components/toast";
+  import ExamMixin from "mixins/exam";
+  import HttpMixin from "mixins/http";
+  import ToastMixin from "mixins/toast";
+  import DataMixin from "mixins/data";
+  import db from "util/db"
   export default class Exam extends wepy.page {
     config = {
       navigationBarTitleText: '考试安排',

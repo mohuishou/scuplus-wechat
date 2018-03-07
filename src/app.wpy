@@ -48,6 +48,12 @@
             text: '资讯',
             iconPath: 'icon/news.png',
             selectedIconPath: 'icon/news@select.png'
+          },
+          {
+            pagePath: 'pages/my/my',
+            text: '个人中心',
+            iconPath: 'icon/user.png',
+            selectedIconPath: 'icon/user@select.png'
           }
         ]
       }
