@@ -44,13 +44,11 @@
     box-shadow: 4rpx 4rpx 4rpx #ddd;
     .grade-list {
       display: flex;
-      border-bottom: 1px dashed #eee;
       color: #666;
       font-size: 0.8rem;
       padding: 0.2rem 0.5rem;
       &.select {
-        background: @base-color !important;
-        color: #fff !important;
+        background: #ddd !important;
       }
       &:nth-child(2n+1) {
         background-color: #f8f8f8;
@@ -284,8 +282,8 @@
         wepy.showModal({
           title: "计算结果",
           content: `您共选择${grades.length}门课程, 学分共计: ${result.sum.all.credit}; \r
-平均分: ${result.avg.all.grade}; \r
-平均绩点: ${result.avg.all.gpa}; \r`,
+  平均分: ${result.avg.all.grade}; \r
+  平均绩点: ${result.avg.all.gpa}; \r`,
           showCancel: false
         })
       },
