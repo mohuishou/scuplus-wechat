@@ -52,20 +52,20 @@
       <htmlParser parserName="name" parserType="md" :parserContent.sync="content" />
     </view>
     <view class="comments">
-      <repeat for="{{comments}}">
+      <repeat for="{{commentArr}}" index="i" key="{{i}}">
         <view class="comment">
-          <fb-comment :comment.sync="item"></fb-comment>
-          <view class="username">——{{item.nickName}}</view>
+          <htmlParser2 parserName="name2" parserType="md" :parserContent.sync="item" />
+          <view class="username">——{{comments[i].nickName}}</view>
         </view>
-      </repeat>
     </view>
+    </repeat>
+  </view>
   </view>
 </template>
 
 <script>
   import wepy from "wepy";
   import htmlParser from "components/htmlParser";
-  import FBComment from "components/feedbackComment";
   import Toast from "components/toast";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
@@ -78,7 +78,6 @@
       toast: Toast,
       htmlParser: htmlParser,
       htmlParser2: htmlParser,
-      "fb-comment": FBComment,
     };
     mixins = [HttpMixin, ToastMixin];
     computed = {
@@ -91,12 +90,15 @@
     };
     data = {
       issue: {},
-      comments: []
+      comments: [],
+      commentArr: []
     };
     watch = {
       comments(newVal, oldVal) {
+        this.commentArr = []
         for (let i = 0; i < newVal.length; i++) {
           const e = newVal[i];
+          this.commentArr.push(e.body)
           if (e.user.login == "mohuishou") {
             newVal[i].nickName = "管理员"
           } else {
@@ -116,6 +118,7 @@
         this.comments = resp.data.comments;
         this.$apply()
         this.$invoke("htmlParser", "htmlParserNotice");
+        this.$invoke("htmlParser2", "htmlParserNotice");
       } catch (error) {
         console.log(error);
       }

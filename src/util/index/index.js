@@ -13,13 +13,6 @@ const funcs = [{
     type: 'login'
   },
   {
-    name: '反馈',
-    url: 'feedback',
-    icon: 'fankui',
-    bg: '#569597',
-    type: 'normal'
-  },
-  {
     name: '自习',
     url: 'classroom',
     icon: 'building',
