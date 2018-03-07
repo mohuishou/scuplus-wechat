@@ -67,7 +67,9 @@
     }
     methods = {
       to(id) {
-        console.log(id);
+        wepy.navigateTo({
+          url: "/pages/my/feedbackDetail?id=" + id
+        });
       }
     }
     async onLoad() {

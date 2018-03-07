@@ -19,6 +19,7 @@ module.exports = {
       'config': path.join(__dirname, 'src/config'),
       'less': path.join(__dirname, 'src/less'),
       'icon': path.join(__dirname, 'src/icon'),
+      'plugins': path.join(__dirname, 'src/plugins'),
     },
     modules: ['node_modules']
   },

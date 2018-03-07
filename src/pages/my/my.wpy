@@ -79,6 +79,10 @@
           url: "/pages/my/feedback?index=1"
         },
         {
+          name: "我的反馈",
+          url: "/pages/my/feedbackList"
+        },
+        {
           name: "账号绑定",
           url: "/pages/bind"
         }

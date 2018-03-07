@@ -1,18 +1,124 @@
 <style lang="less">
-
+  @import "./src/less/config";
+  page {
+    background: @bg-color;
+  }
+  .title {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 20rpx;
+    border-bottom: 2rpx solid #eee;
+    .tag {
+      padding: 4rpx;
+      border: 2rpx solid #008e59;
+      color: #008e59;
+      border-radius: 6rpx;
+      font-size: 20rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &.closed {
+        border: 2rpx solid @base-color;
+        color: @base-color;
+      }
+    }
+  }
+  .content {
+    background: #fff;
+    padding: 20rpx;
+  }
+  .comments {
+    margin-top: 20rpx;
+    .comment {
+      background: #fff;
+      padding: 20rpx;
+      .username {
+        text-align: right;
+      }
+    }
+  }
 </style>
 
 <template>
-
+  <view>
+    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
+    </toast>
+    <view class="title">
+      <view>{{issue.title}}</view>
+      <view class="tag {{issue.state}}">{{issue.state == "closed" ? "已关闭" : "开放中"}}</view>
+    </view>
+    <view class="content">
+      <htmlParser parserName="name" parserType="md" :parserContent.sync="content" />
+    </view>
+    <view class="comments">
+      <repeat for="{{comments}}">
+        <view class="comment">
+          <fb-comment :comment.sync="item"></fb-comment>
+          <view class="username">——{{item.nickName}}</view>
+        </view>
+      </repeat>
+    </view>
+  </view>
 </template>
 
 <script>
   import wepy from "wepy";
+  import htmlParser from "components/htmlParser";
+  import FBComment from "components/feedbackComment";
   import Toast from "components/toast";
-  import ExamMixin from "mixins/exam";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
-  export default class FeedBackList extends wepy.page {
-
+  import db from "util/db"
+  export default class FeedBackDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: "反馈详情"
+    };
+    components = {
+      toast: Toast,
+      htmlParser: htmlParser,
+      htmlParser2: htmlParser,
+      "fb-comment": FBComment,
+    };
+    mixins = [HttpMixin, ToastMixin];
+    computed = {
+      content() {
+        if ("body" in this.issue) {
+          return this.issue.body.replace(/scuplus_version[\s\S]+/g, "")
+        }
+        return ""
+      }
+    };
+    data = {
+      issue: {},
+      comments: []
+    };
+    watch = {
+      comments(newVal, oldVal) {
+        for (let i = 0; i < newVal.length; i++) {
+          const e = newVal[i];
+          if (e.user.login == "mohuishou") {
+            newVal[i].nickName = "管理员"
+          } else {
+            newVal[i].nickName = ""
+          }
+        }
+        return newVal
+      }
+    }
+    async onLoad(option) {
+      try {
+        const resp = await this.GET("/user/feedback/" + option.id);
+        wepy.setNavigationBarTitle({
+          title: resp.data.issue.title
+        });
+        this.issue = resp.data.issue;
+        this.comments = resp.data.comments;
+        this.$apply()
+        this.$invoke("htmlParser", "htmlParserNotice");
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 </script>
