@@ -1,25 +1,30 @@
 <style lang="less" scoped>
+  .share-c {
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5);
+  }
   .share {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 200rpx;
     left: calc(~"50% - 100px");
-    canvas {
-      box-shadow: 4rpx 4rpx 20rpx #ddd;
-      border: 4rpx solid #ddd;
-    }
+    canvas {}
     button {
       margin-top: 10rpx;
-      opacity: 0.9;
     }
   }
 </style>
 
 <template>
-  <view class="share" style="display: {{isShow ? 'block' : 'none'}} ;">
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
-    <canvas style="width: 200px; height: 290px;" canvas-id="m"></canvas>
-    <button type="warn" @tap="save">保存图片</button>
+  <view @touchstart="moveStart" @touchend="moveEnd" class="share-c" style="display: {{isShow ? 'block' : 'none'}} ;">
+    <view class="share" style="display: {{isShow ? 'block' : 'none'}} ;">
+      <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
+      <canvas disable-scroll="true" style="width: 200px; height: 290px;" canvas-id="m"></canvas>
+      <button type="warn" @tap="save">保存图片</button>
+    </view>
   </view>
 </template>
 
@@ -41,10 +46,18 @@
       option: Object
     }
     data = {
-      isShow: false
+      isShow: false,
+      x: 0
     }
     mixins = [HttpMixin, ToastMixin];
     methods = {
+      moveStart(e) {
+        this.x = e.touches[0].clientY
+      },
+      moveEnd(e) {
+        let changedX = e.changedTouches[0].clientX - this.x
+        if (Math.abs(changedX) > 80) this.isShow = false;
+      },
       async save() {
         try {
           const path = await this.canvasToTmp("m")
@@ -58,6 +71,7 @@
         this.$apply()
       },
       async show() {
+        if (this.isShow) return;
         this.isShow = true;
         this.$apply();
         wepy.showLoading && wepy.showLoading({
@@ -106,6 +120,7 @@
           ctx.fillText("查看完整内容", 10, y + lineHeight * 3 + 5);
           // 绘制右下角小程序码
           const path = await this.download("/wechat/qcode?" + params);
+          console.log(path);
           ctx.drawImage(path, 110, y, 80, 80);
           ctx.draw();
         } catch (error) {

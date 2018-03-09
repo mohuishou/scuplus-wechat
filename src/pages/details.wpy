@@ -1,91 +1,9 @@
-<template>
-  <view class="details">
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
-    <view class="header">
-      <view class="title">
-        <text></text>
-      </view>
-      <view class="info">
-      </view>
-    </view>
-    <view class="content {{from}}">
-      <htmlParser :parserName="name" :parserContent.sync="content" />
-    </view>
-    <view wx:if="{{url}}" class="footer">
-      <view>
-        原文：{{url}}
-      </view>
-    </view>
-  </view>
-</template>
-
-<script>
-  import wepy from 'wepy'
-  import htmlParser from '../components/htmlParser'
-  import Toast from "../components/toast";
-  import HttpMixin from "../mixins/http";
-  import ToastMixin from "../mixins/toast";
-  export default class Details extends wepy.page {
-    config = {}
-    mixins = [HttpMixin, ToastMixin]
-    components = {
-      htmlParser: htmlParser,
-      toast: Toast
-    }
-    data = {
-      title: '',
-      content: '',
-      name: '123',
-      url: '',
-      from: 'news'
-    }
-    async getDetail(id) {
-      const resp = await this.GET(`/detail/${id}`)
-      let title = resp.data.title
-      if (resp.data.category === 'scuinfo') {
-        title = resp.data.author
-        resp.data.content = resp.data.content.replace(/\n/g, '<br />')
-      }
-      this.content = resp.data.content
-      wepy.setNavigationBarTitle({
-        title: title
-      })
-      this.title = title
-      this.url = resp.data.url
-      this.$apply()
-      this.$invoke('htmlParser', 'htmlParserNotice')
-    }
-    async getNotice(id) {
-      const resp = await this.GET(`/notice/${id}`)
-      this.content = resp.data.content
-      wepy.setNavigationBarTitle({
-        title: resp.data.title
-      })
-      this.$apply()
-      this.$invoke('htmlParser', 'htmlParserNotice')
-    }
-    async onLoad(option) {
-      this.from = option.from
-      switch (option.from) {
-        case 'notice':
-          await this.getNotice(option.id)
-          break
-        default:
-          await this.getDetail(option.id)
-          break
-      }
-    }
-    onShareAppMessage(options) {
-      return {
-        title: this.title
-      }
-    }
-  }
-</script>
-
 <style lang="less">
+  @import "./src/less/config";
   page {
-    background: #eee;
+    width: 100%;
+    height: 100%;
+    background: @bg-color;
   }
   .details {
     margin: 0.2rem;
@@ -128,4 +46,139 @@
     font-size: 0.5rem;
     color: #888;
   }
+  .tabs {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 3rpx solid #eee;
+    width: 100%;
+    text-align: center;
+    height: 80rpx;
+    margin: 0;
+    .tab {
+      background: @base-color;
+      color: #fff;
+      border: none;
+      flex: 1;
+      &:nth-child(1) {
+        border-right: 2rpx solid #ddd;
+      }
+    }
+  }
 </style>
+
+<template>
+  <share :option.sync="shareOption"></share>
+  <view class="details">
+    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
+    <view class="header">
+      <view class="title">
+        <text></text>
+      </view>
+      <view class="info">
+      </view>
+    </view>
+    <view class="content {{from}}">
+      <htmlParser :parserName="name" :parserContent.sync="content" />
+    </view>
+    <view wx:if="{{url}}" class="footer">
+      <view>
+        原文：{{url}}
+      </view>
+    </view>
+  </view>
+  <view class="tabs">
+    <button open-type="share" class="tab">转发</button>
+    <button @tap="share" class="tab">分享</button>
+  </view>
+</template>
+
+<script>
+  import wepy from "wepy";
+  import htmlParser from "components/htmlParser";
+  import Share from "components/share";
+  import Toast from "components/toast";
+  import HttpMixin from "mixins/http";
+  import ToastMixin from "mixins/toast";
+  export default class Details extends wepy.page {
+    config = {};
+    mixins = [HttpMixin, ToastMixin];
+    components = {
+      htmlParser: htmlParser,
+      toast: Toast,
+      share: Share
+    };
+    data = {
+      title: "",
+      content: "",
+      name: "123",
+      url: "",
+      from: "news",
+      shareOption: {}
+    };
+    methods = {
+      send() {},
+      share() {
+        this.$invoke("share", "show");
+      }
+    }
+    async getDetail(id) {
+      const resp = await this.GET(`/detail/${id}`);
+      let title = resp.data.title;
+      if (resp.data.category === "scuinfo") {
+        title = resp.data.author;
+        resp.data.content = resp.data.content.replace(/\n/g, "<br />");
+      }
+      this.content = resp.data.content;
+      wepy.setNavigationBarTitle({
+        title: title
+      });
+      this.title = title;
+      this.url = resp.data.url;
+      this.shareOption.title = title;
+      this.shareOption.content = resp.data.content.replace(/<[^>]*>/g, "");
+      this.shareOption.from = resp.data.category;
+      this.shareOption.params = "page=pages/details&scene=" + resp.data.id + "_news"
+      this.$apply();
+      this.$invoke("htmlParser", "htmlParserNotice");
+    }
+    async getNotice(id) {
+      const resp = await this.GET(`/notice/${id}`);
+      this.content = resp.data.content;
+      wepy.setNavigationBarTitle({
+        title: resp.data.title
+      });
+      this.shareOption.title = title;
+      this.shareOption.content = resp.data.content.replace(/<[^>]*>/g, "");
+      this.shareOption.params = "page=pages/details&scene=" + resp.data.id + "_notice"
+      this.$apply();
+      this.$invoke("htmlParser", "htmlParserNotice");
+    }
+    async onLoad(option) {
+      this.from = option.from;
+      let id = option.id || ""
+      let from = option.from || ""
+      if ("scene" in option) {
+        const r = option.scene.split("_")
+        id = r[0]
+        from = r[1]
+      }
+      switch (from) {
+        case "notice":
+          await this.getNotice(id);
+          break;
+        default:
+          await this.getDetail(id);
+          break;
+      }
+    }
+    onShareAppMessage(options) {
+      return {
+        title: this.title
+      };
+    }
+  }
+</script>
+
