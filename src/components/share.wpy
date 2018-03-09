@@ -80,7 +80,7 @@
         try {
           const title = this.option.title
           const from = this.option.from
-          const content = this.option.content
+          const content = "  " + this.option.content.trim()
           const params = this.option.params
           // 获取canvas对象
           const ctx = wx.createCanvasContext("m");
@@ -99,8 +99,8 @@
             ctx.fillText(title.substr(i * 15, 15), 10, y);
           }
           // 绘制来源 标签
+           ctx.setFontSize(10);
           if (from != "") {
-            ctx.setFontSize(10);
             ctx.setFillStyle('#888888')
             y += 8
             y += lineHeight;

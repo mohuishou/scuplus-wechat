@@ -116,7 +116,12 @@
       name: "123",
       url: "",
       from: "news",
-      shareOption: {}
+      shareOption: {
+        title: "",
+        content: "",
+        from: "",
+        params: ""
+      }
     };
     methods = {
       send() {},
@@ -138,7 +143,7 @@
       this.title = title;
       this.url = resp.data.url;
       this.shareOption.title = title;
-      this.shareOption.content = resp.data.content.replace(/<[^>]*>/g, "");
+      this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, "");
       this.shareOption.from = resp.data.category;
       this.shareOption.params = "page=pages/details&scene=" + resp.data.id + "_news"
       this.$apply();
@@ -150,8 +155,8 @@
       wepy.setNavigationBarTitle({
         title: resp.data.title
       });
-      this.shareOption.title = title;
-      this.shareOption.content = resp.data.content.replace(/<[^>]*>/g, "");
+      this.shareOption.title = resp.data.title;
+      this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, "");
       this.shareOption.params = "page=pages/details&scene=" + resp.data.id + "_notice"
       this.$apply();
       this.$invoke("htmlParser", "htmlParserNotice");
