@@ -5,13 +5,16 @@
     display: none;
     position: fixed;
     background: rgba(0, 0, 0, 0.5);
+    margin-top: -10rpx;
   }
   .share {
     display: none;
     position: fixed;
     top: 200rpx;
     left: calc(~"50% - 100px");
-    canvas {}
+    canvas {
+      border-radius: 10rpx;
+    }
     button {
       margin-top: 10rpx;
     }
