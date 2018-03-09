@@ -62,7 +62,7 @@
             <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
               <text class="course-name">{{item.course_name}}</text>
               <text class="address">
-                  <text>{{item.building}}</text>
+                    <text>{{item.building}}</text>
               <text>{{item.classroom}}</text>
               </text>
             </view>
@@ -111,6 +111,7 @@
         await this.PostWithBind('/user/schedule', {
           term: 1
         })
+        this.initData()
         await this.get()
         wepy.stopPullDownRefresh()
       } catch (error) {
@@ -138,6 +139,9 @@
     }
     initData() {
       // 初始化data
+      this.schedules = [
+        ['', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      ]
       let title = ['一', '二', '三', '四', '五', '六', '日']
       for (let i = 0; i < 7; i++) {
         let tmpData = []
