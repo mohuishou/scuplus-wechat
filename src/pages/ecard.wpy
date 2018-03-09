@@ -61,7 +61,6 @@
 
 <template>
   <view>
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="title">
       余额
     </view>
@@ -95,7 +94,6 @@
 
 <script>
   import wepy from 'wepy'
-  import Toast from '../components/toast'
   import EcardMixin from '../mixins/ecard'
   import HttpMixin from '../mixins/http'
   import ToastMixin from '../mixins/toast'
@@ -108,9 +106,7 @@
       enablePullDownRefresh: true
     }
     mixins = [EcardMixin, HttpMixin, ToastMixin, DataMixin]
-    components = {
-      "toast": Toast
-    }
+    components = {}
     data = {
       height: 0,
       trans: []

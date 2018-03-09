@@ -73,7 +73,6 @@
 
 <template>
   <view wx:if="{{exams.length > 0}}">
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <block wx:for="{{exams}}" wx:key="{{index}}">
       <view @tap="active({{index}})" class="exam">
         <view class="header">
@@ -121,7 +120,6 @@
 <script>
   import wepy from "wepy";
   import Empty from "components/empty";
-  import Toast from "components/toast";
   import ExamMixin from "mixins/exam";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
@@ -134,7 +132,6 @@
     };
     components = {
       empty: Empty,
-      toast: Toast
     };
     mixins = [ExamMixin, HttpMixin, ToastMixin, DataMixin];
     data = {

@@ -1,7 +1,5 @@
 <template>
   <view>
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
-    </toast>
     <form @submit="feedback">
       <text class="info">新建反馈</text>
       <input name="title" placeholder="请输入标题" />
@@ -14,8 +12,8 @@
       <textarea name="content" placeholder="请输入内容" />
       <view class="help">
         <text>感谢您的反馈，您的反馈将以issue的形式提交到scuplus-wechat的github，您可以通过访问https://github.com/mohuishou/scuplus-wechat/issues
-                  来获取您的反馈动态，同时也可以关注项目的开发进度，当然如果您有更好的实现欢迎提交PR
-                </text>
+                    来获取您的反馈动态，同时也可以关注项目的开发进度，当然如果您有更好的实现欢迎提交PR
+                  </text>
       </view>
       <button formType="submit">提交反馈</button>
     </form>
@@ -27,15 +25,12 @@
   import {
     version
   } from 'config'
-  import Toast from "components/toast";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
   import db from "util/db"
   export default class Feedback extends wepy.page {
     mixins = [HttpMixin, ToastMixin]
-    components = {
-      toast: Toast
-    }
+    components = {}
     config = {
       navigationBarTitleText: '反馈'
     }

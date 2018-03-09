@@ -70,9 +70,9 @@
 </style>
 
 <template>
-  <share :option.sync="shareOption"></share>
+  <share :option.sync="shareOption">
+  </share>
   <view class="details">
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view class="header">
       <view class="title">
         <text></text>
@@ -99,7 +99,6 @@
   import wepy from "wepy";
   import htmlParser from "components/htmlParser";
   import Share from "components/share";
-  import Toast from "components/toast";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
   export default class Details extends wepy.page {
@@ -107,7 +106,6 @@
     mixins = [HttpMixin, ToastMixin];
     components = {
       htmlParser: htmlParser,
-      toast: Toast,
       share: Share
     };
     data = {

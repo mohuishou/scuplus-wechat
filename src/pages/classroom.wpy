@@ -49,8 +49,6 @@
 
 <template>
   <view class="classroom">
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
-    </toast>
     <picker mode="multiSelector" range-key="name" @change="changeBuilding" @columnchange="columnchange" value="{{index}}" range="{{buildings}}">
       <view class="picker">
         <view>当前选择：{{building.addr}}-{{building.name}}</view>
@@ -84,8 +82,6 @@
 
 <script>
   import wepy from 'wepy'
-  import Toast from "../components/toast";
-  import ExamMixin from "../mixins/exam";
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
   import db from "../util/db"
@@ -196,10 +192,8 @@
       index: [0, 0],
       rooms: []
     }
-    mixins = [ExamMixin, HttpMixin, ToastMixin]
-    components = {
-      toast: Toast
-    }
+    mixins = [HttpMixin, ToastMixin]
+    components = {}
     methods = {
       changeBuilding(e) {
         this.index = e.detail.value

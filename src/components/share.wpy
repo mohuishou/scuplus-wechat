@@ -24,7 +24,6 @@
 <template>
   <view @touchstart="moveStart" @touchend="moveEnd" class="share-c" style="display: {{isShow ? 'block' : 'none'}} ;">
     <view class="share" style="display: {{isShow ? 'block' : 'none'}} ;">
-      <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
       <canvas disable-scroll="true" style="width: 200px; height: 290px;" canvas-id="m"></canvas>
       <button type="warn" @tap="save">保存图片</button>
     </view>
@@ -34,7 +33,6 @@
 <script>
   import wepy from "wepy";
   import htmlParser from "components/htmlParser";
-  import Toast from "components/toast";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
   import db from "util/db";
@@ -42,9 +40,7 @@
     domain
   } from 'config'
   export default class Share extends wepy.component {
-    components = {
-      toast: Toast
-    };
+    components = {};
     props = {
       option: Object
     }
@@ -102,7 +98,7 @@
             ctx.fillText(title.substr(i * 15, 15), 10, y);
           }
           // 绘制来源 标签
-           ctx.setFontSize(10);
+          ctx.setFontSize(10);
           if (from != "") {
             ctx.setFillStyle('#888888')
             y += 8

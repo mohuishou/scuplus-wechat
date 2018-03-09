@@ -28,8 +28,6 @@
 </style>
 
 <template>
-  <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
-  </toast>
   <scroll-view style="height:{{isTag != '' ? height : ''}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y>
     <view style="{{isTag != '' ? 'margin-top: 0px;' : '' }}" class="lists">
       <block wx:for="{{details}}" wx:key="{{item.id}}">
@@ -54,14 +52,11 @@
 
 <script>
   import wepy from "wepy";
-  import Toast from "../components/toast";
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
   export default class List extends wepy.page {
     mixins = [HttpMixin, ToastMixin]
-    components = {
-      toast: Toast
-    }
+    components = {}
     props = {
       params: {
         type: Object,

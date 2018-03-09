@@ -100,7 +100,6 @@
 <template>
   <view>
     <view class="grade">
-      <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
       <view class="header">
         <view wx:if="{{avg!=null}}" class="grade-header">
           <view class="title">
@@ -183,7 +182,6 @@
 <script>
   import wepy from 'wepy'
   import gradeUtil from '../util/grade'
-  import Toast from "../components/toast";
   import Empty from "../components/empty";
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
@@ -196,7 +194,6 @@
     };
     components = {
       empty: Empty,
-      toast: Toast
     };
     mixins = [HttpMixin, ToastMixin, DataMixin];
     data = {
@@ -282,8 +279,8 @@
         wepy.showModal({
           title: "计算结果",
           content: `您共选择${grades.length}门课程, 学分共计: ${result.sum.all.credit}; \r
-  平均分: ${result.avg.all.grade}; \r
-  平均绩点: ${result.avg.all.gpa}; \r`,
+    平均分: ${result.avg.all.grade}; \r
+    平均绩点: ${result.avg.all.gpa}; \r`,
           showCancel: false
         })
       },

@@ -16,7 +16,6 @@
 
 <template>
   <view>
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
     <view wx:if="{{feedbacks.length > 0}}" class="lists">
       <block wx:for="{{feedbacks}}" wx:key="{{index}}">
         <view class="list" @tap="to({{item.number}})">{{item.title}}</view>
@@ -29,7 +28,6 @@
 <script>
   import wepy from "wepy";
   import Empty from "components/empty";
-  import Toast from "components/toast";
   import ExamMixin from "mixins/exam";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
@@ -41,7 +39,6 @@
     }
     components = {
       empty: Empty,
-      toast: Toast
     };
     data = {
       feedbacks: []

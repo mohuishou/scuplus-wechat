@@ -42,8 +42,6 @@
 
 <template>
   <view>
-    <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
-    </toast>
     <view class="title">
       <view>{{issue.title}}</view>
       <view class="tag {{issue.state}}">{{issue.state == "closed" ? "已关闭" : "开放中"}}</view>
@@ -66,7 +64,6 @@
 <script>
   import wepy from "wepy";
   import htmlParser from "components/htmlParser";
-  import Toast from "components/toast";
   import HttpMixin from "mixins/http";
   import ToastMixin from "mixins/toast";
   import db from "util/db"
@@ -75,7 +72,6 @@
       navigationBarTitleText: "反馈详情"
     };
     components = {
-      toast: Toast,
       htmlParser: htmlParser,
       htmlParser2: htmlParser,
     };

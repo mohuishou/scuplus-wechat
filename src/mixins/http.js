@@ -57,12 +57,13 @@ export default class HttpMixin extends wepy.mixin {
       handler.header['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     }
 
-    if (showToast) wepy.showLoading && wepy.showLoading({
+    wepy.showLoading && wepy.showLoading({
       title: '加载中...'
     })
 
     return new Promise((resolve, reject) => {
       handler.success = res => {
+        wepy.hideLoading && wepy.hideLoading()
         if (res.data.status === 0) {
           if (showToast) this.ShowToast(res.data.msg, 'success')
           resolve(res.data)
@@ -72,11 +73,9 @@ export default class HttpMixin extends wepy.mixin {
         }
       }
       handler.fail = () => {
+        wepy.hideLoading && wepy.hideLoading()
         if (showToast) this.ShowToast('网络错误', 'error', 3000)
         reject('Network request failed')
-      }
-      handler.complete = () => {
-        if (showToast) wepy.hideLoading && wepy.hideLoading()
       }
       wepy.request(handler)
     })

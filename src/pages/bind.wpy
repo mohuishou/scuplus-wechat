@@ -82,8 +82,6 @@
 </style>
 
 <template>
-  <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
-  </toast>
   <view id="bind">
     <view id="title">
       <view>
@@ -110,7 +108,6 @@
 
 <script>
   import wepy from 'wepy'
-  import Toast from "../components/toast";
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
   import db from "../util/db"
@@ -119,9 +116,7 @@
       navigationBarTitleText: ''
     };
     mixins = [HttpMixin, ToastMixin]
-    components = {
-      toast: Toast
-    }
+    components = {}
     methods = {
       bind(e) {
         let params = e.detail.value

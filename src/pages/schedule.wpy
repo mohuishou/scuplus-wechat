@@ -54,7 +54,6 @@
 <template>
   <scroll-view scroll-x scroll-into-view="day-{{day}}">
     <view class="contanier">
-      <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType"></toast>
       <block wx:for="{{schedules}}" wx:key="{{index}}" wx:for-item="items" wx:for-index="i">
         <view class="col {{i==0 ? 'title' : ''}}" id="day-{{i}}">
           <block wx:for="{{items}}" wx:key="{{j}}" wx:for-item="item" wx:for-index="j">
@@ -63,8 +62,8 @@
             <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
               <text class="course-name">{{item.course_name}}</text>
               <text class="address">
-                <text>{{item.building}}</text>
-                <text>{{item.classroom}}</text>
+                  <text>{{item.building}}</text>
+              <text>{{item.classroom}}</text>
               </text>
             </view>
           </block>
@@ -76,7 +75,6 @@
 
 <script>
   import wepy from 'wepy'
-  import Toast from "../components/toast";
   import HttpMixin from "../mixins/http";
   import ToastMixin from "../mixins/toast";
   import DataMixin from "../mixins/data";
@@ -87,9 +85,7 @@
       enablePullDownRefresh: true
     };
     mixins = [HttpMixin, ToastMixin, DataMixin];
-    components = {
-      toast: Toast
-    }
+    components = {}
     data = {
       schedules: [
         ['', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -103,14 +99,18 @@
       this.$apply()
     }
     async get() {
-      const resp = await this.GetWithBind('/user/schedule',{term: 1})
+      const resp = await this.GetWithBind('/user/schedule', {
+        term: 1
+      })
       this.initSchedules(resp.data)
       this.$apply()
       this.InitSet("schedules", this.schedules)
     }
     async onPullDownRefresh() {
       try {
-        await this.PostWithBind('/user/schedule',{term: 1})
+        await this.PostWithBind('/user/schedule', {
+          term: 1
+        })
         await this.get()
         wepy.stopPullDownRefresh()
       } catch (error) {

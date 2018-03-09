@@ -56,8 +56,6 @@
 </style>
 
 <template>
-  <toast :msg.sync="toastMsg" :show.sync="toastShow" :toastType.sync="toastType">
-  </toast>
   <view>
     <view class="search-input">
       <input @blur="change" placeholder="请输入图书名称" confirm-type="search" />
@@ -84,14 +82,11 @@
 
 <script>
   import wepy from 'wepy'
-  import Toast from "../../components/toast";
   import HttpMixin from "../../mixins/http";
   import ToastMixin from "../../mixins/toast";
   export default class Search extends wepy.page {
     mixins = [HttpMixin, ToastMixin]
-    components = {
-      toast: Toast
-    }
+    components = {}
     config = {
       navigationBarTitleText: '图书搜索'
     };
