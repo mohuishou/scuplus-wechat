@@ -27,7 +27,7 @@
   }
   .mview {
     padding-top: 0.7rem;
-    width: 25%;
+    width: 20%;
     border-bottom: 1px solid #eee;
   }
   .icon-btn {

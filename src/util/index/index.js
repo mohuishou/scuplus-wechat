@@ -52,7 +52,14 @@ const funcs = [{
     icon: 'exam',
     bg: '#2578b5',
     type: 'login'
-  }
+  },
+  {
+    name: '校历',
+    url: 'calendar',
+    icon: 'rili',
+    bg: '#008e59',
+    type: 'normal'
+  },
 
 ]
 

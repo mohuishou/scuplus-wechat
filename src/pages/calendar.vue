@@ -34,6 +34,7 @@
             align-items: center;
             flex-direction: column;
             height: 87rpx;
+            border: 2rpx solid #fff;
             .iconfont {
               color: #888;
               position: absolute;
@@ -70,6 +71,19 @@
         }
       }
     }
+    .return {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      width: 100rpx;
+      height: 100rpx;
+      border-radius: 50rpx;
+      color: #fff;
+      background: @base-color;
+      bottom: 20rpx;
+      right: 20rpx;
+    }
   }
 </style>
 
@@ -90,7 +104,7 @@
         <block wx:for="{{monthDay}}" wx:key="{{index}}" wx:for-item="row">
           <view class="row">
             <block wx:for="{{row}}" wx:key="{{index}}" wx:for-index="i">
-              <view class="day {{(today.year == current.year && today.day == item.name && current.month == today.month) ? 'today' : ''}} {{(current.day == item.name && i !=0 && item.name != '' ) ? 'current' : ''}}" @tap="currentDay({{item}},{{i}})">
+              <view class="day {{(today.year == current.year && today.day == item.name && current.month == today.month) ? 'today' : ''}} {{(current.day == item.name && i !=0 && item.name != '' ) ? 'current' : ''}}" @tap="currentDay({{item}},{{i}},{{index}})">
                 <view wx:if="{{item.events.length > 0}}" class="iconfont icon-dian"></view>
                 <view class="">{{item.name}}</view>
               </view>
@@ -100,8 +114,8 @@
       </view>
     </view>
     <!-- 事件 -->
-    <view class="events">
-      <view wx:if="{{current.day != 0}}" class="event">
+    <view class="events" wx:if="{{current.day != 0}}">
+      <view class="event">
         <view class="title">{{current.year}}年{{current.month}}月{{current.day}}日</view>
         <view class="info">{{termName}}</view>
       </view>
@@ -111,6 +125,9 @@
           <view class="info">{{item.start_time}} ~ {{item.end_time}}</view>
         </view>
       </block>
+    </view>
+    <view @tap="returnToday" class="return" wx:if="{{today.year != current.year || today.day != current.day || current.month != today.month}}">
+      今
     </view>
   </view>
 </template>
@@ -122,7 +139,9 @@
   import db from "util/db";
   import DataMixin from "mixins/data";
   export default class BindJwc extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '校历',
+    };
     mixins = [HttpMixin, ToastMixin, DataMixin];
     data = {
       current: {
@@ -153,6 +172,13 @@
       }
     }
     methods = {
+      returnToday() {
+        this.current.day = this.today.day
+        this.current.year = this.today.year
+        this.current.month = this.today.month
+        this.event = this.events[`${this.current.year}-${this.current.month}-${this.current.day}`] || []
+        this.init()
+      },
       updateCurrent(e) {
         const arr = e.detail.value.split("-")
         if (arr.length != 2) return
@@ -181,8 +207,8 @@
         this.current.day = 0
         this.init()
       },
-      currentDay(item, index) {
-        if (index === 0 || !item.name) return
+      currentDay(item, i, j) {
+        if (i === 0 || j === 0 || !item.name) return
         this.event = item.events
         this.current.day = item.name
       }
