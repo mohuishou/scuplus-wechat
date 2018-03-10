@@ -68,7 +68,7 @@ export default class HttpMixin extends wepy.mixin {
           if (showToast) this.ShowToast(res.data.msg, 'success')
           resolve(res.data)
         } else {
-          if (showToast) this.ShowToast(res.data.msg)
+          if (showToast) this.ShowToast(res.data.msg || res.data || "网络错误")
           reject(res)
         }
       }

@@ -10,16 +10,11 @@ export default class DataMixin extends wepy.mixin {
   async Init(data_name, h = 6) {
     const now = (new Date()).getTime()
     const update_time = db.Get("update_time." + data_name) || 0
-    if ((now - update_time) / 1000 / 3600 > h) {
-      await this.get()
+    if ((now - update_time) / 1000 / 3600 < h && db.Get(data_name)) {
+      this[data_name] = db.Get(data_name);
+      this.$apply();
     } else {
-      const data = db.Get(data_name)
-      if (data) {
-        this[data_name] = data;
-        this.$apply();
-      } else {
-        await this.get()
-      }
+      await this.get()
     }
   }
 

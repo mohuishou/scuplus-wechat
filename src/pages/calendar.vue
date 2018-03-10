@@ -138,11 +138,12 @@
   import ToastMixin from "mixins/toast";
   import db from "util/db";
   import DataMixin from "mixins/data";
+  import TermMixin from "mixins/term";
   export default class BindJwc extends wepy.page {
     config = {
       navigationBarTitleText: '校历',
     };
-    mixins = [HttpMixin, ToastMixin, DataMixin];
+    mixins = [HttpMixin, ToastMixin, DataMixin, TermMixin];
     data = {
       current: {
         year: 2018,
@@ -155,7 +156,6 @@
         year: 2018,
       },
       monthDay: [],
-      term: {},
       events: {},
       event: []
     };
@@ -228,28 +228,14 @@
         resp.data.events.forEach(e => {
           let start = new Date(e.start_time)
           let end = new Date(e.end_time)
-          let day = (end.getTime() - start.getTime()) / 1000 / 3600 / 24
-          day = Math.ceil(day)
-          let y = start.getFullYear()
-          let m = start.getMonth() + 1
-          let d = start.getDate()
+          let day = Math.ceil((end.getTime() - start.getTime()) / 1000 / 3600 / 24)
+          e.start_time = start.toLocaleDateString()
+          e.end_time = end.toLocaleDateString()
           for (let i = 0; i < day; i++) {
-            let key = `${y}-${m}-${d}`
-            if (!(key in this.events)) this.events[key] = []
-            e.start_time = start.toLocaleDateString()
-            e.end_time = end.toLocaleDateString()
+            let key = `${start.getFullYear()}-${start.getMonth() + 1}-${start.getDate()}`
+            this.events[key] = this.events[key] || []
             this.events[key].push(e)
-            if (d < new Date(y, m, 0).getDate()) {
-              d++
-            } else {
-              d = 1
-              if (m == 12) {
-                m = 1
-                y++
-              } else {
-                m
-              }
-            }
+            start.setDate(start.getDate() + 1)
           }
         });
         this.$apply()
@@ -258,16 +244,6 @@
       } catch (error) {
         console.log(error);
       }
-    }
-    // 计算周次
-    getWeek(year, month, day) {
-      const start = new Date(this.term.start_time)
-      const end = new Date(this.term.end_time)
-      const now = new Date(year, month - 1, day)
-      if (now.getTime() < start.getTime() || now.getTime() > end.getTime()) {
-        return 0
-      }
-      return Math.floor((now.getTime() - start.getTime()) / 1000 / 3600 / 24 / 7) + 1
     }
     // 初始化当月数据
     init() {
@@ -315,7 +291,7 @@
         events: []
       };
       this.monthDay[this.monthDay.length - 1].push({
-        name: this.getWeek(this.current.year, this.current.month, 1) || '',
+        name: this.GetWeek(this.current.year, this.current.month, 1) || '',
         events: []
       });
       // 计算每月第一周空白时间
@@ -326,7 +302,7 @@
       for (let i = 1; i <= days; i++) {
         if (this.monthDay[this.monthDay.length - 1].length === 8) {
           this.monthDay.push([{
-            name: this.getWeek(this.current.year, this.current.month, i) || '',
+            name: this.GetWeek(this.current.year, this.current.month, i) || '',
             events: []
           }]);
         }
@@ -343,7 +319,7 @@
     }
     async onLoad() {
       await this.Init("events", 24 * 30)
-      this.term = db.Get("term")
+      await this.InitTerm()
       this.current.year = this.today.year = new Date().getFullYear()
       this.current.day = this.today.day = new Date().getDate()
       this.current.month = this.today.month = new Date().getMonth() + 1
