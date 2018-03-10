@@ -5,19 +5,20 @@ export default class DataMixin extends wepy.mixin {
    * 数据初始化
    * 注意：获取数据的方法必须是 this.get()
    * @param {String} data_name 数据名
+   * @param {number} h 缓存多少小时
    */
-  Init(data_name) {
+  async Init(data_name, h = 6) {
     const now = (new Date()).getTime()
     const update_time = db.Get("update_time." + data_name) || 0
-    if ((now - update_time) / 1000 / 3600 > 6) {
-      this.get()
+    if ((now - update_time) / 1000 / 3600 > h) {
+      await this.get()
     } else {
       const data = db.Get(data_name)
       if (data) {
         this[data_name] = data;
         this.$apply();
       } else {
-        this.get()
+        await this.get()
       }
     }
   }

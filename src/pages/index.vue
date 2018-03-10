@@ -83,9 +83,9 @@
 <template>
   <view>
     <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
-    <swiper style="height: {{swiper_height}}px;" class="swiper"  autoplay="true" interval="4000" duration="1000">
+    <swiper style="height: {{swiper_height}}px;" class="swiper" autoplay="true" interval="4000" duration="1000">
       <block wx:for="{{notices}}" wx:key="{{index}}">
-        <swiper-item >
+        <swiper-item>
           <image style="height: {{swiper_height}}px;" @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
         </swiper-item>
       </block>
@@ -233,10 +233,11 @@
           }
         })
         return
+      } else {
+        wepy.navigateTo({
+          url: url
+        })
       }
-      wepy.navigateTo({
-        url: url
-      })
     }
     methods = {
       noticeTo(id) {
