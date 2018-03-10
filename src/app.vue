@@ -28,6 +28,7 @@
         'pages/my/feedback',
         'pages/my/feedbackList',
         'pages/my/feedbackDetail',
+        'pages/calendar',
       ],
       window: {
         navigationBarBackgroundColor: '#f06292',
