@@ -19,7 +19,7 @@
       }
     }
   }
-  .user-info{
+  .user-info {
     margin-top: 100rpx;
     margin-bottom: 100rpx;
     text-align: center;
@@ -31,7 +31,7 @@
       border: 2rpx solid #eee;
       box-shadow: 4rpx 4rpx 4rpx #eee;
     }
-    view{
+    view {
       margin-top: 20rpx;
     }
   }
