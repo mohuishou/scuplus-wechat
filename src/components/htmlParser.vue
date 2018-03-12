@@ -32,7 +32,9 @@
       bindData: {}
     }
     events = {
-      'htmlParser-broadcast': ($event, ...args) => {},
+      'htmlParser-broadcast': ($event, ...args) => {
+        this.htmlParse()
+      },
     }
     methods = {
       htmlParserNotice() {

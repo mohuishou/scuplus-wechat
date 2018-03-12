@@ -84,7 +84,7 @@
             <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
               <text class="course-name">{{item.course_name}}</text>
               <text class="address">
-                                                                <text>{{item.building}}</text>
+                                                                    <text>{{item.building}}</text>
               <text>{{item.classroom}}</text>
               </text>
             </view>
@@ -137,7 +137,7 @@
         this.initSchedules(this.scheduleItems);
       },
       changeWeek(e) {
-        this.week = e.detail.value;
+        this.week = e.detail.value - 0 + 1;
         this.initData()
         this.initSchedules(this.scheduleItems);
       }
