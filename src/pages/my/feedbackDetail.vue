@@ -78,7 +78,7 @@
         </view>
       </repeat>
     </view>
-    <view wx:if="{{ id > 0 }}" class="new-comment">
+    <view wx:if="{{ id > 0 && issue.state == 'open' }}" class="new-comment">
       <textarea value="{{commentVal.val}}" @input="commentChange" name="content" placeholder="请输入内容" />
       <mview @mtap.user="newComment" :arg.sync="commentVal" class="mview">
         <view slot="content" class="btn">提交评论</view>

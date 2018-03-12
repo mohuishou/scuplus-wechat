@@ -84,7 +84,7 @@
             <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
               <text class="course-name">{{item.course_name}}</text>
               <text class="address">
-                                                                    <text>{{item.building}}</text>
+                                                                          <text>{{item.building}}</text>
               <text>{{item.classroom}}</text>
               </text>
             </view>
@@ -143,14 +143,24 @@
       }
     }
     async onLoad() {
+      // 初始化数据
       this.initData()
+      // 获取本学期开学时间
       await this.InitTerm()
+      // 计算本周周次
       const now = new Date()
       this.week = await this.GetWeek(now.getFullYear(), now.getMonth() + 1, now.getDate())
+      // 获取课程表数据
       await this.Init("scheduleItems", 24 * 30)
+      // 渲染数据
       this.initSchedules(this.scheduleItems)
+      // 获取今天星期几
       this.day = (new Date()).getDay() || 7
       this.$apply()
+      const update_time = db.Get("update_time." + "schedules") || 0
+      if ((now.getTime() - update_time) / 1000 / 3600 > (3 * 24)) {
+        this.InitSet("schedules", this.schedules)
+      }
     }
     async get() {
       const resp = await this.GetWithBind('/user/schedule', {
@@ -169,6 +179,7 @@
         await this.initData()
         await this.initSchedules(this.scheduleItems)
         this.$apply()
+        this.InitSet("schedules", this.schedules)
       } catch (error) {
         console.log(error);
       }
