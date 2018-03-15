@@ -8,11 +8,11 @@ export default class TermMixin extends wepy.mixin {
   GetWeek(year, month, day) {
     const start = new Date(this.term.start_time)
     const end = new Date(this.term.end_time)
-    const now = new Date(year, month - 1, day)
-    if (now.getTime() < start.getTime() || now.getTime() > end.getTime()) {
+    const current = new Date(year, month - 1, day, 23, 59, 59)
+    if (current.getTime() < start.getTime() || current.getTime() > end.getTime()) {
       return 0
     }
-    return Math.floor((now.getTime() - start.getTime()) / 1000 / 3600 / 24 / 7) + 1
+    return Math.floor((current.getTime() - start.getTime()) / 1000 / 3600 / 24 / 7) + 1
   }
   async GetTerm() {
     const resp = await this.GET("/term")

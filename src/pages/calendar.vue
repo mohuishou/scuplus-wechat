@@ -142,6 +142,7 @@
   export default class BindJwc extends wepy.page {
     config = {
       navigationBarTitleText: '校历',
+      enablePullDownRefresh: true
     };
     mixins = [HttpMixin, ToastMixin, DataMixin, TermMixin];
     data = {
@@ -223,6 +224,7 @@
     }
     async get() {
       try {
+        // this.events = []
         const resp = await this.GET("/term/events")
         this.term = resp.data.term
         resp.data.events.forEach(e => {
@@ -244,6 +246,18 @@
       } catch (error) {
         console.log(error);
       }
+    }
+    async onPullDownRefresh() {
+      try {
+        await this.get()
+        this.current.year = this.today.year = new Date().getFullYear()
+        this.current.day = this.today.day = new Date().getDate()
+        this.current.month = this.today.month = new Date().getMonth() + 1
+        this.init();
+      } catch (error) {
+        console.log(error);
+      }
+      wepy.stopPullDownRefresh();
     }
     // 初始化当月数据
     init() {
@@ -301,6 +315,7 @@
       // 填充每月时间
       for (let i = 1; i <= days; i++) {
         if (this.monthDay[this.monthDay.length - 1].length === 8) {
+          console.log(this.GetWeek(this.current.year, this.current.month, i))
           this.monthDay.push([{
             name: this.GetWeek(this.current.year, this.current.month, i) || '',
             events: []
