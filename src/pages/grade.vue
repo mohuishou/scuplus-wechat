@@ -167,11 +167,15 @@
         <view class="iconfont icon-quanxuan"></view>
         <view class="tab-name">全选</view>
       </view>
-      <view @tap="deleteSelect({{3}})" class="bottom-tab {{bottom_active === 3 ? 'active' : ''}}">
+      <view @tap="selectRequire({{3}})" class="bottom-tab {{bottom_active === 3 ? 'active' : ''}}">
+        <view class="iconfont icon-kechengbiao"></view>
+        <view class="tab-name">必修</view>
+      </view>
+      <view @tap="deleteSelect({{4}})" class="bottom-tab {{bottom_active === 4 ? 'active' : ''}}">
         <view class="iconfont icon-delete"></view>
         <view class="tab-name">清空</view>
       </view>
-      <view @tap="help({{4}})" class="bottom-tab {{bottom_active === 4 ? 'active' : ''}}">
+      <view @tap="help({{5}})" class="bottom-tab {{bottom_active === 5 ? 'active' : ''}}">
         <view class="iconfont icon-help"></view>
         <view class="tab-name">帮助</view>
       </view>
@@ -239,20 +243,20 @@
       this.avg = avg
       this.$apply()
     }
-    /**
-     * 使m学期的所有成绩处于选中或未选中状态
-     * m<0时表示所有学期
-     */
-    Select(m, option) {
+    Select(m, option, isRequired = false) {
       if (m < 0) {
         for (let m = 0; m < this.grades.length; m++) {
-          const e = this.grades[m];
+          const e = this.grades[m]
           for (let n = 0; n < e.grades.length; n++) {
-            this.grades[m].grades[n].selected = option
+            if (isRequired) {
+              this.grades[m].grades[n].selected = (this.grades[m].grades[n].course_type === "必修")
+            } else {
+              this.grades[m].grades[n].selected = option
+            }
           }
         }
       } else {
-        const e = this.grades[m];
+        const e = this.grades[m]
         for (let n = 0; n < e.grades.length; n++) {
           this.grades[m].grades[n].selected = option
         }
@@ -279,8 +283,8 @@
         wepy.showModal({
           title: "计算结果",
           content: `您共选择${grades.length}门课程, 学分共计: ${result.sum.all.credit}; \r
-    平均分: ${result.avg.all.grade}; \r
-    平均绩点: ${result.avg.all.gpa}; \r`,
+                    平均分: ${result.avg.all.grade}; \r
+                    平均绩点: ${result.avg.all.gpa}; \r`,
           showCancel: false
         })
       },
@@ -290,6 +294,10 @@
       selectAll(i) {
         this.bottom_active = i
         this.Select(-1, true)
+      },
+      selectRequire(i) {
+        this.bottom_active = i
+        this.Select(-1, true, true)
       },
       help(i) {
         this.bottom_active = i
