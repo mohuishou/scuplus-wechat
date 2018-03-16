@@ -1,5 +1,6 @@
 <style lang="less">
-  @import "./icon/iconfont.less";
+  @import "./icon/iconfont";
+  @import "./less/config";
 </style>
 
 <script>
@@ -29,6 +30,7 @@
         'pages/my/feedbackList',
         'pages/my/feedbackDetail',
         'pages/calendar',
+        'pages/bus',
       ],
       window: {
         navigationBarBackgroundColor: '#f06292',

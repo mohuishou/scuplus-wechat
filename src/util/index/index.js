@@ -60,6 +60,13 @@ const funcs = [{
     bg: '#008e59',
     type: 'normal'
   },
+  {
+    name: '校车',
+    url: 'bus',
+    icon: 'bus',
+    bg: '#ab96c5',
+    type: 'normal'
+  },
 
 ]
 
