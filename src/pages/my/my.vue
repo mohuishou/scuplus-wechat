@@ -1,6 +1,5 @@
 <style lang="less">
   @import "./src/less/config";
-  @import "./src/icon/iconfont";
   page {
     background: @bg-color;
   }
