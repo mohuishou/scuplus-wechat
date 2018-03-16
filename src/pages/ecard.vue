@@ -1,6 +1,7 @@
 <style lang="less">
   page {
     background: #efefef;
+    padding-bottom: 20rpx;
   }
   .card {
     margin: 0 1.5rem;

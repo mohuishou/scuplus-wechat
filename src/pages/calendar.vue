@@ -315,7 +315,6 @@
       // 填充每月时间
       for (let i = 1; i <= days; i++) {
         if (this.monthDay[this.monthDay.length - 1].length === 8) {
-          console.log(this.GetWeek(this.current.year, this.current.month, i))
           this.monthDay.push([{
             name: this.GetWeek(this.current.year, this.current.month, i) || '',
             events: []
