@@ -1,6 +1,6 @@
 {
   "name": "scuplus",
-  "version": "1.2.8",
+  "version": "1.5.1",
   "description": "",
   "main": "dist/app.js",
   "scripts": {
