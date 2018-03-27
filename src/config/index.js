@@ -4,4 +4,4 @@ const domains = {
   prod: 'https://api.scuplus.cn'
 }
 export const domain = domains[env]
-export const version = '0.5.3'
+export const version = '0.7.0'
