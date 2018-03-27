@@ -107,7 +107,21 @@
       }
     }
     onLoad() {
-      // this.tabs = this.tabs.concat(db.Get("chooseTags"))
+      if (!db.Get("chooseTags")) {
+        db.Set("chooseTags", [{
+          name: "青春川大",
+          type: "org"
+        }, {
+          name: "就业网",
+          type: "org"
+        }, {
+          name: "学工部",
+          type: "org"
+        }, {
+          name: "教务处",
+          type: "org"
+        }])
+      }
     }
     onShareAppMessage(options) {
       return {

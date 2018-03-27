@@ -9,7 +9,7 @@
     .list {
       padding: 0.5rem;
       background: #fff;
-      min-height: 180rpx;
+      min-height: 150rpx;
       border-bottom: 2rpx solid #ededed;
       display: flex;
       align-content: space-between;
