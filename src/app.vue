@@ -31,6 +31,7 @@
         'pages/my/feedbackDetail',
         'pages/calendar',
         'pages/bus',
+        'pages/chooseTags',
       ],
       window: {
         navigationBarBackgroundColor: '#f06292',

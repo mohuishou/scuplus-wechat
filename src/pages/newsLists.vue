@@ -1,21 +1,84 @@
+<style lang="less">
+  @base-color: #f06292;
+  .tag-tabs {
+    width: 100%;
+    height: 80rpx;
+    position: fixed;
+    top: 0;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+    color: #666;
+    z-index: 100;
+    .tabs {
+      background: #fff;
+      z-index: 110;
+      width: calc(~"100% - 100rpx");
+      .tabs-view {
+        align-items: center;
+        display: flex;
+        flex-wrap: nowrap;
+        height: 80rpx;
+        white-space: nowrap;
+        view {
+          flex: 1;
+          display: inline-flex;
+          margin-right: 20rpx;
+          &.active{
+            color: @base-color;
+          }
+        }
+      }
+    }
+    .icon {
+      display: flex;
+      width: 80rpx;
+      z-index: 200;
+    }
+  }
+  @keyframes fadeinL {
+    0% {
+      opacity: 0;
+      transform: translateX(-1rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  page {
+    background: #eee;
+    width: 100%;
+    height: 100%;
+  }
+</style>
 <template>
-  <view class="newsLists" @touchstart="moveStart" @touchend="moveEnd">
-    <view class="tab-lists">
-      <view class="tabs">
-        <block wx:for="{{tabs}}" wx:key="{{index}}">
-          <view class="tab {{active == index ? 'active' : ''}}" @tap="tabHandle({{index}})">{{item.name}}</view>
-        </block>
-      </view>
-      <view class="slider" style="transform: translateX({{100 * active}}%);">
-        <view class="indicator"></view>
+  <view class="newsLists">
+    <view class="tag-tabs">
+      <scroll-view scroll-x class="tabs">
+        <view class="tabs-view">
+          <block wx:for="{{tabs}}" wx:key="{{index}}">
+            <view class="tab {{active == index ? 'active' : ''}}" @tap="tabHandle({{index}})">{{item.name}}</view>
+          </block>
+        </view>
+      </scroll-view>
+      <view class="icon">
+        <view class="iconfont icon-home"></view>
       </view>
     </view>
     <list id="list" :params.sync="params"></list>
   </view>
 </template>
 <script>
-  import list from "../components/list"
+  import list from "components/list"
   import wepy from "wepy";
+  import HttpMixin from "mixins/http";
+  import ToastMixin from "mixins/toast";
+  import DataMixin from "mixins/data";
+  import db from "util/db"
   export default class NewsLists extends wepy.page {
     config = {
       navigationBarTitleText: "最新资讯",
@@ -24,6 +87,7 @@
     components = {
       list: list,
     }
+    mixins = [HttpMixin, ToastMixin, DataMixin];
     data = {
       active: 0,
       swipe: 0,
@@ -77,6 +141,7 @@
         }
       }
     }
+    
     watch = {
       active(newValue, oldValue) {
         this.params.category = this.tabs[newValue].category
@@ -90,63 +155,4 @@
     }
   }
 </script>
-<style lang="less">
-  @base-color: #f06292;
-  @keyframes fadeinL {
-    0% {
-      opacity: 0;
-      transform: translateX(-1rem);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  page {
-    background: #eee;
-    width: 100%;
-    height: 100%;
-  }
-  .newsLists {
-    height: 100%;
-  }
-  .slider {
-    position: relative;
-    width: 100%/6;
-    -webkit-transition: all 0.2s cubic-bezier(0.38, 0.8, 0.32, 1.07);
-    transition: all 0.2s cubic-bezier(0.38, 0.8, 0.32, 1.07);
-  }
-  .slider .indicator {
-    position: relative;
-    width: 50px;
-    max-width: 100%;
-    margin: 0 auto;
-    height: 2px;
-    background: @base-color;
-    border-radius: 1px;
-  }
-  .tab-lists {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    z-index: 9999;
-  }
-  .tabs {
-    background: #fff;
-    display: flex;
-    justify-content: space-around;
-    overflow: auto;
-    padding: 0.3rem 0.2rem;
-    font-size: 0.8rem;
-    .tab {
-      flex: 1;
-      color: #666;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      &.active {
-        color: @base-color;
-      }
-    }
-  }
-</style>
+
