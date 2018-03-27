@@ -43,7 +43,7 @@
   }
   .footer {
     margin-top: 2rem;
-    font-size: 0.5rem;
+    font-size: 24rpx;
     color: #888;
   }
   .tabs {
@@ -75,7 +75,7 @@
   <view class="details">
     <view class="header">
       <view class="title">
-        <text></text>
+        <text>{{title}}</text>
       </view>
       <view class="info">
       </view>
@@ -84,8 +84,8 @@
       <htmlParser :parserName="name" :parserContent.sync="content" />
     </view>
     <view wx:if="{{url}}" class="footer">
-      <view>
-        原文：{{url}}
+      <view @tap="copy({{url}})">
+        原文(点击复制链接)：{{url}}
       </view>
     </view>
   </view>
@@ -121,8 +121,25 @@
         params: ""
       }
     };
+    copyUrl(url) {
+      const self = this
+      wepy.setClipboardData({
+        data: url,
+        success: function(res) {
+          self.ShowToast("链接复制成功！")
+        },
+        fail: res => {
+          self.ShowToast("链接复制失败！")
+        }
+      })
+    }
     methods = {
-      send() {},
+      copy(url) {
+        this.copyUrl(url)
+      },
+      wxParseTagATap(e) {
+        this.copyUrl(e.currentTarget.dataset.src);
+      },
       share() {
         this.$invoke("share", "show");
       }
