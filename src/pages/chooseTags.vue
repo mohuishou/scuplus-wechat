@@ -139,9 +139,6 @@
     methods = {
       activeHandle() {
         this.active = !this.active
-        if (!this.active) {
-          db.Set("chooseTags", this.choose)
-        }
       },
       add(item, type) {
         if (!this.active) {
@@ -156,6 +153,7 @@
           name: item,
           type: type
         })
+        db.Set("chooseTags", this.choose)
       },
       delete(item) {
         if (!this.active) {
@@ -167,6 +165,7 @@
           }
         }
         this[item.type].unshift(item.name)
+        db.Set("chooseTags", this.choose)
       }
     }
     onLoad() {

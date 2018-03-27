@@ -22,12 +22,12 @@
         display: flex;
         flex-wrap: nowrap;
         height: 80rpx;
+        justify-content: flex-start;
         white-space: nowrap;
         view {
-          flex: 1;
           display: inline-flex;
           margin-right: 20rpx;
-          &.active{
+          &.active {
             color: @base-color;
           }
         }
@@ -37,16 +37,6 @@
       display: flex;
       width: 80rpx;
       z-index: 200;
-    }
-  }
-  @keyframes fadeinL {
-    0% {
-      opacity: 0;
-      transform: translateX(-1rem);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
     }
   }
   page {
@@ -65,8 +55,8 @@
           </block>
         </view>
       </scroll-view>
-      <view class="icon">
-        <view class="iconfont icon-home"></view>
+      <view @tap="to" class="icon">
+        <view class="iconfont icon-daohang"></view>
       </view>
     </view>
     <list id="list" :params.sync="params"></list>
@@ -93,60 +83,31 @@
       swipe: 0,
       swipeY: 0,
       params: {
-        category: ""
+        tag_name: ""
       },
-      tabs: [{
-          name: "全部",
-          category: "",
-        },
-        {
-          name: "scuinfo",
-          category: "scuinfo",
-        },
-        {
-          name: "青春川大",
-          category: "青春川大",
-        },
-        {
-          name: "学工部",
-          category: "学工部",
-        },
-        {
-          name: "教务处",
-          category: "教务处",
-        },
-        {
-          name: "官网新闻",
-          category: "四川大学新闻网",
-        },
-      ]
     };
+    computed = {
+      tabs() {
+        return [{
+          name: "全部",
+          type: "",
+        }, ].concat(db.Get("chooseTags"))
+      }
+    }
     methods = {
       tabHandle(index) {
         this.active = index
+        this.params.tag_name = this.tabs[index].name
+        this.$invoke('list', 'getNewDetails', 1)
       },
-      moveStart(e) {
-        this.swipe = e.touches[0].clientX
-        this.swipeY = e.touches[0].clientY
-      },
-      moveEnd(e) {
-        let changedX = e.changedTouches[0].clientX - this.swipe
-        if (Math.abs(e.changedTouches[0].clientY - this.swipeY) >= Math.abs(changedX)) return;
-        if (changedX > 60) {
-          // 右移
-          if (this.active < 5) this.active++
-        } else if (changedX < -60) {
-          // 左移
-          if (this.active > 0) this.active--
-        }
+      to() {
+        wepy.navigateTo({
+          url: 'chooseTags'
+        })
       }
     }
-    
-    watch = {
-      active(newValue, oldValue) {
-        this.params.category = this.tabs[newValue].category
-        this.$invoke('list', 'getNewDetails', 1)
-      }
+    onLoad() {
+      // this.tabs = this.tabs.concat(db.Get("chooseTags"))
     }
     onShareAppMessage(options) {
       return {

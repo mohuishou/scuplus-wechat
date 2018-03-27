@@ -9,13 +9,21 @@
     .list {
       padding: 0.5rem;
       background: #fff;
-      margin-bottom: 0.5rem;
+      min-height: 180rpx;
+      border-bottom: 2rpx solid #ededed;
+      display: flex;
+      align-content: space-between;
+      flex-wrap: wrap;
+      color: #555;
       .title {
-        font-size: 0.8rem;
+        width: 100%;
+        font-size: 28rpx;
       }
       .info {
+        color: #999;
+        width: 100%;
         margin-top: 0.5rem;
-        font-size: 0.6rem;
+        font-size: 24rpx;
         display: flex;
         justify-content: space-between;
         text {
@@ -28,7 +36,7 @@
 </style>
 
 <template>
-  <scroll-view style="height:{{isTag != '' ? height : ''}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y>
+  <scroll-view style="height:{{height}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y scroll-top="{{scrollTop}}" lower-threshold="80">
     <view style="{{isTag != '' ? 'margin-top: 0px;' : '' }}" class="lists">
       <block wx:for="{{details}}" wx:key="{{item.id}}">
         <view class="list">
@@ -37,7 +45,6 @@
           </view>
           <view class="info">
             <view class="tags">
-              <text>{{item.category}}</text>
               <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="{{tag.id}}">
                 <text class="tag" @tap="toTagLists({{tag}})">#{{tag.name}}</text>
               </block>
@@ -46,22 +53,26 @@
           </view>
         </view>
       </block>
+      <empty wx:if="{{isNone}}" msg="没有数据了"></empty>
     </view>
   </scroll-view>
 </template>
 
 <script>
   import wepy from "wepy";
-  import HttpMixin from "../mixins/http";
-  import ToastMixin from "../mixins/toast";
+  import HttpMixin from "mixins/http";
+  import ToastMixin from "mixins/toast";
+  import Empty from "components/empty"
   export default class List extends wepy.page {
     mixins = [HttpMixin, ToastMixin]
-    components = {}
+    components = {
+      empty: Empty
+    }
     props = {
       params: {
         type: Object,
         default: {
-          category: ""
+          tag_name: ""
         }
       },
       isTag: {
@@ -75,11 +86,10 @@
       page_size: 20,
       details: [],
       height: 500,
+      scrollTop: 0,
+      isNone: false,
     };
     methods = {
-      scroll(e) {
-        console.log(e);
-      },
       updateLists() {
         this.page++;
         this.getDetails()
@@ -95,18 +105,28 @@
         })
       },
       getNewDetails(page) {
-        if (page) this.page = page
+        this.page = page || this.page
+        this.isNone = false
+        // scrollTop 值必须要有变化，不然的话没有效果
+        this.scrollTop = 1
         setTimeout(() => {
+          this.scrollTop = 0
           this.getDetails()
-        }, 100)
+        }, 200);
       }
     }
     async getDetails() {
+      if (this.isNone && this.page != 1) return
       try {
         const resp = await this.GET("/details", Object.assign({
           page: this.page,
           page_size: this.page_size,
         }, this.params))
+        if (resp.data.data.length == 0) {
+          this.isNone = true
+          this.ShowToast("没有数据了")
+          return
+        }
         for (let i = 0; i < resp.data.data.length; i++) {
           resp.data.data[i].created_at = this.timeParser(resp.data.data[i].created_at)
         }
