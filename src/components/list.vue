@@ -111,6 +111,7 @@
         this.scrollTop = 1
         setTimeout(() => {
           this.scrollTop = 0
+          this.details = []
           this.getDetails()
         }, 200);
       }
@@ -125,6 +126,7 @@
         if (resp.data.data.length == 0) {
           this.isNone = true
           this.ShowToast("没有数据了")
+          this.$apply();
           return
         }
         for (let i = 0; i < resp.data.data.length; i++) {

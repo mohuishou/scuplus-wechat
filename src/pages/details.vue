@@ -5,6 +5,9 @@
     height: 100%;
     background: @bg-color;
   }
+  .header{
+    margin-bottom: 20rpx;
+  }
   .details {
     margin: 0.2rem;
     padding: 0.5rem;
