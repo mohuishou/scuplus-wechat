@@ -32,4 +32,4 @@
 
 ## Feature && ChangeLog
 
-[ChangeLog](https://github.com/mohuishou/scuplus-go/blob/master/ChangeLog.md)
+[ChangeLog](ChangeLog.md)

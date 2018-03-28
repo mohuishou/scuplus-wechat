@@ -2,7 +2,7 @@
   @import "./src/less/config";
   page {
     background-image: url("https://scuplus.oss-cn-shenzhen.aliyuncs.com/bg/bus.png");
-    background-position: 50% calc(~"100% + 100rpx");
+    background-position: 50% calc(~"100% + 380rpx");
     background-repeat: no-repeat;
     background-size: 100%;
     background-attachment: fixed;
