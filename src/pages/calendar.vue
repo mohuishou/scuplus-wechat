@@ -224,7 +224,8 @@
     }
     async get() {
       try {
-        // this.events = []
+        this.events = []
+        this.$apply()
         const resp = await this.GET("/term/events")
         this.term = resp.data.term
         resp.data.events.forEach(e => {
@@ -338,6 +339,9 @@
       this.current.day = this.today.day = new Date().getDate()
       this.current.month = this.today.month = new Date().getMonth() + 1
       this.init();
+    }
+    onShareAppMessage(options) {
+      return {}
     }
   }
 </script>
