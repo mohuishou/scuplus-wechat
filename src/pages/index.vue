@@ -25,9 +25,9 @@
     }
   }
   .mview {
-    padding-top: 0.7rem;
+    padding-top: 30rpx;
     width: 20%;
-    border-bottom: 1px solid #eee;
+    // border-bottom: 1px solid #eee;
   }
   .icon-btn {
     text-align: center;
@@ -35,25 +35,17 @@
     align-items: center;
     justify-content: center;
     align-content: space-between;
-    flex-wrap: wrap; // width: 25%;
-    .iconfont {
-      box-shadow: 2rpx 2rpx 0rpx #eee;
-      @size: 2.7rem;
+    flex-wrap: wrap;
+    .icon {
+      @size: 80rpx;
       width: @size;
-      border-radius: @size*0.5;
       height: @size;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #99ccee;
-      color: #fff;
-      font-size: 1.2rem;
     }
     text {
       width: 100%;
       display: block;
-      margin-top: 5rpx;
-      font-size: 0.8rem;
+      margin-top: 2rpx;
+      font-size: 28rpx;
     }
   }
   .swiper {
@@ -95,7 +87,7 @@
         <repeat for="{{funcs}}" item="item" key="index">
           <mview @mtap.user="to" class="mview {{item.type}} {{verify === 1 ? '' : 'no-verify'}}" :arg.sync="item">
             <view class="icon-btn" slot="content">
-              <view style="background: {{item.bg}};" class="iconfont icon-{{item.icon}}"></view>
+              <image class="icon" src="/icon/index/{{item.icon}}.svg"></image>
               <text>{{item.name}}</text>
             </view>
           </mview>

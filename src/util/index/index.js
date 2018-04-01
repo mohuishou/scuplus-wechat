@@ -1,34 +1,36 @@
-const funcs = [{
+const funcs = [
+  {
     name: '课程表',
     url: 'schedule',
-    icon: 'kechengbiao',
+    icon: 'schedule',
     bg: '#eacdd1',
     type: 'login'
   },
   {
     name: '成绩',
     url: 'grade',
-    icon: 'chengji',
+    icon: 'grade',
     bg: '#99ccee',
     type: 'login'
   },
   {
     name: '自习',
     url: 'classroom',
-    icon: 'building',
+    icon: 'classroom',
     bg: '#90caaf',
     type: 'normal'
   },
   {
     name: '我的借阅',
     url: 'library/loan',
-    icon: 'book',
+    icon: 'loan',
     bg: '#ab96c5',
     type: 'login'
-  }, {
+  },
+  {
     name: '历史借阅',
     url: 'library/loan?type=history',
-    icon: 'book1',
+    icon: 'loan_all',
     bg: '#eea5d1',
     type: 'login'
   },
@@ -56,7 +58,7 @@ const funcs = [{
   {
     name: '校历',
     url: 'calendar',
-    icon: 'rili',
+    icon: 'cal',
     bg: '#008e59',
     type: 'normal'
   },
@@ -66,8 +68,7 @@ const funcs = [{
     icon: 'bus',
     bg: '#ab96c5',
     type: 'normal'
-  },
-
+  }
 ]
 
 module.exports = {
