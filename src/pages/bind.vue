@@ -131,9 +131,16 @@
       try {
         const res = await this.POST('/bind', params)
         db.Set('verify', 1)
-        this.ShowToast('绑定成功！', 'success')
-        wepy.navigateBack({
-          delta: 1
+        wepy.showModal({
+          title: "绑定成功",
+          content: "点击确认掉转到首页，请在首页点击查看we川大使用说明！",
+          showCancel: false,
+          success: function(res) {
+            // 关闭所有页面并且跳转到首页，确保verify数据重新获取
+            wepy.reLaunch({
+              url: "/pages/index"
+            })
+          }
         })
       } catch (error) {
         console.log(error);
