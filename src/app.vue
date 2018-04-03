@@ -34,8 +34,8 @@
         'pages/chooseTags',
       ],
       window: {
-        navigationBarBackgroundColor: '#f06292',
-        navigationBarTextStyle: '#fff',
+        navigationBarBackgroundColor: '#ffffff',
+        navigationBarTextStyle: 'black',
         navigationBarTitleText: 'We川大',
         backgroundColor: '#dddddd'
       },
@@ -66,6 +66,9 @@
     constructor() {
       super()
       this.use('requestfix')
+    }
+    GlobalData = {
+      verify: 0
     }
     onLaunch() {
       this.getToken()
@@ -119,6 +122,7 @@
           const data = resp.data
           db.Set('token', data.token)
           db.Set('verify', data.verify)
+          this.GlobalData.verify = data.verify
           if (data.verify === 0) {
             wepy.navigateTo({
               url: 'bind'
