@@ -6,6 +6,7 @@
   }
   .grade {
     margin: 20rpx;
+    margin-bottom: 120rpx;
   }
   .header {
     box-shadow: 4rpx 4rpx 10rpx #ddd;

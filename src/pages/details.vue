@@ -11,7 +11,7 @@
   .details {
     margin: 0.2rem;
     padding: 0.5rem;
-    margin-bottom: 100rpx;
+    margin-bottom: 150rpx;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 0.1rem;
