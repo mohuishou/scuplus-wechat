@@ -5,13 +5,13 @@
     height: 100%;
     background: @bg-color;
   }
-  .header{
+  .header {
     margin-bottom: 20rpx;
   }
   .details {
     margin: 0.2rem;
     padding: 0.5rem;
-    margin-bottom: 150rpx;
+    margin-bottom: 120rpx;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 0.1rem;
@@ -50,24 +50,59 @@
     font-size: 24rpx;
     color: #888;
   }
+  button.tab {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0;
+    font-size: 0rpx;
+    line-height: normal;
+    &::after {
+      content: "";
+      width: 0;
+      height: 0;
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      display: none;
+      background-color: transparent;
+    }
+  }
   .tabs {
     position: fixed;
     bottom: 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: 3rpx solid #eee;
+    line-height: normal;
     width: 100%;
-    text-align: center;
-    height: 80rpx;
+    height: 90rpx;
     margin: 0;
+    background: #fff;
     .tab {
-      background: @base-color;
-      color: #fff;
+      line-height: normal;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: @base-color;
       border: none;
       flex: 1;
-      &:nth-child(1) {
-        border-right: 2rpx solid #ddd;
+      background: #fff;
+      border: none;
+      border-radius: 0;
+      width: 100%;
+      .iconfont {
+        font-size: 38rpx;
+      }
+      .tab-name {
+        font-size: 24rpx;
       }
     }
   }
@@ -94,8 +129,18 @@
     </view>
   </view>
   <view class="tabs">
-    <button open-type="share" class="tab">转发</button>
-    <button @tap="share" class="tab">分享</button>
+    <button open-type="share" class="tab">
+              <view class="iconfont icon-fenxiang"></view>
+              <view class="tab-name">转发</view>
+            </button>
+    <view @tap="share" class="tab">
+      <view class="iconfont icon-pengyouquan"></view>
+      <view class="tab-name">分享</view>
+    </view>
+    <view @tap="copy({{url}})" class="tab">
+      <view class="iconfont icon-lianjie"></view>
+      <view class="tab-name">原文</view>
+    </view>
   </view>
 </template>
 
@@ -126,20 +171,20 @@
       }
     };
     copyUrl(url) {
-      const self = this
+      const self = this;
       wepy.setClipboardData({
         data: url,
         success: function(res) {
-          self.ShowToast("链接复制成功！")
+          self.ShowToast("链接复制成功！");
         },
         fail: res => {
-          self.ShowToast("链接复制失败！")
+          self.ShowToast("链接复制失败！");
         }
-      })
+      });
     }
     methods = {
       copy(url) {
-        this.copyUrl(url)
+        this.copyUrl(url);
       },
       wxParseTagATap(e) {
         this.copyUrl(e.currentTarget.dataset.src);
@@ -147,7 +192,7 @@
       share() {
         this.$invoke("share", "show");
       }
-    }
+    };
     async getDetail(id) {
       const resp = await this.GET(`/detail/${id}`);
       let title = resp.data.title;
@@ -164,7 +209,8 @@
       this.shareOption.title = title;
       this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, "");
       this.shareOption.from = resp.data.category;
-      this.shareOption.params = "page=pages/details&scene=" + resp.data.id + "_news"
+      this.shareOption.params =
+        "page=pages/details&scene=" + resp.data.id + "_news";
       this.$apply();
       this.$invoke("htmlParser", "htmlParserNotice");
     }
@@ -176,18 +222,19 @@
       });
       this.shareOption.title = resp.data.title;
       this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, "");
-      this.shareOption.params = "page=pages/details&scene=" + resp.data.id + "_notice"
+      this.shareOption.params =
+        "page=pages/details&scene=" + resp.data.id + "_notice";
       this.$apply();
       this.$invoke("htmlParser", "htmlParserNotice");
     }
     async onLoad(option) {
       this.from = option.from;
-      let id = option.id || ""
-      let from = option.from || ""
+      let id = option.id || "";
+      let from = option.from || "";
       if ("scene" in option) {
-        const r = option.scene.split("_")
-        id = r[0]
-        from = r[1]
+        const r = option.scene.split("_");
+        id = r[0];
+        from = r[1];
       }
       switch (from) {
         case "notice":
