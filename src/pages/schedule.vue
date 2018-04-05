@@ -1,5 +1,6 @@
 <style lang="less">
   @import "./src/less/config";
+  @tab-bg: #f5f5f5;
   page {
     width: 100%;
     height: 100%;
@@ -22,8 +23,24 @@
     width: 100%;
     top: 0;
     font-size: 28rpx;
-    background: #f5f5f5;
-    view {
+    background: @tab-bg;
+    .time {
+      flex-wrap: wrap;
+      view {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &.day {
+          font-size: 22rpx;
+          margin-bottom: 5rpx;
+        }
+        &.date {
+          margin-top: 5rpx;
+        }
+      }
+    }
+    >view {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -50,10 +67,11 @@
     text-align: center;
     flex: 1;
     padding: 0 0.15rem;
+    border-bottom: 1px solid @bg-color;
     &.title {
       display: flex;
       justify-content: center;
-      background: #f5f5f5;
+      background: @tab-bg;
       align-items: center;
       border-bottom: 1px solid #e0e0e0;
       &:first-child {
@@ -63,7 +81,7 @@
     &.item {
       font-size: 20rpx;
       height: 300rpx;
-      color: #fefefe;
+      color: #fff;
       display: flex;
       flex-direction: column;
       view {
@@ -85,8 +103,8 @@
     align-items: center;
     height: 80rpx;
     width: 100%;
-    color: #fff;
-    background: @base-color;
+    color: #555;
+    background: @tab-bg;
     .iconfont {
       display: flex;
       justify-content: space-around;
@@ -102,13 +120,12 @@
     <view class="contanier">
       <view class="header">
         <view class="title">{{month}}月</view>
-        <view>一</view>
-        <view>二</view>
-        <view>三</view>
-        <view>四</view>
-        <view>五</view>
-        <view>六</view>
-        <view>日</view>
+        <block wx:for="{{headers}}" wx:key="{{index}}">
+          <view class="time">
+            <view class="date">{{item.date}}</view>
+            <view class="day">星期{{item.day}}</view>
+          </view>
+        </block>
       </view>
       <block wx:for="{{schedules}}" wx:key="{{index}}" wx:for-item="items" wx:for-index="i">
         <view class="col {{i==0 ? 'title' : ''}}" id="day-{{i}}">
@@ -127,7 +144,8 @@
   <view class="tabs">
     <view @tap="prev" class="iconfont icon-arrow-left"></view>
     <picker @change="changeWeek" value="{{week-1}}" mode="selector" range="{{allWeeks}}">
-      <view class="title">第{{week}}周</view>
+      <view class="title" wx:if="{{week == nowWeek}}">本周课表(第{{week}}周)</view>
+      <view class="title" wx:else>第{{week}}周</view>
     </picker>
     <view @tap="next" class="iconfont icon-arrow-right"></view>
   </view>
@@ -154,8 +172,10 @@
       ],
       day: 0,
       scheduleItems: [],
-      week: 1,
+      week: 1, // 当前选择周次
+      nowWeek: 2, // 本周
       month: 1,
+      headers: [],
       allWeeks: [
         1,
         2,
@@ -185,21 +205,34 @@
     };
     methods = {
       prev() {
-        this.week--;
-        this.initData();
-        this.initSchedules(this.scheduleItems);
+        this.ChangeWeek(this.week - 1)
       },
       next() {
-        this.week++;
-        this.initData();
-        this.initSchedules(this.scheduleItems);
+        this.ChangeWeek(this.week + 1)
       },
       changeWeek(e) {
-        this.week = e.detail.value - 0 + 1;
-        this.initData();
-        this.initSchedules(this.scheduleItems);
+        this.ChangeWeek(e.detail.value - 0 + 1)
       }
     };
+    ChangeWeek(week) {
+      this.week = week;
+      this.initData();
+      this.initHeaders()
+      this.initSchedules(this.scheduleItems);
+    }
+    initHeaders() {
+      let current = this.GetDate(this.week)
+      this.month = current.getMonth() + 1
+      this.headers = []
+      for (let i = 0; i < 7; i++) {
+        this.headers.push({
+          day: ["日", "一", "二", "三", "四", "五", "六"][current.getDay()],
+          date: current.getDate()
+        })
+        current.setDate(current.getDate() + 1)
+      }
+      this.$apply()
+    }
     async onLoad() {
       // 初始化数据
       this.initData();
@@ -208,17 +241,20 @@
       // 计算本周周次
       const now = new Date();
       this.month = now.getMonth() + 1;
-      this.week = await this.GetWeek(
+      let week = await this.GetWeek(
         now.getFullYear(),
         now.getMonth() + 1,
         now.getDate()
       );
+      this.week = week
+      this.nowWeek = week
       // 获取课程表数据
       await this.Init("scheduleItems", 24 * 30);
       // 渲染数据
       this.initSchedules(this.scheduleItems);
       // 获取今天星期几
       this.day = new Date().getDay() || 7;
+      this.initHeaders()
       this.$apply();
       const update_time = db.Get("update_time." + "schedules") || 0;
       if ((now.getTime() - update_time) / 1000 / 3600 > 3 * 24) {
@@ -249,9 +285,11 @@
       wepy.stopPullDownRefresh();
     }
     initSchedules(schedules) {
-      let colors = ["#009966", "#99CC99", "#0099CC", "#339999", "#FF9999"];
+      let colors = ["#f07c82", "#66CC99", "#ea7293", "#13afc8", "#FF9999", "#99CCFF", "#f97d1c", "#FF6666", "#21a265"];
       const week = this.week;
+      let ci = 0;
       for (let e of schedules) {
+        ci++
         e.flex = 0;
         e.sessionArr = [];
         if (e.session !== "") {
@@ -268,13 +306,12 @@
         }
         if (thisWeek) {
           // 生成随机背景色
-          let ridx = Math.round(Math.random() * (colors.length - 1));
-          e.color = colors[ridx];
+          e.color = colors[ci % colors.length];
           // 替换原矩阵值
           e.sessionArr.forEach(element => {
-            this.schedules[e.day - 0][element - 1].flex = 0;
+            this.schedules[(e.day % 7) + 1][element - 1].flex = 0;
           });
-          this.schedules[e.day - 0][e.sessionArr[0] - 1] = e;
+          this.schedules[(e.day % 7) + 1][e.sessionArr[0] - 1] = e;
         }
       }
     }
@@ -283,14 +320,9 @@
       this.schedules = [
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
       ];
-      // let title = ["一", "二", "三", "四", "五", "六", "日"];
       for (let i = 0; i < 7; i++) {
         let tmpData = [];
         for (let j = 0; j < 12; j++) {
-          // if (j === 0) {
-          //   // tmpData[j] = title[i];
-          //   continue;
-          // }
           tmpData[j] = {
             course_name: "",
             flex: 1

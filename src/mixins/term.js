@@ -1,5 +1,5 @@
 import wepy from 'wepy'
-import db from "../util/db"
+import db from '../util/db'
 export default class TermMixin extends wepy.mixin {
   data = {
     term: {}
@@ -14,18 +14,24 @@ export default class TermMixin extends wepy.mixin {
     }
     return Math.floor((current.getTime() - start.getTime()) / 1000 / 3600 / 24 / 7) + 1
   }
+  // 根据周次计算时间
+  GetDate(week) {
+    let start = new Date(this.term.start_time)
+    start.setDate(start.getDate() + (week - 1) * 7)
+    return start
+  }
   async GetTerm() {
-    const resp = await this.GET("/term")
+    const resp = await this.GET('/term')
     this.term = resp.data
     this.$apply()
-    db.Set("term", resp.data)
-    db.Set("update_time.term", new Date().getTime())
+    db.Set('term', resp.data)
+    db.Set('update_time.term', new Date().getTime())
   }
   async InitTerm() {
     const now = (new Date()).getTime()
-    const update_time = db.Get("update_time.term") || 0
-    if ((now - update_time) / 1000 / 3600 < (30 * 24) && db.Get("term")) {
-      this.term = db.Get("term")
+    const update_time = db.Get('update_time.term') || 0
+    if ((now - update_time) / 1000 / 3600 < (30 * 24) && db.Get('term')) {
+      this.term = db.Get('term')
       this.$apply()
     } else {
       await this.GetTerm()
