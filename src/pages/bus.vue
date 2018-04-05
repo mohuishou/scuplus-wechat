@@ -97,6 +97,7 @@
   export default class Bus extends wepy.page {
     config = {
       navigationBarBackgroundColor: '#ab96c5',
+      navigationBarTextStyle: 'white',
     }
     mixins = [DataMixin];
     changeColumn(v) {

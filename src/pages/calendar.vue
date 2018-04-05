@@ -1,5 +1,4 @@
 <style lang="less">
-  
   @import "./src/less/config";
   page {
     background: @bg-color;
@@ -104,7 +103,7 @@
         <block wx:for="{{monthDay}}" wx:key="{{index}}" wx:for-item="row">
           <view class="row">
             <block wx:for="{{row}}" wx:key="{{index}}" wx:for-index="i">
-              <view class="day {{(today.year == current.year && today.day == item.name && current.month == today.month) ? 'today' : ''}} {{(current.day == item.name && i !=0 && item.name != '' ) ? 'current' : ''}}" @tap="currentDay({{item}},{{i}},{{index}})">
+              <view class="day {{(i != 0 && today.year == current.year && today.day == item.name && current.month == today.month) ? 'today' : ''}} {{(current.day == item.name && i !=0 && item.name != '' ) ? 'current' : ''}}" @tap="currentDay({{item}},{{i}},{{index}})">
                 <view wx:if="{{item.events.length > 0}}" class="iconfont icon-dian"></view>
                 <view class="">{{item.name}}</view>
               </view>
@@ -157,8 +156,9 @@
         year: 2018,
       },
       monthDay: [],
-      events: {},
-      event: []
+      events: [],
+      event: [],
+      termEvents: []
     };
     computed = {
       termName() {
@@ -224,26 +224,12 @@
     }
     async get() {
       try {
-        this.events = []
-        this.$apply()
         const resp = await this.GET("/term/events")
         this.term = resp.data.term
-        resp.data.events.forEach(e => {
-          let start = new Date(e.start_time)
-          let end = new Date(e.end_time)
-          let day = Math.ceil((end.getTime() - start.getTime()) / 1000 / 3600 / 24)
-          e.start_time = start.toLocaleDateString()
-          e.end_time = end.toLocaleDateString()
-          for (let i = 0; i < day; i++) {
-            let key = `${start.getFullYear()}-${start.getMonth() + 1}-${start.getDate()}`
-            this.events[key] = this.events[key] || []
-            this.events[key].push(e)
-            start.setDate(start.getDate() + 1)
-          }
-        });
+        this.termEvents = resp.data.events
         this.$apply()
         this.InitSet("term", this.term)
-        this.InitSet("events", this.events)
+        this.InitSet("termEvents", this.termEvents)
       } catch (error) {
         console.log(error);
       }
@@ -260,9 +246,29 @@
       }
       wepy.stopPullDownRefresh();
     }
+    convertEvents() {
+      this.events = []
+      for (let j = 0; j < this.termEvents.length; j++) {
+        let e = this.termEvents[j]
+        let start = new Date(e.start_time)
+        let end = new Date(e.end_time)
+        let day = Math.ceil((end.getTime() - start.getTime()) / 1000 / 3600 / 24)
+        e.start_time = start.toLocaleDateString()
+        e.end_time = end.toLocaleDateString()
+        for (let i = 0; i < day; i++) {
+          let key = `${start.getFullYear()}-${start.getMonth() + 1}-${start.getDate()}`
+          this.events[key] = this.events[key] || []
+          this.events[key].push(e)
+          start.setDate(start.getDate() + 1)
+        }
+      }
+      this.$apply()
+    }
     // 初始化当月数据
     init() {
-      // 初始话monthday
+      // 转化event数据
+      this.convertEvents()
+      // 初始化monthday
       this.monthDay = [
         [{
             name: "周",
@@ -333,7 +339,7 @@
       this.$apply()
     }
     async onLoad() {
-      await this.Init("events", 24 * 30)
+      await this.Init("termEvents", 24 * 30)
       await this.InitTerm()
       this.current.year = this.today.year = new Date().getFullYear()
       this.current.day = this.today.day = new Date().getDate()

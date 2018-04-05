@@ -104,7 +104,8 @@
     config = {
       navigationBarTitleText: '我的校园卡',
       navigationBarBackgroundColor: '#b92c18',
-      enablePullDownRefresh: true
+      enablePullDownRefresh: true,
+      navigationBarTextStyle: 'white',
     }
     mixins = [EcardMixin, HttpMixin, ToastMixin, DataMixin]
     components = {}
