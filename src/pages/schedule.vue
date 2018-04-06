@@ -32,11 +32,13 @@
         justify-content: center;
         align-items: center;
         &.day {
-          font-size: 22rpx;
-          margin-bottom: 5rpx;
+          font-size: 24rpx;
+          margin-top: 5rpx;
         }
         &.date {
-          margin-top: 5rpx;
+          font-size: 22rpx;
+          color: #888;
+          margin-bottom: 5rpx;
         }
       }
     }
@@ -122,8 +124,8 @@
         <view class="title">{{month}}月</view>
         <block wx:for="{{headers}}" wx:key="{{index}}">
           <view class="time">
-            <view class="date">{{item.date}}</view>
-            <view class="day">星期{{item.day}}</view>
+            <view class="day">周{{item.day}}</view>
+            <view class="date">{{item.date}}日</view>
           </view>
         </block>
       </view>

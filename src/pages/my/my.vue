@@ -3,12 +3,6 @@
   page {
     background: @bg-color;
   }
-  .warn {
-    .list {
-      background: #ee3f4d !important;
-      color: #fff;
-    }
-  }
   .lists {
     .list {
       padding: 10rpx 20rpx;
