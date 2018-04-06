@@ -146,7 +146,6 @@
       }
     }
     onLoad(option) {
-      console.log(option, "111");
       this.type = option.type || this.type
     }
     async Bind(params) {
