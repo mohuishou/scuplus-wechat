@@ -3,13 +3,30 @@
   page {
     background: #eee;
   }
+  .search {
+    margin: 80rpx auto;
+    text-align: center;
+    image {
+      width: 200rpx;
+      height: 200rpx;
+    }
+  }
   .search-input {
-    position: fixed;
-    z-index: 1000;
-    top: 0;
+    text-align: left;
+    &.has-result {
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      width: calc(~"100% - 1rem");
+      padding: 0.5rem;
+      margin: 0;
+      transition: all 1s ease-in;
+    }
+    transition: all 1s ease-in;
     background: @white;
-    width: calc(~"100% - 1rem");
-    padding: 0.5rem;
+    width: calc(~"100% - 80rpx");
+    padding: 20rpx;
+    margin: 20rpx;
     display: flex;
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.3rem;
@@ -57,9 +74,12 @@
 
 <template>
   <view>
-    <view class="search-input">
-      <input @blur="change" placeholder="请输入图书名称" confirm-type="search" />
-      <icon type="search" size="18" />
+    <view class="{{books.length === 0 ? 'search' : ''}}">
+      <image wx:if="{{books.length === 0}}" src="/icon/index/search.svg"></image>
+      <view class="search-input {{books.length === 0 ? '' : 'has-result'}}">
+        <input @blur="change" placeholder="请输入图书名称" confirm-type="search" />
+        <icon type="search" size="18" />
+      </view>
     </view>
     <scroll-view style="height:{{height}}px;" class="results" @scrolltolower="next" enable-back-to-top scroll-y>
       <block wx:for="{{books}}" wx:key="index">
