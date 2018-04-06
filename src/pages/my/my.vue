@@ -95,6 +95,11 @@
         {
           name: "账号绑定",
           url: "/pages/bind",
+          type: "page?type=library"
+        },
+        {
+          name: "图书馆绑定",
+          url: "/pages/bind?type=library",
           type: "page"
         },
         {

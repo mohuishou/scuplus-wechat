@@ -174,6 +174,9 @@
       verify() {
         return db.Get("verify")
       },
+      library_verify() {
+        return db.Get("library_verify")
+      },
       ecardBalance() {
         const trans = db.Get("trans");
         if (trans.length > 0) {
@@ -217,12 +220,23 @@
           success: function(res) {
             if (res.confirm) {
               wepy.navigateTo({
-                url: "bind"
+                url: "bind?type=bind"
               });
             }
           }
         });
-        return;
+      } else if (item.type == "library" && this.library_verify == 0) {
+        wepy.showModal({
+          title: "账号信息错误",
+          content: "图书馆账号未绑定或密码错误！是否前往绑定？",
+          success: function(res) {
+            if (res.confirm) {
+              wepy.navigateTo({
+                url: "bind?type=library"
+              });
+            }
+          }
+        });
       } else {
         wepy.navigateTo({
           url: url

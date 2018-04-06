@@ -14,7 +14,7 @@ export default class HttpMixin extends wepy.mixin {
   }
 
   async requestWithBind(method, url, params = {}, showToast = true, handler = {}) {
-    if (db.Get('verify') === 0) {
+    if (db.Get('verify') == 0) {
       wepy.showModal({
         title: '绑定',
         content: '统一认证平台未绑定或密码错误，是否跳转到绑定页面？',
@@ -26,6 +26,19 @@ export default class HttpMixin extends wepy.mixin {
           } else if (res.cancel) {
             wepy.navigateBack({
               delta: 1
+            })
+          }
+        }
+      })
+      throw '未绑定账号'
+    } else if (db.Get('library_verify') == 0) {
+      wepy.showModal({
+        title: '账号信息错误',
+        content: '图书馆账号未绑定或密码错误！是否前往绑定？',
+        success: function (res) {
+          if (res.confirm) {
+            wepy.navigateTo({
+              url: '/pages/bind?type=library'
             })
           }
         }
@@ -68,7 +81,7 @@ export default class HttpMixin extends wepy.mixin {
           if (showToast) this.ShowToast(res.data.msg, 'success')
           resolve(res.data)
         } else {
-          if (showToast) this.ShowToast(res.data.msg || res.data || "网络错误")
+          if (showToast) this.ShowToast(res.data.msg || res.data || '网络错误')
           reject(res)
         }
       }

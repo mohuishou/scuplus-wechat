@@ -122,6 +122,7 @@
           const data = resp.data
           db.Set('token', data.token)
           db.Set('verify', data.verify)
+          db.Set('library_verify', data.library_verify)
           this.GlobalData.verify = data.verify
           if (data.verify === 0) {
             wepy.navigateTo({

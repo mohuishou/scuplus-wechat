@@ -25,14 +25,14 @@ const funcs = [
     url: 'library/loan',
     icon: 'loan',
     bg: '#ab96c5',
-    type: 'login'
+    type: 'library'
   },
   {
     name: '历史借阅',
     url: 'library/loan?type=history',
     icon: 'loan_all',
     bg: '#eea5d1',
-    type: 'login'
+    type: 'library'
   },
   {
     name: '图书搜索',

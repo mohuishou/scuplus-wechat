@@ -51,7 +51,6 @@
   #bind {
     width: 100%;
     height: 100%;
-    
     #content {
       border-radius: 10rpx;
       margin: 100rpx auto;
@@ -68,8 +67,7 @@
         background: rgba(255, 255, 255, 0.15);
         color: #fff;
         border-color: @base-color;
-        margin: 20rpx;
-        // width: calc(~"100% - 40rpx");
+        margin: 20rpx; // width: calc(~"100% - 40rpx");
       }
       form {
         padding-top: 20rpx;
@@ -87,7 +85,7 @@
     <view id="stars3"></view>
     <view id="content">
       <view id="title">
-        绑定统一认证账号
+        绑定{{types[type].name}}
       </view>
       <form @submit="bind">
         <view class="input-group" hover-class="active">
@@ -99,8 +97,7 @@
           <input name="password" type="password" placeholder="请输入您的密码" />
         </view>
         <view class="help">
-          <view>密码为统一身份认证平台(即EDU邮箱)的密码，默认密码为身份证后六位</view>
-          <view>忘记密码可以访问 my.scu.edu.cn 找回</view>
+          <view>{{types[type].help}}</view>
         </view>
         <button formType="submit">绑定</button>
       </form>
@@ -121,6 +118,23 @@
     };
     mixins = [HttpMixin, ToastMixin];
     components = {};
+    data = {
+      type: "bind",
+      types: {
+        "bind": {
+          "name": "统一认证账号",
+          "url": "/bind",
+          "verify": "verify",
+          "help": "密码为统一身份认证平台(即EDU邮箱)的密码，默认密码为身份证后六位,忘记密码可以访问 my.scu.edu.cn 找回"
+        },
+        "library": {
+          "name": "图书馆",
+          "url": "/library/bind",
+          "verify": "library_verify",
+          "help": "密码为图书馆的密码，默认密码为身份证后六位,忘记密码可以访问图书馆找回"
+        }
+      }
+    }
     methods = {
       bind(e) {
         let params = e.detail.value;
@@ -130,11 +144,15 @@
         }
         this.Bind(params);
       }
-    };
+    }
+    onLoad(option) {
+      console.log(option, "111");
+      this.type = option.type || this.type
+    }
     async Bind(params) {
       try {
-        const res = await this.POST("/bind", params);
-        db.Set("verify", 1);
+        const res = await this.POST(this.types[this.type].url || "/bind", params);
+        db.Set(this.types[this.type].verify || "verify", 1);
         wepy.showModal({
           title: "绑定成功",
           content: "点击确认掉转到首页，请在首页点击查看we川大使用说明！",
