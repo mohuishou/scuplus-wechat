@@ -5,16 +5,24 @@ import {
 import db from '../util/db'
 
 export default class HttpMixin extends wepy.mixin {
-  GetWithBind(url, params = {}, showToast = true, handler = {}) {
-    return this.requestWithBind('GET', url, params, showToast, handler)
+  GetWithLibrary(url, params = {}, showToast = true, handler = {}) {
+    return this.requestWithBind('GET', url, params, showToast, handler, 'library')
   }
 
-  PostWithBind(url, params = {}, showToast = true, handler = {}) {
-    return this.requestWithBind('POST', url, params, showToast, handler)
+  PostWithLibrary(url, params = {}, showToast = true, handler = {}) {
+    return this.requestWithBind('POST', url, params, showToast, handler, 'library')
   }
 
-  async requestWithBind(method, url, params = {}, showToast = true, handler = {}) {
-    if (db.Get('verify') == 0) {
+  GetWithBind(url, params = {}, showToast = true, handler = {}, type = 'bind') {
+    return this.requestWithBind('GET', url, params, showToast, handler, type)
+  }
+
+  PostWithBind(url, params = {}, showToast = true, handler = {}, type = 'bind') {
+    return this.requestWithBind('POST', url, params, showToast, handler, type)
+  }
+
+  async requestWithBind(method, url, params = {}, showToast = true, handler = {}, type = 'bind') {
+    if (type === 'bind' && db.Get('verify') == 0) {
       wepy.showModal({
         title: '绑定',
         content: '统一认证平台未绑定或密码错误，是否跳转到绑定页面？',
@@ -31,7 +39,7 @@ export default class HttpMixin extends wepy.mixin {
         }
       })
       throw '未绑定账号'
-    } else if (db.Get('library_verify') == 0) {
+    } else if (type === 'library' && db.Get('library_verify') == 0) {
       wepy.showModal({
         title: '账号信息错误',
         content: '图书馆账号未绑定或密码错误！是否前往绑定？',
@@ -70,13 +78,15 @@ export default class HttpMixin extends wepy.mixin {
       handler.header['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     }
 
-    wepy.showLoading && wepy.showLoading({
-      title: '加载中...'
-    })
+    if (showToast) {
+      wepy.showLoading && wepy.showLoading({
+        title: '加载中...'
+      })
+    }
 
     return new Promise((resolve, reject) => {
       handler.success = res => {
-        wepy.hideLoading && wepy.hideLoading()
+        if (showToast) wepy.hideLoading && wepy.hideLoading()
         if (res.data.status === 0) {
           if (showToast) this.ShowToast(res.data.msg, 'success')
           resolve(res.data)
@@ -86,7 +96,7 @@ export default class HttpMixin extends wepy.mixin {
         }
       }
       handler.fail = () => {
-        wepy.hideLoading && wepy.hideLoading()
+        if (showToast) wepy.hideLoading && wepy.hideLoading()
         if (showToast) this.ShowToast('网络错误', 'error', 3000)
         reject('Network request failed')
       }

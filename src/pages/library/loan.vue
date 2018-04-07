@@ -62,11 +62,11 @@
 
 <script>
   import wepy from 'wepy'
-  import Empty from "../../components/empty";
-  import HttpMixin from "../../mixins/http";
-  import ToastMixin from "../../mixins/toast";
-  import DataMixin from "../../mixins/data";
-  import db from "../../util/db"
+  import Empty from "components/empty";
+  import HttpMixin from "mixins/http";
+  import ToastMixin from "mixins/toast";
+  import DataMixin from "mixins/data";
+  import db from "util/db"
   export default class Loan extends wepy.page {
     config = {
       navigationBarTitleText: '我的借阅',
@@ -84,7 +84,7 @@
     };
     methods = {
       async loan(bookID) {
-        const resp = await this.PostWithBind('/library/loan', {
+        const resp = await this.PostWithLibrary('/library/loan', {
           book_id: bookID
         })
         this.get()
@@ -101,7 +101,7 @@
     }
     async get() {
       const t = this.loan_type === 'now' ? 0 : 1
-      const resp = await this.GetWithBind('/library/books?is_history=' + t)
+      const resp = await this.GetWithLibrary('/library/books?is_history=' + t)
       this.loan_books = resp.data
       this.$apply()
       this.InitSet('loan_' + this.loan_type, resp.data)
