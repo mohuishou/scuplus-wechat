@@ -202,7 +202,7 @@
           return;
         }
         const todaySchedule = [];
-        let today = new Date().getDay() || 7;
+        let today = new Date().getDay() + 1;
         schedules[today].forEach(e => {
           if (e.course_name) {
             todaySchedule.push(e);

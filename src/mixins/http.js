@@ -95,10 +95,10 @@ export default class HttpMixin extends wepy.mixin {
           reject(res)
         }
       }
-      handler.fail = () => {
+      handler.fail = err => {
         if (showToast) wepy.hideLoading && wepy.hideLoading()
-        if (showToast) this.ShowToast('网络错误', 'error', 3000)
-        reject('Network request failed')
+        if (showToast) this.ShowToast(JSON.stringify(err), 'error', 3000)
+        reject(err)
       }
       wepy.request(handler)
     })

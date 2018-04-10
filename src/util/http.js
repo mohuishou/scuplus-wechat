@@ -2,6 +2,14 @@ import {
   domain
 } from '../config'
 
+const ShowToast = (msg, type = 'error', time = 2000) => {
+  wx.showToast({
+    title: msg,
+    icon: 'none',
+    duration: time
+  })
+}
+
 function GetWithBind(url, params = {}, handler = {}) {
   return requestWithBind('GET', url, params, handler)
 }
@@ -27,7 +35,7 @@ async function requestWithBind(method, url, params = {}, handler = {}) {
         }
       }
     })
-    throw "未绑定账号"
+    throw '未绑定账号'
   } else {
     return request(method, url, params, handler)
   }
@@ -59,14 +67,22 @@ function request(method, url, params = {}, handler = {}) {
   })
 
   return new Promise((resolve, reject) => {
-    handler.success = res => resolve(res.data)
-    handler.fail = () => {
+    handler.success = res => {
+      if (res.data.status === 0) {
+        ShowToast(res.data.msg, 'success')
+        resolve(res.data)
+      } else {
+        ShowToast(res.data.msg || res.data || '网络错误')
+        reject(res)
+      }
+    }
+    handler.fail = err => {
       wx.showModal({
         title: '网络错误',
-        content: '网络错误',
+        content: JSON.stringify(err),
         showCancel: false
       })
-      reject('Network request failed')
+      reject(err)
     }
     handler.complete = () => wx.hideLoading && wx.hideLoading()
     wx.request(handler)
