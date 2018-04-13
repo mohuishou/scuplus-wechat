@@ -85,7 +85,7 @@
       page: 1,
       page_size: 20,
       details: [],
-      height: 500,
+      height: 520,
       scrollTop: 0,
       isNone: false,
     };
@@ -153,10 +153,14 @@
       return y + '-' + m + '-' + d + ' ' + h + ':' + minute;
     }
     onLoad() {
-      setTimeout(() => {
-        this.getDetails()
-      }, 100)
-      this.height = wx.getSystemInfoSync().windowHeight
+      try {
+        setTimeout(() => {
+          this.getDetails()
+        }, 100)
+        this.height = wx.getSystemInfoSync().screenHeight
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 </script>
