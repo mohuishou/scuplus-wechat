@@ -32,6 +32,7 @@
         'pages/calendar',
         'pages/bus',
         'pages/chooseTags',
+        'pages/course/lists',
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',
