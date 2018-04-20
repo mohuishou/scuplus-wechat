@@ -15,27 +15,19 @@
     border: 2rpx solid #eee;
     box-shadow: 4rpx 4rpx 8rpx #e8e8e8;
     background: #fff;
-    >view {
-      flex: 1;
+    flex-wrap: wrap;
+    align-content: space-between;
+    > view {
+      width: 100%;
     }
     .info {
-      color: #333;
       display: flex;
-      flex-wrap: wrap;
-      align-content: space-between;
-      padding-right: 20rpx;
-      border-right: 3rpx solid #ddd;
-      text {
-        color: #999;
-      }
-      view {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
+      justify-content: space-between;
+      .teacher {
+        color: #888;
       }
     }
     .tags {
-      padding-left: 20rpx;
       .tag {
         border-radius: 6rpx;
         display: inline-flex;
@@ -49,32 +41,61 @@
       }
     }
   }
+  .tabs {
+    display: flex;
+    background: #fff;
+    font-size: 28rpx;
+    padding: 0 20rpx;
+    height: 50rpx;
+    .tab {
+      text-align: center;
+      flex: 1;
+      text {
+        color: #888;
+        font-size: 24rpx;
+      }
+    }
+  }
 </style>
 
 <template>
   <view>
+    <view class="tabs">
+      <view class="tab">
+        <view class="iconfont icon-search"></view>
+      </view>
+      <view class="tab">
+        测试
+      </view>
+      <view class="tab">
+        测试
+      </view>
+      <view class="tab">
+        测试
+      </view>
+      <view class="tab">
+        测试
+      </view>
+      <view class="tab">
+        测试
+      </view>
+      <view class="tab">
+        测试
+      </view>
+    </view>
     <view class="course-card">
       <view class="info">
         <view class="name">
-          <text>课程</text> 大学英语
+          大学英语
         </view>
         <view class="teacher">
-          <text>教师</text> 莫莫莫等
+          某某某等
         </view>
       </view>
       <view class="tags">
-        <view class="tag">
-          不点名
-        </view>
-        <view class="tag">
-          无作业
-        </view>
-        <view class="tag">
-          考试
-        </view>
-        <view class="tag">
-          挂科率15%
-        </view>
+        <view class="tag">偶尔点名</view>
+        <view class="tag">考试</view>
+        <view class="tag">好评:1</view>
       </view>
     </view>
   </view>
@@ -88,10 +109,9 @@
   import DataMixin from "mixins/data";
   import TermMixin from "mixins/term";
   export default class CourseLists extends wepy.page {
-    config = {}
-    data = {}
-    methods = {}
-    onLoad() {
-    }
+    config = {};
+    data = {};
+    methods = {};
+    onLoad() {}
   }
 </script>

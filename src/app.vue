@@ -33,6 +33,7 @@
         'pages/bus',
         'pages/chooseTags',
         'pages/course/lists',
+        'pages/course/details',
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',
