@@ -99,6 +99,47 @@
       }
     }
   }
+  .header {
+    color: #888;
+    margin-top: 20rpx;
+    margin-left: 20rpx; // text-align: center;
+  }
+  .comments {
+    height: auto;
+    .comment {
+      .comment-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10rpx;
+        .user {
+          display: flex;
+        }
+        .avatar {
+          width: 60rpx;
+          height: 60rpx;
+          background-position: center;
+          background-size: cover;
+          margin-right: 10rpx;
+          border-radius: 50%;
+        }
+        .time {
+          color: #888;
+          font-size: 24rpx;
+        }
+        .star {
+          display: flex;
+          color: #555;
+          align-items: baseline;
+          &.is-zan{
+            color: @base-color;
+          }
+          .iconfont {
+            margin-right: 10rpx;
+          }
+        }
+      }
+    }
+  }
 </style>
 
 <template>
@@ -116,6 +157,20 @@
         <view class="tag">偶尔点名</view>
         <view class="tag">考试</view>
         <view class="tag">好评:1</view>
+      </view>
+    </view>
+    <view class="address panel">
+      <view class="title">
+        <view>时间</view>
+        <view>地点</view>
+      </view>
+      <view>
+        <view>1-17周五1-3节</view>
+        <view>江安一教C02</view>
+      </view>
+      <view>
+        <view>1-17周五1-3节</view>
+        <view>江安一教C02</view>
       </view>
     </view>
     <view class="course-info panel">
@@ -156,29 +211,38 @@
         </view>
       </view>
     </view>
+    <view class="header">
+      课程评价
+    </view>
     <view class="course-eva panel">
       <view>
         很赞 1
       </view>
       <view>
-        很赞 1
+        一般 1
       </view>
       <view>
-        很赞 1
+        不好 1
       </view>
     </view>
     <view class="comments panel">
       <view class="comment">
-        <view>
-          <view class="avatar">
+        <view class="comment-info">
+          <view class="user">
+            <view class="avatar" style="background-image: url('https://wx.qlogo.cn/mmopen/vi_32/3QkQCrnlBQXSvm455iauwPM9rDLluPtyXj3C4zcFzXMo0upWcJpINTSlURGMLZ1zLKWj5JGWKnYvhVMMoTphBIA/0');">
+            </view>
+            <view>
+              <view class="username">莫回首</view>
+              <view class="time">2018-05-01</view>
+            </view>
           </view>
-          <view>
-            <view class="username"></view>
-            <view class="time"></view>
+          <view class="star is-zan">
+            <view class="iconfont icon-unie60b"></view>
+            <text>1</text>
           </view>
-          <view class="star"></view>
         </view>
         <view class="content">
+          测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价
         </view>
       </view>
     </view>
