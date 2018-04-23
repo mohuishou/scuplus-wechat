@@ -34,6 +34,7 @@
         'pages/chooseTags',
         'pages/course/lists',
         'pages/course/details',
+        'pages/course/comment',
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',
