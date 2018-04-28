@@ -36,7 +36,6 @@
       align-items: center;
       justify-content: center;
       background: linear-gradient(90deg, @base-color, #ed5a65);
-      ;
       color: #fff;
       font-size: 28rpx;
     }

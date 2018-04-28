@@ -60,36 +60,33 @@
   .course-info {
     flex-wrap: wrap;
     height: auto;
-    .all {
-      width: 100%;
-      height: 50rpx;
-      >view {
-        flex: 3;
-      }
-      .title {
-        flex: 1;
-      }
+    .left {
+      width: calc(~"100% - 240rpx");
+    }
+    .right {
+      width: 240rpx;
     }
     >view {
       display: flex;
       flex-wrap: wrap;
-      width: 50%;
-      margin-top: 10rpx;
+      margin-top: 15rpx;
+      width: 100%;
+      &:first-child {
+        margin-top: 0;
+      }
       .title {
         color: #888;
+        width: 160rpx;
       }
       >view {
         display: flex;
         flex-wrap: wrap;
-        >view {
-          height: 50rpx;
-          width: 100%;
-        }
       }
     }
   }
   .course-eva {
     height: 50rpx;
+    align-items: center;
     >view {
       text-align: center;
       flex: 1;
@@ -106,7 +103,13 @@
   }
   .comments {
     height: auto;
+    flex-wrap: wrap;
+    margin-bottom: 100rpx;
     .comment {
+      width: 100%;
+      border-bottom: 2rpx solid #ddd;
+      padding-bottom: 20rpx;
+      padding-top: 20rpx;
       .comment-info {
         display: flex;
         justify-content: space-between;
@@ -130,7 +133,7 @@
           display: flex;
           color: #555;
           align-items: baseline;
-          &.is-zan{
+          &.is-zan {
             color: @base-color;
           }
           .iconfont {
@@ -138,76 +141,90 @@
           }
         }
       }
+      .content {
+        margin-top: 10rpx;
+        font-size: 26rpx;
+      }
     }
+  }
+  .new-comment {
+    position: fixed;
+    bottom: 0;
+    background: linear-gradient(90deg, @base-color, #ed5a65);
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    padding: 20rpx;
+    font-size: 30rpx;
   }
 </style>
 
 <template>
   <view>
-    <view class="course-card panel">
-      <view class="info">
-        <view class="name">
-          大学英语
-        </view>
-        <view class="teacher">
-          某某某等
-        </view>
-      </view>
-      <view class="tags">
-        <view class="tag">偶尔点名</view>
-        <view class="tag">考试</view>
-        <view class="tag">好评:1</view>
-      </view>
-    </view>
+    <Card :item.sync="item" :isTo.sync="isTo"></Card>
     <view class="address panel">
       <view class="title">
         <view>时间</view>
         <view>地点</view>
       </view>
-      <view>
-        <view>1-17周五1-3节</view>
-        <view>江安一教C02</view>
-      </view>
-      <view>
-        <view>1-17周五1-3节</view>
-        <view>江安一教C02</view>
-      </view>
+      <block wx:for="{{courses}}">
+        <view>
+          <view>{{item.week}}周{{item.day}} {{item.session}}小节</view>
+          <view>{{item.campus}}{{item.building}} {{item.classroom}}</view>
+        </view>
+      </block>
     </view>
     <view class="course-info panel">
       <view>
-        <view class="title">
-          <view>课程号</view>
-          <view>课序号</view>
+        <view class="left">
+          <view class="title">
+            <view>课程号</view>
+          </view>
+          <view>
+            <view>{{courses[0].course_id}}</view>
+          </view>
         </view>
-        <view>
-          <view>100098928</view>
-          <view>103</view>
+        <view class="right">
+          <view class="title">
+            <view>学分</view>
+          </view>
+          <view>
+            <view>{{courses[0].credit}}</view>
+          </view>
         </view>
       </view>
       <view>
-        <view class="title">
-          <view>学分</view>
-          <view>考试类型</view>
+        <view class="left">
+          <view class="title">
+            <view>课序号</view>
+          </view>
+          <view>
+            <view>{{courses[0].lesson_id}}</view>
+          </view>
         </view>
-        <view>
-          <view>5.0</view>
-          <view>考查</view>
+        <view class="right">
+          <view class="title">
+            <view>考试类型</view>
+          </view>
+          <view>
+            <view>{{courses[0].exam_type}}</view>
+          </view>
         </view>
       </view>
-      <view class="all">
+      <view>
         <view class="title">
           <view>学院</view>
         </view>
         <view>
-          <view>电子信息学院</view>
+          <view>{{courses[0].college}}</view>
         </view>
       </view>
-      <view class="all">
+      <view>
         <view class="title">
           <view>选课限制</view>
         </view>
         <view>
-          <view>无</view>
+          <view>{{courses[0].course_limit}}</view>
         </view>
       </view>
     </view>
@@ -226,25 +243,30 @@
       </view>
     </view>
     <view class="comments panel">
-      <view class="comment">
-        <view class="comment-info">
-          <view class="user">
-            <view class="avatar" style="background-image: url('https://wx.qlogo.cn/mmopen/vi_32/3QkQCrnlBQXSvm455iauwPM9rDLluPtyXj3C4zcFzXMo0upWcJpINTSlURGMLZ1zLKWj5JGWKnYvhVMMoTphBIA/0');">
+      <block wx:for="{{course.course_evalutes}}" wx:key="index">
+        <view class="comment">
+          <view class="comment-info">
+            <view class="user">
+              <view class="avatar" style="background-image: url('https://wx.qlogo.cn/mmopen/vi_32/3QkQCrnlBQXSvm455iauwPM9rDLluPtyXj3C4zcFzXMo0upWcJpINTSlURGMLZ1zLKWj5JGWKnYvhVMMoTphBIA/0');">
+              </view>
+              <view>
+                <view class="username">莫回首</view>
+                <view class="time">2018-05-01</view>
+              </view>
             </view>
-            <view>
-              <view class="username">莫回首</view>
-              <view class="time">2018-05-01</view>
+            <view class="star is-zan">
+              <view class="iconfont icon-unie60b"></view>
+              <text>{{item.score}}</text>
             </view>
           </view>
-          <view class="star is-zan">
-            <view class="iconfont icon-unie60b"></view>
-            <text>1</text>
+          <view class="content">
+            {{item.comment}}
           </view>
         </view>
-        <view class="content">
-          测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价测试评价
-        </view>
-      </view>
+      </block>
+    </view>
+    <view @tap="newComment" class="new-comment">
+      添加评价
     </view>
   </view>
 </template>
@@ -255,11 +277,81 @@
   import ToastMixin from "mixins/toast";
   import db from "util/db";
   import DataMixin from "mixins/data";
-  import TermMixin from "mixins/term";
+  import Card from "components/course/card"
+  const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"]
+  const examTypes = ["", "论文", "考试", "大作业", "其他"]
+  const taskTypes = ["", "没作业", "有作业"]
   export default class CourseLists extends wepy.page {
-    config = {};
-    data = {};
-    methods = {};
-    onLoad() {}
+    config = {
+      navigationBarTitleText: '课程搜索',
+    };
+    mixins = [HttpMixin, ToastMixin];
+    components = {
+      Card: Card,
+    };
+    data = {
+      course: {},
+      item: {},
+      courses: {},
+      isTo: false
+    };
+    newCourseCount(course) {
+      course.call_name = callTypes[course.call_name]
+      course.task = taskTypes[course.task]
+      course.exam_type = examTypes[course.exam_type]
+      let teachers = course.teacher.split(",")
+      let is_more = teachers.length > 1 ? '等' : ''
+      course.teacher = teachers[0] + is_more
+      return course
+    }
+    newCourse(courses) {
+      for (let i = 0; i < courses.length; i++) {
+        // 计算上课节次
+        let sessions = courses[i].session.split(",")
+        if (sessions.length > 1) {
+          courses[i].session = sessions[0] + "-" + sessions[sessions.length - 1]
+        }
+        // 计算上课时间
+        courses[i].day = ["", "一", "二", "三", "四", "五", "六", "七"][courses[i].day]
+        // 计算上课周次
+        let week = ""
+        let weeks = courses[i].all_week.split(",")
+        if (weeks.length > 0) {
+          let start = weeks[0]
+          let prev = weeks[0]
+          for (let j = 1; j < weeks.length; j++) {
+            const e = weeks[j];
+            if (e != (prev - 0 + 1)) {
+              if (weeks[j - 1] > start) {
+                week += start + "-" + weeks[j - 1] + ","
+              } else {
+                week += start + ","
+              }
+              start = e
+            }
+            prev = e
+          }
+          if (weeks[weeks.length - 1] > start) {
+            week += start + "-" + weeks[weeks.length - 1]
+          } else {
+            week += start
+          }
+        }
+        courses[i].week = week
+      }
+      return courses
+    }
+    methods = {
+      newComment(){
+        // 检查是否拥有权限
+      }
+    };
+    async onLoad(options) {
+      const resp = await this.GetWithBind("/course", options)
+      this.course = resp.data
+      this.item = this.newCourseCount(resp.data.course_count)
+      this.courses = this.newCourse(resp.data.courses)
+      this.$apply()
+    }
   }
 </script>
