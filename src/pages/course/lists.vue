@@ -9,44 +9,7 @@
       height: 100%;
     }
   }
-  .course-card {
-    font-size: 28rpx;
-    margin-top: 15rpx;
-    margin-left: 15rpx;
-    margin-right: 15rpx;
-    padding: 20rpx 20rpx;
-    border-radius: 4rpx;
-    display: flex;
-    height: 150rpx;
-    border: 2rpx solid #eee;
-    box-shadow: 4rpx 4rpx 8rpx #e8e8e8;
-    background: #fff;
-    flex-wrap: wrap;
-    align-content: space-between;
-    >view {
-      width: 100%;
-    }
-    .info {
-      display: flex;
-      justify-content: space-between;
-      .teacher {
-        color: #888;
-      }
-    }
-  }
-  .tags {
-    .tag {
-      border-radius: 6rpx;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4rpx 12rpx;
-      margin: 0rpx 10rpx 10rpx 0rpx;
-      font-size: 26rpx;
-      color: @base-color;
-      border: 2rpx solid @base-color;
-    }
-  }
+  
   radio-group {
     margin: 20rpx;
     display: flex;
@@ -217,26 +180,9 @@
       </form>
     </view>
     <scroll-view style="height: {{height}}px;" scroll-y class="main" @scrolltolower="more">
-      <block wx:for="{{courses}}" wx:key="index">
-        <view class="course-card">
-          <view class="info">
-            <view class="name">
-              {{item.name}}
-            </view>
-            <view class="teacher">
-              {{item.teacher}}
-            </view>
-          </view>
-          <view class="tags">
-            <view wx:if="{{item.exam_type}}" class="tag">{{item.exam_type}}</view>
-            <view wx:if="{{item.call_name}}" class="tag">{{item.call_name}}</view>
-            <view wx:if="{{item.task}}" class="tag">{{item.task}}</view>
-            <view wx:if="{{item.avg_grade > 0}}" class="tag">平均分: {{item.avg_grade}}</view>
-            <view wx:if="{{item.fail_rate == 0}}" class="tag">无挂科</view>
-            <view wx:if="{{item.fail_rate > 0}}" class="tag">挂科率: {{item.fail_rate}}</view>
-          </view>
-        </view>
-      </block>
+      <repeat for="{{courses}}" item="data" key="index">
+        <Card :item.sync="data"></Card>
+      </repeat>
     </scroll-view>
   </view>
 </template>
@@ -247,13 +193,17 @@
   import ToastMixin from "mixins/toast";
   import db from "util/db";
   import DataMixin from "mixins/data";
+  import Card from "components/course/card"
   const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"]
   const examTypes = ["", "论文", "考试", "大作业", "其他"]
   const taskTypes = ["", "没作业", "有作业"]
   const orders = ["avg_grade desc", "avg_grade asc", "star desc", "star asc"]
   export default class CourseLists extends wepy.page {
     config = {};
-    mixins = [HttpMixin, ToastMixin]
+    mixins = [HttpMixin, ToastMixin];
+    components = {
+      Card: Card,
+    };
     data = {
       isShowFilter: false,
       courses: [],
