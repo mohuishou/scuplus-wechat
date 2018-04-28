@@ -199,7 +199,9 @@
   const taskTypes = ["", "没作业", "有作业"]
   const orders = ["avg_grade desc", "avg_grade asc", "star desc", "star asc"]
   export default class CourseLists extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '寻课',
+    };
     mixins = [HttpMixin, ToastMixin];
     components = {
       Card: Card,
