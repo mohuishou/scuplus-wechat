@@ -265,6 +265,9 @@
           </view>
         </view>
       </block>
+      <view wx:if="{{evaluates.length == 0}}" style="text-align: center; color: #888;width: 100%;">
+        暂无评论
+      </view>
     </view>
     <view wx:if="{{course.has}}" @tap="newComment" class="new-comment">
       {{ course.evaluate.id == 0 ? "添加评价" : "编辑评价" }}
@@ -360,8 +363,9 @@
           this.ShowToast("您暂时没有该课程")
           return
         }
+        let params = `id=${this.course.evaluate.id}&course_id=${this.item.course_id}&lesson_id=${this.item.lesson_id}&course_name=${this.item.name}`
         wepy.navigateTo({
-          url: "/pages/course/comment?id=" + this.course.evaluate.id
+          url: "/pages/course/comment?" + params
         })
       }
     };

@@ -133,6 +133,9 @@
         this.items[i][1][j].checked = true
       }
     };
-    onLoad() {}
+    onLoad(option) {
+      console.log(option);
+      
+    }
   }
 </script>
