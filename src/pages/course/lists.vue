@@ -227,21 +227,21 @@
           title: "点名方式",
           radios: [{
               name: "全点",
-              value: 0,
+              value: 4,
               checked: false
             },
             {
               name: "抽点",
-              value: 0,
+              value: 3,
               checked: false
             }, {
               name: "偶尔点名",
-              value: 0,
+              value: 2,
               checked: false
             },
             {
               name: "不点名",
-              value: 0,
+              value: 1,
               checked: false
             }
           ]
@@ -251,21 +251,21 @@
           title: "考核方式",
           radios: [{
               name: "论文",
-              value: 0,
+              value: 1,
               checked: false
             },
             {
               name: "考试",
-              value: 0,
+              value: 2,
               checked: false
             }, {
               name: "大作业",
-              value: 0,
+              value: 3,
               checked: false
             },
             {
               name: "其他",
-              value: 0,
+              value: 4,
               checked: false
             }
           ]
