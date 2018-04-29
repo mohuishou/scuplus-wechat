@@ -169,7 +169,7 @@
       </view>
       <block wx:for="{{courses}}" wx:key="index">
         <view>
-          <view>{{item.week}}周{{item.day}} {{item.session}}小节</view>
+          <view>{{item.week}}周{{item.day_str}} {{item.session_str}}小节</view>
           <view>{{item.campus}}{{item.building}} {{item.classroom}}</view>
         </view>
       </block>
@@ -256,9 +256,9 @@
             </view>
             <!-- 点赞暂时去除 -->
             <!-- <view class="star is-zan">
-                          <view class="iconfont icon-unie60b"></view>
-                          <text>{{item.score}}</text>
-                        </view> -->
+                                                  <view class="iconfont icon-unie60b"></view>
+                                                  <text>{{item.score}}</text>
+                                                </view> -->
           </view>
           <view class="content">
             {{item.comment}}
@@ -273,7 +273,8 @@
       {{ course.evaluate.id == 0 ? "添加评价" : "编辑评价" }}
     </view>
     <!-- 没有评价权限 -->
-    <view class="no-comment">
+    <view wx:else @tap="changeSchedule" class="no-comment new-comment">
+      {{ inSchedule ? "删除课程" : "添加到我的课表"}}
     </view>
   </view>
 </template>
@@ -284,17 +285,17 @@
   import ToastMixin from "mixins/toast";
   import db from "util/db";
   import DataMixin from "mixins/data";
-  import Card from "components/course/card"
-  const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"]
-  const examTypes = ["", "论文", "考试", "大作业", "其他"]
-  const taskTypes = ["", "没作业", "有作业"]
+  import Card from "components/course/card";
+  const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"];
+  const examTypes = ["", "论文", "考试", "大作业", "其他"];
+  const taskTypes = ["", "没作业", "有作业"];
   export default class CourseLists extends wepy.page {
     config = {
-      navigationBarTitleText: '课程搜索',
+      navigationBarTitleText: "课程搜索"
     };
     mixins = [HttpMixin, ToastMixin];
     components = {
-      Card: Card,
+      Card: Card
     };
     data = {
       course: {},
@@ -302,83 +303,131 @@
       courses: {},
       isTo: false,
       evaluates: [],
+      inSchedule: false,
     };
     newCourseCount(course) {
-      course.call_name = callTypes[course.call_name]
-      course.task = taskTypes[course.task]
-      course.exam_type = examTypes[course.exam_type]
-      let teachers = course.teacher.split(",")
-      let is_more = teachers.length > 1 ? '等' : ''
-      course.teacher = teachers[0] + is_more
-      return course
+      course.call_name = callTypes[course.call_name];
+      course.task = taskTypes[course.task];
+      course.exam_type = examTypes[course.exam_type];
+      let teachers = course.teacher.split(",");
+      let is_more = teachers.length > 1 ? "等" : "";
+      course.teacher = teachers[0] + is_more;
+      return course;
     }
     newCourse(courses) {
       for (let i = 0; i < courses.length; i++) {
+        courses[i].course_name = courses[i].name
         // 计算上课节次
-        let sessions = courses[i].session.split(",")
+        let sessions = courses[i].session.split(",");
         if (sessions.length > 1) {
-          courses[i].session = sessions[0] + "-" + sessions[sessions.length - 1]
+          courses[i].session_str = sessions[0] + "-" + sessions[sessions.length - 1];
         }
         // 计算上课时间
-        courses[i].day = ["", "一", "二", "三", "四", "五", "六", "七"][courses[i].day]
+        courses[i].day_str = ["", "一", "二", "三", "四", "五", "六", "七"][
+          courses[i].day
+        ];
         // 计算上课周次
-        let week = ""
-        let weeks = courses[i].all_week.split(",")
+        let week = "";
+        let weeks = courses[i].all_week.split(",");
         if (weeks.length > 0) {
-          let start = weeks[0]
-          let prev = weeks[0]
+          let start = weeks[0];
+          let prev = weeks[0];
           for (let j = 1; j < weeks.length; j++) {
             const e = weeks[j];
-            if (e != (prev - 0 + 1)) {
+            if (e != prev - 0 + 1) {
               if (weeks[j - 1] > start) {
-                week += start + "-" + weeks[j - 1] + ","
+                week += start + "-" + weeks[j - 1] + ",";
               } else {
-                week += start + ","
+                week += start + ",";
               }
-              start = e
+              start = e;
             }
-            prev = e
+            prev = e;
           }
           if (weeks[weeks.length - 1] > start) {
-            week += start + "-" + weeks[weeks.length - 1]
+            week += start + "-" + weeks[weeks.length - 1];
           } else {
-            week += start
+            week += start;
           }
         }
-        courses[i].week = week
+        courses[i].week = week;
       }
-      return courses
+      return courses;
     }
     newEvaluate(evaluates) {
       for (let i = 0; i < evaluates.length; i++) {
-        evaluates[i].avatar = evaluates[i].avatar || "/icon/user@select.png"
-        evaluates[i].updated_str = new Date(evaluates[i].updated_at).toLocaleDateString()
+        evaluates[i].avatar = evaluates[i].avatar || "/icon/user@select.png";
+        evaluates[i].updated_str = new Date(
+          evaluates[i].updated_at
+        ).toLocaleDateString();
       }
-      return evaluates
+      return evaluates;
     }
     methods = {
+      changeSchedule() {
+        // 检查是否已经拥有该课程
+        let items = db.Get("myScheduleItems") || [];
+        const self = this
+        if (this.inSchedule) {
+          wepy.showModal({
+            title: '确认删除', //提示的标题
+            content: '是否从我的课表删除该门课程', //提示的内容
+            showCancel: true, //是否显示取消按钮
+            success: (res) => {
+              if (res.confirm) {
+                for (let i = 0; i < items.length; i++) {
+                  const item = items[i];
+                  if (item.course_id == self.item.course_id && item.lesson_id == self.item.lesson_id) {
+                    items.splice(i, 1);
+                  }
+                }
+                self.inSchedule = false
+                db.Set("myScheduleItems", items)
+                self.ShowToast("删除成功！")
+                self.$apply()
+              }
+            }
+          })
+        } else {
+          db.Set("myScheduleItems", items.concat(this.course.courses));
+          wepy.navigateTo({
+            url: "/pages/schedule"
+          });
+        }
+      },
       newComment() {
         // 检查是否拥有权限
         if (!this.course.has) {
-          this.ShowToast("您暂时没有该课程")
-          return
+          this.ShowToast("您暂时没有该课程");
+          return;
         }
-        let params = `id=${this.course.evaluate.id}&course_id=${this.item.course_id}&lesson_id=${this.item.lesson_id}&course_name=${this.item.name}`
+        let params = `id=${this.course.evaluate.id}&course_id=${this.item.course_id}&lesson_id=${this.item.lesson_id}&course_name=${this.item.name}`;
         wepy.navigateTo({
           url: "/pages/course/comment?" + params
-        })
+        });
       }
     };
     async onLoad(options) {
-      const resp = await this.GetWithBind("/course", options)
-      this.course = resp.data
-      this.item = this.newCourseCount(resp.data.course_count)
-      this.courses = this.newCourse(resp.data.courses)
-      this.evaluates = this.newEvaluate(resp.data.course_evaluates)
+      const resp = await this.GetWithBind("/course", options);
+      this.course = resp.data;
+      this.item = this.newCourseCount(resp.data.course_count);
+      this.courses = this.newCourse(resp.data.courses);
+      this.evaluates = this.newEvaluate(resp.data.course_evaluates);
       wepy.setNavigationBarTitle({
         title: this.item.name
       });
-      this.$apply()
+      // 判断自定义课程是否添加了该门课程
+      const items = db.Get("myScheduleItems") || [];
+      if (items.length > 0) {
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.course_id == this.item.course_id && item.lesson_id == this.item.lesson_id) {
+            this.inSchedule = true
+            break;
+          }
+        }
+      }
+      this.$apply();
     }
   }
 </script>

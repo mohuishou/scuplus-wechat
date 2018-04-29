@@ -44,6 +44,13 @@
     z-index: 100;
     padding-top: 120rpx;
   }
+  .add {
+    width: 100%;
+    color: #888;
+    padding: 40rpx 0;
+    text-align: center;
+    font-size: 30rpx;
+  }
 </style>
 
 <template>
@@ -56,6 +63,9 @@
       <repeat for="{{courses}}" item="data" key="index">
         <Card :item.sync="data"></Card>
       </repeat>
+      <view class="add" @tap="addCourse" wx:if="{{courses.length == 0 && from == 'add'}}">
+        没有结果？点击添加自定义课程
+      </view>
     </scroll-view>
   </view>
 </template>
@@ -82,6 +92,7 @@
       page_size: 15,
       name: "",
       height: 500,
+      from: ""
     }
     newCourse(courses) {
       for (let i = 0; i < courses.length; i++) {
@@ -109,6 +120,9 @@
       this.$apply()
     }
     methods = {
+      addCourse() {
+        // 跳转到自定义课程界面
+      },
       changeSearch(e) {
         this.name = e.detail.value
       },
@@ -120,7 +134,10 @@
         this.searchCourse()
       }
     }
-    onLoad() {
+    onLoad(option) {
+      if ('from' in option) {
+        this.from = option.from
+      }
       this.height = wx.getSystemInfoSync().screenHeight - 61
     }
   }

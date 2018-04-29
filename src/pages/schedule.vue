@@ -101,18 +101,23 @@
     position: fixed;
     bottom: 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     height: 80rpx;
-    width: 100%;
+    width: calc(~"100% - 90rpx");
     color: #555;
     background: @tab-bg;
+    padding-left: 60rpx;
+    padding-right: 30rpx;
     .iconfont {
       display: flex;
       justify-content: space-around;
       align-items: center;
       width: 100rpx;
       height: 100%;
+    }
+    .icon-add {
+      font-size: 40rpx;
     }
   }
 </style>
@@ -134,7 +139,7 @@
           <block wx:for="{{items}}" wx:key="{{j}}" wx:for-item="item" wx:for-index="j">
             <view class="row title" wx:if="{{i == 0}}">{{item}}</view>
             <view class="row" style="flex: {{item.flex}};" wx:elif="{{item.flex == 1 && item.course_name == ''}}"></view>
-            <view class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
+            <view @tap="toCourseDetail({{item.course_id}},{{item.lesson_id}})" class="row item" style="flex: {{item.flex}}; padding-bottom: {{item.flex-1}}px; background: {{item.color}};" wx:elif="{{item.flex > 0}}">
               <view class="course-name">{{item.course_name}}</view>
               <view class="address">@{{item.building}} {{item.classroom}}</view>
             </view>
@@ -144,12 +149,11 @@
     </view>
   </scroll-view>
   <view class="tabs">
-    <view @tap="prev" class="iconfont icon-arrow-left"></view>
     <picker @change="changeWeek" value="{{week-1}}" mode="selector" range="{{allWeeks}}">
       <view class="title" wx:if="{{week == nowWeek}}">本周课表(第{{week}}周)</view>
       <view class="title" wx:else>第{{week}}周</view>
     </picker>
-    <view @tap="next" class="iconfont icon-arrow-right"></view>
+    <view @tap="add" class="iconfont icon-add"></view>
   </view>
 </template>
 
@@ -164,7 +168,6 @@
     config = {
       navigationBarTitleText: "我的课表",
       enablePullDownRefresh: true,
-      // navigationBarBackgroundColor: "#f8f8f5"
     };
     mixins = [HttpMixin, ToastMixin, DataMixin, TermMixin];
     components = {};
@@ -206,11 +209,19 @@
       ]
     };
     methods = {
-      prev() {
-        this.ChangeWeek(this.week - 1)
+      toCourseDetail(course_id, lesson_id) {
+        if (!course_id || !lesson_id) {
+          this.ShowToast("不存在该课程！")
+          return
+        }
+        wepy.navigateTo({
+          url: '/pages/course/details?course_id=' + course_id + '&lesson_id=' + lesson_id,
+        })
       },
-      next() {
-        this.ChangeWeek(this.week + 1)
+      add() {
+        wepy.navigateTo({
+          url: '/pages/course/search?from=add'
+        })
       },
       changeWeek(e) {
         this.ChangeWeek(e.detail.value - 0 + 1)
@@ -287,6 +298,8 @@
       wepy.stopPullDownRefresh();
     }
     initSchedules(schedules) {
+      const myScheduleItems = db.Get("myScheduleItems") || [];
+      schedules = schedules.concat(myScheduleItems)
       let colors = ["#f07c82", "#66CC99", "#ea7293", "#13afc8", "#FF9999", "#99CCFF", "#f97d1c", "#FF6666", "#21a265"];
       const week = this.week;
       let ci = 0;

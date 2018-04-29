@@ -136,7 +136,7 @@
 <template>
   <view>
     <view class="tabs">
-      <view class="tab">
+      <view @tap="search" class="tab">
         <view class="iconfont icon-search"></view>
       </view>
       <view class="tab order" @tap="orderHandler">
@@ -290,17 +290,17 @@
           title: "校区",
           radios: [{
               name: "江安",
-              value: 0,
+              value: "江安",
               checked: false
             },
             {
               name: "望江",
-              value: 0,
+              value: "望江",
               checked: false
             },
             {
               name: "华西",
-              value: 0,
+              value: "华西",
               checked: false
             }
           ]
@@ -348,6 +348,11 @@
       ],
     };
     methods = {
+      search(){
+        wepy.navigateTo({
+          url:'/pages/course/search',
+        })
+      },
       orderHandler() {
         const self = this
         wepy.showActionSheet({
