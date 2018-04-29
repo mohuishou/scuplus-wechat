@@ -167,7 +167,7 @@
         <view>时间</view>
         <view>地点</view>
       </view>
-      <block wx:for="{{courses}}">
+      <block wx:for="{{courses}}" wx:key="index">
         <view>
           <view>{{item.week}}周{{item.day}} {{item.session}}小节</view>
           <view>{{item.campus}}{{item.building}} {{item.classroom}}</view>
@@ -233,31 +233,32 @@
     </view>
     <view class="course-eva panel">
       <view>
-        很赞 1
+        很赞 {{item.good}}
       </view>
       <view>
-        一般 1
+        一般 {{item.normal}}
       </view>
       <view>
-        不好 1
+        不好 {{item.bad}}
       </view>
     </view>
     <view class="comments panel">
-      <block wx:for="{{course.course_evalutes}}" wx:key="index">
+      <block wx:for="{{evaluates}}" wx:key="index">
         <view class="comment">
           <view class="comment-info">
             <view class="user">
-              <view class="avatar" style="background-image: url('https://wx.qlogo.cn/mmopen/vi_32/3QkQCrnlBQXSvm455iauwPM9rDLluPtyXj3C4zcFzXMo0upWcJpINTSlURGMLZ1zLKWj5JGWKnYvhVMMoTphBIA/0');">
+              <view class="avatar" style="background-image: url('{{item.avatar}}');">
               </view>
               <view>
-                <view class="username">莫回首</view>
-                <view class="time">2018-05-01</view>
+                <view class="username">{{item.nick_name}}</view>
+                <view class="time">{{item.updated_str}}</view>
               </view>
             </view>
-            <view class="star is-zan">
-              <view class="iconfont icon-unie60b"></view>
-              <text>{{item.score}}</text>
-            </view>
+            <!-- 点赞暂时去除 -->
+            <!-- <view class="star is-zan">
+                          <view class="iconfont icon-unie60b"></view>
+                          <text>{{item.score}}</text>
+                        </view> -->
           </view>
           <view class="content">
             {{item.comment}}
@@ -265,8 +266,11 @@
         </view>
       </block>
     </view>
-    <view @tap="newComment" class="new-comment">
-      添加评价
+    <view wx:if="{{course.has}}" @tap="newComment" class="new-comment">
+      {{ course.evaluate.id == 0 ? "添加评价" : "编辑评价" }}
+    </view>
+    <!-- 没有评价权限 -->
+    <view class="no-comment">
     </view>
   </view>
 </template>
@@ -293,7 +297,8 @@
       course: {},
       item: {},
       courses: {},
-      isTo: false
+      isTo: false,
+      evaluates: [],
     };
     newCourseCount(course) {
       course.call_name = callTypes[course.call_name]
@@ -341,9 +346,23 @@
       }
       return courses
     }
+    newEvaluate(evaluates) {
+      for (let i = 0; i < evaluates.length; i++) {
+        evaluates[i].avatar = evaluates[i].avatar || "/icon/user@select.png"
+        evaluates[i].updated_str = new Date(evaluates[i].updated_at).toLocaleDateString()
+      }
+      return evaluates
+    }
     methods = {
-      newComment(){
+      newComment() {
         // 检查是否拥有权限
+        if (!this.course.has) {
+          this.ShowToast("您暂时没有该课程")
+          return
+        }
+        wepy.navigateTo({
+          url: "/pages/course/comment?id=" + this.course.evaluate.id
+        })
       }
     };
     async onLoad(options) {
@@ -351,6 +370,10 @@
       this.course = resp.data
       this.item = this.newCourseCount(resp.data.course_count)
       this.courses = this.newCourse(resp.data.courses)
+      this.evaluates = this.newEvaluate(resp.data.course_evaluates)
+      wepy.setNavigationBarTitle({
+        title: this.item.name
+      });
       this.$apply()
     }
   }
