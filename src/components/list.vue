@@ -39,14 +39,14 @@
   <scroll-view style="height:{{height}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y scroll-top="{{scrollTop}}" lower-threshold="80">
     <view style="{{isTag != '' ? 'margin-top: 0px;' : '' }}" class="lists">
       <block wx:for="{{details}}" wx:key="{{item.id}}">
-        <view class="list">
-          <view @tap="toDetail({{item.id}})" class="title">
+        <view @tap="toDetail({{item.id}})"  class="list">
+          <view class="title">
             {{item.title}}
           </view>
           <view class="info">
             <view class="tags">
               <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="{{tag.id}}">
-                <text class="tag" @tap="toTagLists({{tag}})">#{{tag.name}}</text>
+                <text class="tag">#{{tag.name}}</text>
               </block>
             </view>
             <view class="time">{{item.created_at}}</view>
