@@ -51,6 +51,16 @@
     text-align: center;
     font-size: 30rpx;
   }
+  .add-schedule {
+    position: fixed;
+    bottom: 0;
+    background: linear-gradient(90deg, @base-color, #ed5a65);
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    padding: 30rpx 0;
+    font-size: 30rpx;
+  }
 </style>
 
 <template>
@@ -67,6 +77,9 @@
         没有结果？点击添加自定义课程
       </view>
     </scroll-view>
+    <view @tap="addCourse" wx:if="{{from == 'add'}}" class="add-schedule">
+      自定义课程
+    </view>
   </view>
 </template>
 
@@ -122,6 +135,9 @@
     methods = {
       addCourse() {
         // 跳转到自定义课程界面
+        wepy.navigateTo({
+          url: '/pages/addSchedule',
+        })
       },
       changeSearch(e) {
         this.name = e.detail.value

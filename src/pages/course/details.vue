@@ -104,7 +104,7 @@
   .comments {
     height: auto;
     flex-wrap: wrap;
-    margin-bottom: 100rpx;
+    margin-bottom: 120rpx;
     .comment {
       width: 100%;
       border-bottom: 2rpx solid #ddd;
@@ -154,7 +154,7 @@
     width: 100%;
     color: #fff;
     text-align: center;
-    padding: 20rpx;
+    padding: 30rpx 0;
     font-size: 30rpx;
   }
 </style>

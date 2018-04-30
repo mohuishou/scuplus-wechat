@@ -214,6 +214,32 @@
           this.ShowToast("不存在该课程！")
           return
         }
+        let items = db.Get("myScheduleItems") || [];
+        const self = this
+        if (course_id < 0 && lesson_id < 0) {
+          wepy.showModal({
+            title: '确认删除', //提示的标题
+            content: '是否从我的课表删除该门课程', //提示的内容
+            showCancel: true, //是否显示取消按钮
+            success: (res) => {
+              if (res.confirm) {
+                for (let i = 0; i < items.length; i++) {
+                  const item = items[i];
+                  if (item.course_id == course_id && item.lesson_id == lesson_id) {
+                    items.splice(i, 1);
+                  }
+                }
+                db.Set("myScheduleItems", items)
+                self.ShowToast("删除成功！")
+                self.initData();
+                self.initHeaders()
+                self.initSchedules(self.scheduleItems);
+                self.$apply()
+              }
+            }
+          })
+          return
+        }
         wepy.navigateTo({
           url: '/pages/course/details?course_id=' + course_id + '&lesson_id=' + lesson_id,
         })

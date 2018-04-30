@@ -31,6 +31,7 @@
         'pages/my/feedbackDetail',
         'pages/calendar',
         'pages/bus',
+        'pages/addSchedule',
         'pages/chooseTags',
         'pages/course/lists',
         'pages/course/details',
