@@ -146,7 +146,8 @@
         this.page++;
         this.searchCourse()
       },
-      search() {
+      search(e) {
+        this.name = e.detail.value
         this.searchCourse()
       }
     }

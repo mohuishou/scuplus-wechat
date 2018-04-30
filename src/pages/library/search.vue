@@ -1,44 +1,43 @@
 <style lang="less">
   @import url("../../less/config");
   page {
-    background: #eee;
+    background: @bg-color;
   }
   .search {
-    margin: 80rpx auto;
-    text-align: center;
-    image {
-      width: 200rpx;
-      height: 200rpx;
-    }
-  }
-  .search-input {
-    text-align: left;
-    &.has-result {
-      position: fixed;
-      z-index: 1000;
-      top: 0;
-      width: calc(~"100% - 1rem");
-      padding: 0.5rem;
-      margin: 0;
-      transition: all 1s ease-in;
-    }
-    transition: all 1s ease-in;
-    background: @white;
-    width: calc(~"100% - 80rpx");
-    padding: 20rpx;
-    margin: 20rpx;
+    position: fixed; // top: 0;
+    padding: 10rpx 20rpx;
+    background: #fff;
+    width: 100%;
+    z-index: 9999;
     display: flex;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 0.3rem;
+    justify-content: space-between;
+    height: 100rpx;
     align-items: center;
+    border-bottom: 2rpx solid #ddd;
     input {
-      font-size: 15px;
-      width: calc(~"100% - 20px");
+      width: calc(~"100% - 260rpx");
+      font-size: 28rpx;
+      padding: 10rpx;
+      padding-left: 20rpx;
+      height: 40rpx;
+      background: #f6f6f6;
+    }
+    button {
+      border-radius: 0;
+      width: 150rpx;
+      height: 60rpx;
+      font-size: 28rpx;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(90deg, @base-color, #ed5a65);
+      color: #fff;
+      font-size: 28rpx;
     }
   }
   .results {
     width: 100%;
-    margin-top: 2rem;
+    padding-top: 3rem;
     .result {
       // margin-top: 0.5rem;
       border-bottom: 3rpx solid #eee;
@@ -74,12 +73,9 @@
 
 <template>
   <view>
-    <view class="{{books.length === 0 ? 'search' : ''}}">
-      <image wx:if="{{books.length === 0}}" src="/icon/index/search.svg"></image>
-      <view class="search-input {{books.length === 0 ? '' : 'has-result'}}">
-        <input @blur="change" placeholder="请输入图书名称" confirm-type="search" />
-        <icon type="search" size="18" />
-      </view>
+    <view class="search">
+      <input @blur="change" name="name" placeholder="请输入图书名称" confirm-type="search" auto-focus/>
+      <button @tap="change">搜索</button>
     </view>
     <scroll-view style="height:{{height}}px;" class="results" @scrolltolower="next" enable-back-to-top scroll-y>
       <block wx:for="{{books}}" wx:key="index">
