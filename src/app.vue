@@ -54,6 +54,12 @@
             selectedIconPath: 'icon/home@select.png'
           },
           {
+            pagePath: 'pages/course/lists',
+            text: '寻课',
+            iconPath: 'icon/course.png',
+            selectedIconPath: 'icon/course@select.png'
+          },
+          {
             pagePath: 'pages/newsLists',
             text: '资讯',
             iconPath: 'icon/news.png',
