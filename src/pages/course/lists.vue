@@ -413,6 +413,9 @@
         this.ShowToast("已经到底了！")
         return
       }
+      if (this.page == 1) {
+        this.isEmpty = false
+      }
       const resp = await this.GetWithBind("/course/all", Object.assign({
         page: this.page,
         page_size: this.page_size,

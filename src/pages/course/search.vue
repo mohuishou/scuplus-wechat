@@ -106,7 +106,7 @@
       name: "",
       height: 500,
       from: "",
-      isEmpty: false,      
+      isEmpty: false,
     }
     newCourse(courses) {
       for (let i = 0; i < courses.length; i++) {
@@ -127,6 +127,9 @@
         this.ShowToast("已经到底了！")
         return
       }
+      if (this.page == 1) {
+        this.isEmpty = false
+      }
       const resp = await this.PostWithBind("/course/search", {
         page: this.page,
         page_size: this.page_size,
@@ -137,7 +140,7 @@
       } else {
         this.courses = this.newCourse(resp.data)
       }
-       if (resp.data.length === 0) {
+      if (resp.data.length === 0) {
         this.isEmpty = true
       }
       this.$apply()
@@ -160,6 +163,7 @@
         if (e.detail.value) {
           this.name = e.detail.value
         }
+        this.page = 1
         this.searchCourse()
       }
     }
