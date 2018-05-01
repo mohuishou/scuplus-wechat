@@ -105,7 +105,8 @@
       page_size: 15,
       name: "",
       height: 500,
-      from: ""
+      from: "",
+      isEmpty: false,      
     }
     newCourse(courses) {
       for (let i = 0; i < courses.length; i++) {
@@ -122,6 +123,10 @@
       return courses
     }
     async searchCourse() {
+      if (this.page > 1 && this.isEmpty) {
+        this.ShowToast("已经到底了！")
+        return
+      }
       const resp = await this.PostWithBind("/course/search", {
         page: this.page,
         page_size: this.page_size,
@@ -131,6 +136,9 @@
         this.courses = this.courses.concat(this.newCourse(resp.data))
       } else {
         this.courses = this.newCourse(resp.data)
+      }
+       if (resp.data.length === 0) {
+        this.isEmpty = true
       }
       this.$apply()
     }

@@ -152,7 +152,7 @@
           this.ShowToast("节次范围错误")
           return
         }
-        course.day += 1
+        course.day = course.day - 0 + 1
         // 节次
         let session = ""
         for (let i = course.session[0] - 0 + 1; i < course.session[1] - 0 + 1; i++) {
@@ -168,14 +168,13 @@
         course.all_week = course.all_week.join(",")
         course.course_id = -Math.random()
         course.lesson_id = -Math.random()
-       
-       // 添加课程
+        // 添加课程
         let items = db.Get("myScheduleItems") || [];
         items.push(course)
         db.Set("myScheduleItems", items);
-          wepy.navigateTo({
-            url: "/pages/schedule"
-          });
+        wepy.navigateBack({
+          delta: 2, //返回的页面数，如果 delta 大于现有页面数，则返回到首页
+        })
       },
       campusChange(e) {
         this.campusIdx = e.detail.value

@@ -211,6 +211,7 @@
       page: 1,
       page_size: 15,
       height: 500,
+      isEmpty: false,
       params: {
         call_name: "",
         task: "",
@@ -408,6 +409,10 @@
       return courses
     }
     async getCourses() {
+      if (this.page > 1 && this.isEmpty) {
+        this.ShowToast("已经到底了！")
+        return
+      }
       const resp = await this.GetWithBind("/course/all", Object.assign({
         page: this.page,
         page_size: this.page_size,
@@ -417,6 +422,9 @@
         this.courses = this.courses.concat(this.newCourse(resp.data))
       } else {
         this.courses = this.newCourse(resp.data)
+      }
+      if (resp.data.length === 0) {
+        this.isEmpty = true
       }
       this.$apply()
     }
