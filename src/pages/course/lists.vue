@@ -9,7 +9,6 @@
       height: 100%;
     }
   }
-  
   radio-group {
     margin: 20rpx;
     display: flex;
@@ -348,9 +347,9 @@
       ],
     };
     methods = {
-      search(){
+      search() {
         wepy.navigateTo({
-          url:'/pages/course/search',
+          url: '/pages/course/search',
         })
       },
       orderHandler() {
@@ -400,6 +399,8 @@
         courses[i].call_name = callTypes[courses[i].call_name]
         courses[i].task = taskTypes[courses[i].task]
         courses[i].exam_type = examTypes[courses[i].exam_type]
+        courses[i].avg_grade = courses[i].avg_grade.toFixed(1)
+        courses[i].fail_rate = courses[i].fail_rate.toFixed(1)
         let teachers = courses[i].teacher.split(",")
         let is_more = teachers.length > 1 ? '等' : ''
         courses[i].teacher = teachers[0] + is_more

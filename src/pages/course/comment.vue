@@ -204,6 +204,7 @@
       },
       submit(e) {
         let params = Object.assign(this.params, e.detail.value);
+        delete params.course_name
         const self = this;
         wx.getUserInfo({
           success: async function(res) {

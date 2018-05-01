@@ -256,9 +256,9 @@
             </view>
             <!-- 点赞暂时去除 -->
             <!-- <view class="star is-zan">
-                                                  <view class="iconfont icon-unie60b"></view>
-                                                  <text>{{item.score}}</text>
-                                                </view> -->
+                                                      <view class="iconfont icon-unie60b"></view>
+                                                      <text>{{item.score}}</text>
+                                                    </view> -->
           </view>
           <view class="content">
             {{item.comment}}
@@ -298,6 +298,7 @@
       Card: Card
     };
     data = {
+      options: {},
       course: {},
       item: {},
       courses: {},
@@ -309,6 +310,8 @@
       course.call_name = callTypes[course.call_name];
       course.task = taskTypes[course.task];
       course.exam_type = examTypes[course.exam_type];
+      course.avg_grade = course.avg_grade.toFixed(1)
+      course.fail_rate = course.fail_rate.toFixed(1)
       let teachers = course.teacher.split(",");
       let is_more = teachers.length > 1 ? "等" : "";
       course.teacher = teachers[0] + is_more;
@@ -407,8 +410,8 @@
         });
       }
     };
-    async onLoad(options) {
-      const resp = await this.GetWithBind("/course", options);
+    async init() {
+      const resp = await this.GetWithBind("/course", this.options);
       this.course = resp.data;
       this.item = this.newCourseCount(resp.data.course_count);
       this.courses = this.newCourse(resp.data.courses);
@@ -428,6 +431,15 @@
         }
       }
       this.$apply();
+    }
+    onShow() {
+      if (this.options) {
+        this.init()
+      }
+    }
+    async onLoad(options) {
+      this.options = options
+      // this.init()
     }
   }
 </script>
