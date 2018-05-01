@@ -149,7 +149,9 @@
         this.searchCourse()
       },
       search(e) {
-        this.name = e.detail.value
+        if (e.detail.value) {
+          this.name = e.detail.value
+        }
         this.searchCourse()
       }
     }
