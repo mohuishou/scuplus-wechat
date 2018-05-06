@@ -4,14 +4,14 @@ const funcs = [
     url: 'schedule',
     icon: 'schedule',
     bg: '#eacdd1',
-    type: 'login'
+    type: 'jwc'
   },
   {
     name: '成绩',
     url: 'grade',
     icon: 'grade',
     bg: '#99ccee',
-    type: 'login'
+    type: 'jwc'
   },
   {
     name: '自习',
@@ -46,14 +46,14 @@ const funcs = [
     url: 'ecard',
     icon: 'card',
     bg: '#b92c18',
-    type: 'login'
+    type: 'my'
   },
   {
     name: '考表',
     url: 'exam',
     icon: 'exam',
     bg: '#2578b5',
-    type: 'login'
+    type: 'jwc'
   },
   {
     name: '校历',

@@ -13,15 +13,23 @@ export default class HttpMixin extends wepy.mixin {
     return this.requestWithBind('POST', url, params, showToast, handler, 'library')
   }
 
-  GetWithBind(url, params = {}, showToast = true, handler = {}, type = 'bind') {
+  GetWithBind(url, params = {}, showToast = true, handler = {}, type = 'jwc') {
     return this.requestWithBind('GET', url, params, showToast, handler, type)
   }
 
-  PostWithBind(url, params = {}, showToast = true, handler = {}, type = 'bind') {
+  PostWithBind(url, params = {}, showToast = true, handler = {}, type = 'jwc') {
     return this.requestWithBind('POST', url, params, showToast, handler, type)
   }
 
-  async requestWithBind(method, url, params = {}, showToast = true, handler = {}, type = 'bind') {
+  GetWithMy(url, params = {}, showToast = true, handler = {}, type = 'bind') {
+    return this.requestWithBind('GET', url, params, showToast, handler, type)
+  }
+
+  PostWithMy(url, params = {}, showToast = true, handler = {}, type = 'bind') {
+    return this.requestWithBind('POST', url, params, showToast, handler, type)
+  }
+
+  async requestWithBind(method, url, params = {}, showToast = true, handler = {}, type = 'jwc') {
     if (type === 'bind' && db.Get('verify') == 0) {
       wepy.showModal({
         title: '绑定',
@@ -47,6 +55,19 @@ export default class HttpMixin extends wepy.mixin {
           if (res.confirm) {
             wepy.navigateTo({
               url: '/pages/bind?type=library'
+            })
+          }
+        }
+      })
+      throw '未绑定账号'
+    } else if (type === 'jwc' && db.Get('jwc_verify') == 0) {
+      wepy.showModal({
+        title: '账号信息错误',
+        content: '教务处账号未绑定或密码错误！是否前往绑定？',
+        success: function (res) {
+          if (res.confirm) {
+            wepy.navigateTo({
+              url: '/pages/bind?type=jwc'
             })
           }
         }

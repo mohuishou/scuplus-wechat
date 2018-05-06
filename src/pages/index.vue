@@ -94,7 +94,7 @@
       </view>
     </view>
     <!-- 卡片区, 置放通知卡片, 例如: 成绩通知, 课程通知, 自习教室, 考试通知 -->
-    <view wx:if="{{verify > 0}}">
+    <view wx:if="{{jwc_verify > 0}}">
       <schedule-card iconBg="#eacdd1" icon="kechengbiao" title="今日课表" bg="card-schedule.png" :isShow.sync="todaySchedules" footText="查看完整课表" url="/pages/schedule" noneText="今日无课">
         <block slot="content" wx:for="{{todaySchedules}}" wx:if="{{item.course_name}}" wx:key="{{index}}">
           <view class="card-list">
@@ -169,6 +169,23 @@
       }],
       funcs: index.funcs,
       swiper_height: 200,
+      verifyChecks: {
+        jwc: {
+          name: "教务处",
+          params: "jwc",
+          key: "jwc_verify"
+        },
+        library: {
+          name: "图书馆",
+          params: "library",
+          key: "library_verify"
+        },
+        my: {
+          name: "统一认证中心",
+          params: "bind",
+          key: "verify"
+        },
+      },
     };
     computed = {
       verify() {
@@ -176,6 +193,9 @@
       },
       library_verify() {
         return db.Get("library_verify")
+      },
+      jwc_verify() {
+        return db.Get("jwc_verify")
       },
       ecardBalance() {
         const trans = db.Get("trans");
@@ -213,33 +233,24 @@
     };
     navigate(item) {
       let url = item.url;
-      if (item.type == "login" && this.verify == 0) {
-        wepy.showModal({
-          title: "账号信息错误",
-          content: "统一身份认证账号未绑定或密码错误！是否前往绑定？",
-          success: function(res) {
-            if (res.confirm) {
-              wepy.navigateTo({
-                url: "bind?type=bind"
-              });
+      if (item.type in this.verifyChecks) {
+        let check = this.verifyChecks[item.type]
+        if (!this[check.key]) {
+          wepy.showModal({
+            title: "账号信息错误",
+            content: check.name + "账号未绑定或密码错误！是否前往绑定？",
+            success: function(res) {
+              if (res.confirm) {
+                wepy.navigateTo({
+                  url: "bind?type=" + check.params
+                });
+              }
             }
-          }
-        });
-      } else if (item.type == "library" && this.library_verify == 0) {
-        wepy.showModal({
-          title: "账号信息错误",
-          content: "图书馆账号未绑定或密码错误！是否前往绑定？",
-          success: function(res) {
-            if (res.confirm) {
-              wepy.navigateTo({
-                url: "bind?type=library"
-              });
-            }
-          }
-        });
+          });
+        }
       } else {
         wepy.navigateTo({
-          url: url
+          url: item.url
         });
       }
     }

@@ -132,7 +132,13 @@
           "url": "/library/bind",
           "verify": "library_verify",
           "help": "密码为图书馆的密码，默认密码为身份证后六位,忘记密码可以访问图书馆找回"
-        }
+        },
+        "jwc": {
+          "name": "教务处",
+          "url": "/jwc/bind",
+          "verify": "jwc_verify",
+          "help": "密码为教务处的密码，默认密码为身份证后六位,忘记密码可以访问教务处找回"
+        },
       }
     }
     methods = {

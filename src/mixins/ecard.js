@@ -2,7 +2,7 @@ import wepy from 'wepy'
 
 export default class ECardMixin extends wepy.mixin {
   async GetECard() {
-    const resp = await this.GetWithBind('/user/ecard', {
+    const resp = await this.GetWithMy('/user/ecard', {
       page: 1,
       page_size: 15
     })
@@ -10,6 +10,6 @@ export default class ECardMixin extends wepy.mixin {
   }
 
   async UpdateECard() {
-    await this.PostWithBind('/user/ecard')
+    await this.PostWithMy('/user/ecard')
   }
 }

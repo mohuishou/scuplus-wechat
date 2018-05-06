@@ -4,14 +4,14 @@
     background: @bg-color;
   }
   .lists {
+    .list-group{
+      margin-bottom: 20rpx;
+    }
     .list {
       padding: 10rpx 20rpx;
       display: flex;
       justify-content: space-between;
-      &:nth-child(1) {
-        border-top: 3rpx solid #eee;
-      }
-      border-bottom: 3rpx solid #eee;
+      border-bottom: 2rpx solid #efefef;
       background: #fff;
       .name {
         font-size: 32rpx;
@@ -19,19 +19,25 @@
     }
   }
   .user-info {
-    margin-top: 100rpx;
-    margin-bottom: 100rpx;
-    text-align: center;
-    image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 80rpx 0;
+    flex-wrap: wrap;
+    .avatar {
       @size: 150rpx;
       width: @size;
       height: @size;
-      border-radius: @size / 2;
+      border-radius: 50%;
       border: 2rpx solid #eee;
+      overflow: hidden;
       box-shadow: 4rpx 4rpx 4rpx #eee;
     }
-    view {
+    .name {
+      text-align: center;
       margin-top: 20rpx;
+      width: 100%;
     }
   }
 </style>
@@ -39,24 +45,46 @@
 <template>
   <view class="my">
     <view class="user-info">
-      <image src="{{avatar}}"></image>
-      <view>{{nickName}}</view>
+      <view class="avatar">
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+      <view class="name">
+        <open-data type="userNickName" lang="zh_CN"></open-data>
+      </view>
     </view>
     <view class="lists">
-      <repeat for="{{items}}" item="item" key="index">
-        <mview @mtap.user="to" :arg.sync="item">
-          <view slot="content" class="list">
-            <view class="name">{{item.name}}</view>
-            <view class="iconfont icon-arrow-right"></view>
-          </view>
-        </mview>
-      </repeat>
-      <mview2 class="warn" @mtap.user="clear">
+      <view class="list-group">
+        <repeat for="{{feedbacks}}" item="item" key="index">
+          <mview @mtap.user="to" :arg.sync="item">
+            <view slot="content" class="list">
+              <view class="name">{{item.name}}</view>
+              <view class="iconfont icon-arrow-right"></view>
+            </view>
+          </mview>
+        </repeat>
+      </view>
+      <view class="list-group">
+        <repeat for="{{binds}}" item="item" key="index">
+          <mview2 @mtap.user="to" :arg.sync="item">
+            <view slot="content" class="list">
+              <view class="name">{{item.name}}</view>
+              <view class="iconfont icon-arrow-right"></view>
+            </view>
+          </mview2>
+        </repeat>
+      </view>
+      <mview3 class="warn" @mtap.user="to" :arg.sync="qqGroup">
+        <view slot="content" class="list">
+          <view class="name">QQ群</view>
+          <view class="iconfont icon-arrow-right"></view>
+        </view>
+      </mview3>
+      <mview4 class="warn" @mtap.user="clear">
         <view slot="content" class="list">
           <view class="name">清空缓存</view>
           <view class="iconfont icon-arrow-right"></view>
         </view>
-      </mview2>
+      </mview4>
     </view>
   </view>
 </template>
@@ -73,11 +101,13 @@
     };
     components = {
       mview: MView,
-      mview2: MView
+      mview2: MView,
+      mview3: MView,
+      mview4: MView,
     };
     mixins = [HttpMixin, ToastMixin];
     data = {
-      items: [{
+      feedbacks: [{
           name: "BUG反馈",
           url: "/pages/my/feedback?index=0",
           type: "page"
@@ -92,68 +122,28 @@
           url: "/pages/my/feedbackList",
           type: "page"
         },
+      ],
+      binds: [{
+          name: "教务处绑定",
+          url: "/pages/bind?type=jwc",
+          type: "page"
+        },
         {
-          name: "账号绑定",
+          name: "统一认证中心绑定",
           url: "/pages/bind",
-          type: "page?type=library"
+          type: "page"
         },
         {
           name: "图书馆绑定",
           url: "/pages/bind?type=library",
           type: "page"
         },
-        {
-          name: "QQ群: 698433701",
-          url: "698433701",
-          type: "copy"
-        }
       ],
-      nickName: "未授权",
-      avatar: ""
+      qqGroup: {
+        url: "698433701",
+        type: "copy"
+      }
     };
-    getUserInfo() {
-      const self = this
-      wepy.getUserInfo({
-        success: res => {
-          self.nickName = res.userInfo.nickName;
-          self.avatar = res.userInfo.avatarUrl;
-          self.$apply()
-          db.Set("nickName", self.nickName)
-          db.Set("avatar", self.avatar)
-        },
-        fail: res => {
-          wepy.showModal({
-            title: "用户授权失败",
-            content: "个人中心需要获取您的微信昵称和头像信息用于展示与反馈功能，点击确认授权，点击取消返回首页",
-            success: r => {
-              if (r.confirm) {
-                wx.openSetting({
-                  success: (res) => {
-                    if (!res.authSetting["scope.userInfo"]) {
-                      wepy.switchTab({
-                        url: "/pages/index"
-                      })
-                    } else {
-                      self.getUserInfo()
-                    }
-                  },
-                  fail: res => {
-                    console.log(res);
-                    wepy.switchTab({
-                      url: "/pages/index"
-                    })
-                  }
-                })
-              } else {
-                wepy.switchTab({
-                  url: "/pages/index"
-                })
-              }
-            }
-          })
-        }
-      });
-    }
     methods = {
       to(item) {
         if (item.type == "copy") {
@@ -161,7 +151,6 @@
           wepy.setClipboardData({
             data: item.url,
             success: function(res) {
-              self.ShowToast("复制成功！")
             },
             fail: res => {
               self.ShowToast("复制失败！")
@@ -200,12 +189,6 @@
       }
     };
     onLoad() {
-      if (db.Get("nickName") != "") {
-        this.nickName = db.Get("nickName")
-        this.avatar = db.Get("avatar")
-      } else {
-        this.getUserInfo()
-      }
     }
   }
 </script>
