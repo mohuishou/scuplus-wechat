@@ -4,7 +4,7 @@
     background: @bg-color;
   }
   .lists {
-    .list-group{
+    .list-group {
       margin-bottom: 20rpx;
     }
     .list {
@@ -73,18 +73,24 @@
           </mview2>
         </repeat>
       </view>
-      <mview3 class="warn" @mtap.user="to" :arg.sync="qqGroup">
+      <mview3 class="warn" @mtap.user="pay">
+        <view slot="content" class="list">
+          <view class="name">打赏开发者</view>
+          <view class="iconfont icon-arrow-right"></view>
+        </view>
+      </mview3>
+      <mview4 class="warn" @mtap.user="to" :arg.sync="qqGroup">
         <view slot="content" class="list">
           <view class="name">QQ群</view>
           <view class="iconfont icon-arrow-right"></view>
         </view>
-      </mview3>
-      <mview4 class="warn" @mtap.user="clear">
+      </mview4>
+      <mview5 class="warn" @mtap.user="clear">
         <view slot="content" class="list">
           <view class="name">清空缓存</view>
           <view class="iconfont icon-arrow-right"></view>
         </view>
-      </mview4>
+      </mview5>
     </view>
   </view>
 </template>
@@ -104,6 +110,7 @@
       mview2: MView,
       mview3: MView,
       mview4: MView,
+      mview5: MView,
     };
     mixins = [HttpMixin, ToastMixin];
     data = {
@@ -145,13 +152,17 @@
       }
     };
     methods = {
+      pay() {
+        wepy.previewImage({
+          urls: ["https://scuplus-1251451068.coscd.myqcloud.com/q.png"], 
+        })
+      },
       to(item) {
         if (item.type == "copy") {
           const self = this
           wepy.setClipboardData({
             data: item.url,
-            success: function(res) {
-            },
+            success: function(res) {},
             fail: res => {
               self.ShowToast("复制失败！")
             }
@@ -188,7 +199,6 @@
         })
       }
     };
-    onLoad() {
-    }
+    onLoad() {}
   }
 </script>

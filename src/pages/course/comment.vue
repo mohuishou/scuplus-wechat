@@ -202,47 +202,31 @@
         }
         this.items[i].radios[j].checked = !this.items[i].radios[j].checked;
       },
-      submit(e) {
+      async submit(e) {
         let params = Object.assign(this.params, e.detail.value);
         delete params.course_name
         const self = this;
-        wx.getUserInfo({
-          success: async function(res) {
-            params.nick_name = res.userInfo.nickName;
-            params.avatar = res.userInfo.avatarUrl;
-            for (const x in params) {
-              if (!params[x]) {
-                self.ShowToast("所有项目均为必填！")
-                return
-              }
-            }
-            try {
-              let url = 　"/course/comment"
-              if (params.id > 0) {
-                url += "/update"
-              }
-              const resp = await self.PostWithBind(url, params);
-              self.ShowToast("评价成功！");
-              setTimeout(() => {
-                wepy.navigateBack({
-                  delta: "1"
-                });
-              }, 1000);
-            } catch (error) {}
-          },
-          fail: function() {
-            wepy.showModal({
-              title: "权限", //提示的标题
-              content: "需要获取您的微信昵称和头像权限", //提示的内容
-              showCancel: false, //是否显示取消按钮
-              success: res => {
-                wepy.openSetting({
-                  success: res => {}
-                });
-              }
-            });
+        console.log(params);
+        
+        for (const x in params) {
+          if (!params[x]) {
+            self.ShowToast("所有项目均为必填！")
+            return
           }
-        });
+        }
+        try {
+          let url = 　"/course/comment"
+          if (params.id > 0) {
+            url += "/update"
+          }
+          const resp = await self.PostWithBind(url, params);
+          self.ShowToast("评价成功！");
+          setTimeout(() => {
+            wepy.navigateBack({
+              delta: "1"
+            });
+          }, 1000);
+        } catch (error) {}
       }
     };
     async onLoad(option) {

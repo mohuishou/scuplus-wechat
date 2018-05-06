@@ -247,12 +247,12 @@
               }
             }
           });
+          return
         }
-      } else {
-        wepy.navigateTo({
-          url: item.url
-        });
       }
+      wepy.navigateTo({
+        url: item.url
+      });
     }
     methods = {
       noticeTo(id) {

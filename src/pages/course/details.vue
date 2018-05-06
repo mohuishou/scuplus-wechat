@@ -250,7 +250,7 @@
               <view class="avatar" style="background-image: url('{{item.avatar}}');">
               </view>
               <view>
-                <view class="username">{{item.nick_name}}</view>
+                <view class="username">{{item.nick_name || '某同学'}}</view>
                 <view class="time">{{item.updated_str}}</view>
               </view>
             </view>
