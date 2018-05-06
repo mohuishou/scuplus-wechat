@@ -127,7 +127,7 @@
             this.ShowToast("不能为空！")
             return
           }
-          let content = e.val + "   $$$" + db.Get("nickName")
+          let content = e.val
           await this.POST("/user/feedback/comment/" + this.id, {
             content: content
           })
