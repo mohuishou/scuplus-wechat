@@ -161,10 +161,12 @@
           exams[i].time_info = "已经考过啦";
           exams[i].t = -1
         } else {
-          let t = Math.floor((start - now) / 1000 / 3600 / 24);
+          let hours = (start - now) / 1000 / 3600
+          let days = Math.floor(hours / 24);
+          hours = Math.floor(hours)
           exams[i].t = t
           if (t == 0) {
-            exams[i].time_info = "今天就要考试了";
+            exams[i].time_info = `还有不到${hours}小时考试`;
           } else {
             exams[i].time_info = `还有不到${t}天考试`;
           }
