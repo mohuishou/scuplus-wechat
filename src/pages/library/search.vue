@@ -37,7 +37,7 @@
   }
   .results {
     width: 100%;
-    padding-top: 3rem;
+    padding-top: 125rpx;
     .result {
       // margin-top: 0.5rem;
       border-bottom: 3rpx solid #eee;
@@ -74,8 +74,8 @@
 <template>
   <view>
     <view class="search">
-      <input @blur="change" name="name" placeholder="请输入图书名称" confirm-type="search" auto-focus/>
-      <button @tap="change">搜索</button>
+      <input @blur="change" @confirm="search" name="name" placeholder="请输入图书名称" confirm-type="search" auto-focus/>
+      <button @tap="search">搜索</button>
     </view>
     <scroll-view style="height:{{height}}px;" class="results" @scrolltolower="next" enable-back-to-top scroll-y>
       <block wx:for="{{books}}" wx:key="index">
@@ -110,11 +110,18 @@
       books: [],
       next_page: '',
       height: 280,
-      loading: false
+      loading: false,
+      name: "",
     };
     methods = {
+      search(e) {
+        if (e.detail.value) {
+          this.name = e.detail.value
+        }
+        this.getBooks(this.name, false)
+      },
       change(e) {
-        this.getBooks(e.detail.value, false)
+        this.name = e.detail.value
       },
       next(e) {
         this.getBooks('', true)
