@@ -173,7 +173,7 @@
     components = {};
     data = {
       schedules: [
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13]
       ],
       day: 0,
       scheduleItems: [],
@@ -352,6 +352,7 @@
           e.sessionArr.forEach(element => {
             this.schedules[(e.day % 7) + 1][element - 1].flex = 0;
           });
+          
           this.schedules[(e.day % 7) + 1][e.sessionArr[0] - 1] = e;
         }
       }
@@ -359,11 +360,11 @@
     initData() {
       // 初始化data
       this.schedules = [
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13]
       ];
       for (let i = 0; i < 7; i++) {
         let tmpData = [];
-        for (let j = 0; j < 12; j++) {
+        for (let j = 0; j < 13; j++) {
           tmpData[j] = {
             course_name: "",
             flex: 1
