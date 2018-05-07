@@ -162,13 +162,13 @@
           exams[i].t = -1
         } else {
           let hours = (start - now) / 1000 / 3600
-          let days = Math.floor(hours / 24);
+          let day = Math.floor(hours / 24);
           hours = Math.floor(hours)
-          exams[i].t = t
-          if (t == 0) {
+          exams[i].t = day
+          if (day == 0) {
             exams[i].time_info = `还有不到${hours}小时考试`;
           } else {
-            exams[i].time_info = `还有不到${t}天考试`;
+            exams[i].time_info = `还有不到${day}天考试`;
           }
         }
         exams[i].active = false;
