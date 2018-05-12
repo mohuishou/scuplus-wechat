@@ -37,6 +37,8 @@
         'pages/course/details',
         'pages/course/comment',
         'pages/course/search',
+        'pages/lostFind/lists',
+        'pages/lostFind/item',
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',

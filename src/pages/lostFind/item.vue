@@ -12,5 +12,6 @@
   import ToastMixin from "mixins/toast";
   import db from "util/db";
   export default class BindJwc extends wepy.page {
+     config = {}
   }
 </script>
