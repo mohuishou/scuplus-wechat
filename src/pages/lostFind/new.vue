@@ -81,7 +81,7 @@ button {
         </label>
         <label>
           <view class="title">类型</view>
-          <picker bindchange="bindPickerChange" value="{{cid}}" range="{{categories}}">
+          <picker @change="changeCategories" value="{{cid}}" range="{{categories}}">
             <view class="picker">
               {{categories[cid]}}
             </view>
@@ -106,7 +106,7 @@ button {
         </label>
         <label>
           <view class="title">联系方式</view>
-          <picker bindchange="bindPickerChange" value="{{tid}}" range="{{callTypes}}">
+          <picker @change="changeCallType" value="{{tid}}" range="{{callTypes}}">
             <view class="picker">
               {{callTypes[tid]}}
             </view>
@@ -117,7 +117,7 @@ button {
           <input placeholder="不建议使用手机号" />
         </label>
       </view>
-      <button form-type="submit">提交课程评价</button>
+      <button @tap="submit" form-type="submit">提交课程评价</button>
     </form>
   </view>
 </template>
@@ -126,6 +126,7 @@ import wepy from "wepy";
 import HttpMixin from "mixins/http";
 import ToastMixin from "mixins/toast";
 import db from "util/db";
+import {Upload} from "util/cos"
 export default class BindJwc extends wepy.page {
   config = {};
   mixins = [HttpMixin, ToastMixin]
@@ -137,6 +138,12 @@ export default class BindJwc extends wepy.page {
     imageUrl: "",
   };
   methods = {
+    changeCategories(e){
+      this.cid = e.detail.value || 0
+    },
+    changeCallType(e){
+      this.tid = e.detail.value || 0
+    },
     chooseImg(){
       const self = this
       wepy.chooseImage({
@@ -156,7 +163,10 @@ export default class BindJwc extends wepy.page {
         },
         complete: () => {}
       });
-      
+    },
+    submit(e){
+      console.log(e);
+      Upload(this.imageUrl,"lost_find")
     }
   }
 }

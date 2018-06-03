@@ -1,6 +1,7 @@
 import {
   domain
 } from '../config'
+import db from './db'
 
 const ShowToast = (msg, type = 'error', time = 2000) => {
   wx.showToast({
@@ -55,7 +56,7 @@ function request(method, url, params = {}, handler = {}) {
   handler.url = domain + url
   handler.data = params
   handler.header = {
-    'Authorization': 'Bearer ' + wx.getStorageSync('token')
+    'Authorization': 'Bearer ' + db.Get('token')
   }
   handler.method = method
   if (method === 'POST') {

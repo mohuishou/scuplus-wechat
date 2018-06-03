@@ -11,6 +11,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "dayjs": "^1.6.5",
     "wepy": "^1.7.1",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2"
