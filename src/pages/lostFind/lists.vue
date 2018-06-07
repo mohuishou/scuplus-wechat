@@ -161,7 +161,7 @@ export default class BindJwc extends wepy.page {
       this.cid = cid;
       this.param.page = 1;
       this.param.category = this.categories[this.cid];
-      wepy.setNavigationBarTitle({ title: this.param.category });
+      this.setTitle();
       this.getLists();
     },
     to(id) {
@@ -208,16 +208,22 @@ export default class BindJwc extends wepy.page {
     }
   }
 
+  setTitle() {
+    let title = this.param.category;
+    if (this.param.my) title = "我的-" + title;
+    wepy.setNavigationBarTitle({ title: title });
+  }
+
   onLoad(option) {
     // 显示分类
     if ("cid" in option) {
       this.cid = option.cid;
       this.param.category = this.categories[this.cid];
-      wepy.setNavigationBarTitle({ title: this.param.category });
     }
     if ("my" in option) {
       this.param.my = option.my;
     }
+    this.setTitle();
     this.getLists();
   }
 

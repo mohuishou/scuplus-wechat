@@ -138,7 +138,7 @@ import db from "util/db";
 import dayjs from "dayjs";
 export default class BindJwc extends wepy.page {
   config = {
-    enablePullDownRefresh: true,
+    enablePullDownRefresh: true
   };
   mixins = [HttpMixin, ToastMixin];
   data = {
@@ -180,14 +180,19 @@ export default class BindJwc extends wepy.page {
       let data = res.data.data;
       data.created_at = dayjs(data.created_at).format("YYYY-MM-DD");
       if (data.category == "一卡通招领") {
-        data.card_info = JSON.parse(data.card_info);
-        if (!res.data.is_me && !res.data.is_owner)
-          data.card_info.no = this.hiddenSid(data.card_info.no);
+        if (data.card_info != "") {
+          data.card_info = JSON.parse(data.card_info);
+          if (!res.data.is_me && !res.data.is_owner)
+            data.card_info.no = this.hiddenSid(data.card_info.no);
+        } else {
+          data.card_info = {};
+        }
       } else {
         this.images = data.pictures.split(",");
       }
       this.is_me = res.data.is_me;
       this.item = data;
+      wepy.setNavigationBarTitle({ title: data.title });
       this.$apply();
     } catch (error) {
       console.error(error);
