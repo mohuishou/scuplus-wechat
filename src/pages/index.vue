@@ -26,7 +26,8 @@
   }
   .mview {
     padding-top: 30rpx;
-    width: 20%; // border-bottom: 1px solid #eee;
+    // 控制每行图标数目
+    width: 25%; // border-bottom: 1px solid #eee;
   }
   .icon-btn {
     text-align: center;
@@ -233,6 +234,12 @@
     };
     navigate(item) {
       let url = item.url;
+      if (item.type == "money") {
+        wepy.previewImage({
+          urls: ["https://scuplus-1251451068.coscd.myqcloud.com/q.png"], 
+        })
+        return
+      }
       if (item.type in this.verifyChecks) {
         let check = this.verifyChecks[item.type]
         if (!this[check.key]) {

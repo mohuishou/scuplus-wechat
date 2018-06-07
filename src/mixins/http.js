@@ -101,7 +101,8 @@ export default class HttpMixin extends wepy.mixin {
 
     if (showToast) {
       wepy.showLoading && wepy.showLoading({
-        title: '加载中...'
+        title: '加载中...',
+        mask: true
       })
     }
 

@@ -68,6 +68,20 @@ const funcs = [
     icon: 'bus',
     bg: '#ab96c5',
     type: 'normal'
+  },
+  {
+    name: '失物招领',
+    url: 'lostFind/lists',
+    icon: 'lost_find',
+    bg: '#ab96c5',
+    type: 'jwc'
+  },
+  {
+    name: '打赏开发者',
+    url: 'money',
+    icon: 'money',
+    bg: '#ab96c5',
+    type: 'money'
   }
 ]
 
