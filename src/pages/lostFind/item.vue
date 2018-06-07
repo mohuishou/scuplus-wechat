@@ -9,6 +9,7 @@ page {
   width: 100%;
   height: 422rpx;
   .slide-image {
+    background: #fff;
     width: 100%;
     height: 422rpx;
     background-size: cover;
@@ -121,12 +122,12 @@ button.mo-btn {
       <swiper class="screenshots">
         <block wx:for="{{images}}" wx:key="index">
           <swiper-item>
-            <view style="background-image: url({{item}})" class="slide-image"></view>
+            <view @tap="showImg({{item}})" style="background-image: url({{item}})" class="slide-image"></view>
           </swiper-item>
         </block>
       </swiper>
     </block>
-    <button wx:if="{{is_me}}"  @tap="to({{item.id}})" class="mo-btn">修改信息</button>
+    <button wx:if="{{is_me}}" @tap="to()" class="mo-btn">修改信息</button>
   </view>
 </template>
 <script>
@@ -136,7 +137,9 @@ import ToastMixin from "mixins/toast";
 import db from "util/db";
 import dayjs from "dayjs";
 export default class BindJwc extends wepy.page {
-  config = {};
+  config = {
+    enablePullDownRefresh: true,
+  };
   mixins = [HttpMixin, ToastMixin];
   data = {
     images: [
@@ -145,11 +148,20 @@ export default class BindJwc extends wepy.page {
     height: 500,
     item: {},
     is_me: false,
+    id: 1
   };
 
   methods = {
-    to(id) {
-      wepy.navigateTo({ url: "/pages/lostFind/new?id=" + id });
+    to() {
+      wepy.navigateTo({
+        url: "/pages/lostFind/new?item=" + JSON.stringify(this.item)
+      });
+    },
+    showImg(url) {
+      wepy.previewImage({
+        urls: this.images, //需要预览的图片链接列表,
+        current: url
+      });
     }
   };
 
@@ -162,9 +174,9 @@ export default class BindJwc extends wepy.page {
     return arr.join("");
   }
 
-  async get(id) {
+  async get() {
     try {
-      const res = await this.GetWithBind("/lost_find/" + id);
+      const res = await this.GetWithBind("/lost_find/" + this.id);
       let data = res.data.data;
       data.created_at = dayjs(data.created_at).format("YYYY-MM-DD");
       if (data.category == "一卡通招领") {
@@ -174,7 +186,7 @@ export default class BindJwc extends wepy.page {
       } else {
         this.images = data.pictures.split(",");
       }
-      this.is_me = res.data.is_me
+      this.is_me = res.data.is_me;
       this.item = data;
       this.$apply();
     } catch (error) {
@@ -182,12 +194,18 @@ export default class BindJwc extends wepy.page {
     }
   }
 
+  async onPullDownRefresh() {
+    await this.get();
+    wepy.stopPullDownRefresh();
+  }
+
   onLoad(option) {
     if (!("id" in option)) {
       this.ShowToast("参数错误！");
       return;
     }
-    this.get(option.id);
+    this.id = option.id;
+    this.get();
   }
 }
 </script>

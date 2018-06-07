@@ -73,11 +73,11 @@ button {
       <view class="group">
         <label>
           <view class="title">标题</view>
-          <input name="title" placeholder="请输入标题" />
+          <input name="title" placeholder="请输入标题" value="{{item.title || ''}}" />
         </label>
         <label>
           <view class="title">地点</view>
-          <input name="address" placeholder="请输入地点" />
+          <input name="address" placeholder="请输入地点" value="{{item.address || ''}}" />
         </label>
         <label>
           <view class="title">类型</view>
@@ -89,7 +89,7 @@ button {
         </label>
         <label class="desc">
           <view class="title">描述</view>
-          <textarea name="info" placeholder="请输入物品描述"></textarea>
+          <textarea name="info" value="{{item.info || ''}}" placeholder="请输入物品描述"></textarea>
         </label>
         <label class="image">
           <view class="title">图片上传</view>
@@ -101,7 +101,7 @@ button {
       <view class="group">
         <label>
           <view class="title">称呼</view>
-          <input name="nickname" placeholder="建议不要输入全名" />
+          <input value="{{item.nickname || ''}}" name="nickname" placeholder="建议不要输入全名" />
         </label>
         <label>
           <view class="title">联系方式</view>
@@ -113,10 +113,10 @@ button {
         </label>
         <label>
           <view class="title">联系</view>
-          <input name="contact" placeholder="{{tid == 4 ? '不建议使用手机号' : '请输入' + callTypes[tid]}}" />
+          <input value="{{item.contact || ''}}" name="contact" placeholder="{{tid == 4 ? '不建议使用手机号' : '请输入' + callTypes[tid]}}" />
         </label>
       </view>
-      <button form-type="submit">提交课程评价</button>
+      <button form-type="submit">{{item.id ? '修改' : '提交'}}课程评价</button>
     </form>
   </view>
 </template>
@@ -134,7 +134,8 @@ export default class BindJwc extends wepy.page {
     cid: 0,
     callTypes: ["QQ", "微信", "微博", "邮箱", "手机"],
     tid: 0,
-    imageUrl: ""
+    imageUrl: "",
+    item: {}
   };
   async uploadImage() {
     if (!this.imageUrl) return false;
@@ -211,17 +212,27 @@ export default class BindJwc extends wepy.page {
       }
 
       // 图片上传
-      const url = await this.uploadImage();
-      params.pictures = url || "";
+      if (!("pictures" in this.item && this.item.pictures == this.imageUrl)) {
+        const url = await this.uploadImage();
+        params.pictures = url || "";
+      } else {
+        params.pictures = this.imageUrl;
+      }
+
       // 参数转换
-      params.contact = `[${this.callTypes[params.contact_type]}]: ${
+      params.contact = `${this.callTypes[params.contact_type]}: ${
         params.contact
       }`;
       delete params.contact_type;
       params.category = this.categories[params.category];
       // 上传到服务器
       try {
-        await this.PostWithBind("/lost_find", params);
+        if ("id" in this.item) {
+          params.id = this.item.id;
+          await this.PostWithBind("/lost_find/update", params);
+        } else {
+          await this.PostWithBind("/lost_find", params);
+        }
         // 创建成功，返回上一级
         setTimeout(() => {
           wepy.navigateBack({
@@ -233,5 +244,21 @@ export default class BindJwc extends wepy.page {
       }
     }
   };
+
+  onLoad(option) {
+    if ("item" in option) {
+      let item = JSON.parse(option.item) || {};
+      if (!item.id) {
+        item = {};
+      } else {
+        this.cid = this.categories.indexOf(item.category);
+        let arr = item.contact.split(":");
+        this.tid = this.callTypes.indexOf(arr[0].trim());
+        item.contact = arr[1].trim();
+      }
+      this.imageUrl = item.pictures;
+      this.item = item;
+    }
+  }
 }
 </script>

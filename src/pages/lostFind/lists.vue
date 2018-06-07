@@ -4,8 +4,27 @@ page {
   background: @bg-color;
   font-size: 28rpx;
 }
-scroll-view {
+.lists {
   padding-top: 30px;
+}
+.mo-no-data {
+  color: #888;
+  display: flex;
+  font-size: 28rpx;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  .mo-no-data-content {
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+  }
+  .mo-no-data-left,
+  .mo-no-data-right {
+    height: 2rpx;
+    width: 100rpx;
+    background: #aaa;
+  }
 }
 .list {
   // margin-bottom: 20rpx;
@@ -85,7 +104,7 @@ scroll-view {
         </view>
       </block>
     </view>
-    <scroll-view>
+    <view class="lists">
       <block wx:for="{{items}}" wx:key="index">
         <view class="list" @tap="to({{item.id}})">
           <view>
@@ -106,7 +125,12 @@ scroll-view {
           <view class="preview" style="background-image: url({{item.pictures}})"></view>
         </view>
       </block>
-    </scroll-view>
+    </view>
+    <view class="mo-no-data">
+      <view class="mo-no-data-left"></view>
+      <view class="mo-no-data-content">{{lastPage ? '到底啦' : '加载中...'}}</view>
+      <view class="mo-no-data-right"></view>
+    </view>
   </view>
 </template>
 <script>
@@ -116,7 +140,9 @@ import ToastMixin from "mixins/toast";
 import db from "util/db";
 import dayjs from "dayjs";
 export default class BindJwc extends wepy.page {
-  config = {};
+  config = {
+    enablePullDownRefresh: true
+  };
   data = {
     categories: ["报失", "一卡通招领", "其他招领"],
     cid: 0,
@@ -124,15 +150,18 @@ export default class BindJwc extends wepy.page {
     lastPage: false,
     param: {
       page: 1,
-      page_size: 15,
-      category: "报失"
+      page_size: 6,
+      category: "报失",
+      my: 0
     }
   };
   mixins = [HttpMixin, ToastMixin];
   methods = {
     changeCid(cid) {
       this.cid = cid;
+      this.param.page = 1;
       this.param.category = this.categories[this.cid];
+      wepy.setNavigationBarTitle({ title: this.param.category });
       this.getLists();
     },
     to(id) {
@@ -140,15 +169,24 @@ export default class BindJwc extends wepy.page {
     }
   };
 
+  async onPullDownRefresh() {
+    this.param.page = 1;
+    await this.getLists();
+    wepy.stopPullDownRefresh();
+  }
+
   // 获取列表
   async getLists() {
     try {
       if (this.param.page > 1 && this.lastPage) return;
       if (this.param.page === 1) this.lastPage = false;
       const res = await this.GetWithBind("/lost_finds", this.param);
+      if (res.data.length < this.param.page_size) {
+        this.lastPage = true;
+      }
       if (res.data && res.data.length === 0) {
         this.ShowToast("没有数据了！");
-        this.lastPage == true;
+        this.lastPage = true;
       }
       for (let i = 0; i < res.data.length; i++) {
         res.data[i].created_at = dayjs(res.data[i].created_at).format(
@@ -159,7 +197,11 @@ export default class BindJwc extends wepy.page {
             "http://scuplus-1251451068.coscd.myqcloud.com/nopic.jpg";
         }
       }
-      this.items = res.data;
+      if (this.param.page === 1) {
+        this.items = res.data;
+      } else {
+        this.items = this.items.concat(res.data);
+      }
       this.$apply();
     } catch (error) {
       console.error(error);
@@ -171,7 +213,16 @@ export default class BindJwc extends wepy.page {
     if ("cid" in option) {
       this.cid = option.cid;
       this.param.category = this.categories[this.cid];
+      wepy.setNavigationBarTitle({ title: this.param.category });
     }
+    if ("my" in option) {
+      this.param.my = option.my;
+    }
+    this.getLists();
+  }
+
+  onReachBottom() {
+    this.param.page++;
     this.getLists();
   }
 }
