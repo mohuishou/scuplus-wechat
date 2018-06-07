@@ -3,6 +3,7 @@
 page {
   background: @bg-color;
   font-size: 28rpx;
+  padding-bottom: 100rpx;
 }
 .lists {
   padding-top: 30px;
@@ -65,6 +66,7 @@ page {
 .tabs {
   position: fixed;
   width: calc(~"100% - 50rpx");
+  border-bottom: 2rpx solid #eee;
   display: flex;
   background: #fff;
   font-size: 28rpx;
@@ -92,6 +94,16 @@ page {
       color: #888;
       font-size: 24rpx;
     }
+  }
+}
+.bottom-btns {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  view {
+    flex: 1;
+    text-align: center;
   }
 }
 </style>
@@ -131,6 +143,10 @@ page {
       <view class="mo-no-data-content">{{lastPage ? '到底啦' : '加载中...'}}</view>
       <view class="mo-no-data-right"></view>
     </view>
+    <view class="bottom-btns mo-btn">
+      <view @tap="toNew()">新建</view>
+      <view @tap="changeMy()"> {{param.my ? '所有' : '我的'}}</view>
+    </view>
   </view>
 </template>
 <script>
@@ -166,6 +182,14 @@ export default class BindJwc extends wepy.page {
     },
     to(id) {
       wepy.navigateTo({ url: "/pages/lostFind/item?id=" + id });
+    },
+    changeMy() {
+      this.param.my = (this.param.my + 1) % 2;
+      this.setTitle();
+      this.getLists();
+    },
+    toNew() {
+      wepy.navigateTo({ url: "/pages/lostFind/new" });
     }
   };
 
