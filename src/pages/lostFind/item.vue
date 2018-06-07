@@ -1,75 +1,80 @@
 <style lang="less">
-  @import "./src/less/config";
-  page {
-    background: @bg-color;
-    font-size: 28rpx;
-  }
-  .screenshots {
+@import "./src/less/config";
+page {
+  background: @bg-color;
+  font-size: 28rpx;
+  padding-bottom: 80rpx;
+}
+.screenshots {
+  width: 100%;
+  height: 422rpx;
+  .slide-image {
     width: 100%;
     height: 422rpx;
-    .slide-image {
-      width: 100%;
-      height: 422rpx;
-      background-size: cover;
-      background-position: center;
-    }
+    background-size: cover;
+    background-position: center;
   }
-  .header {
-    &.group {
-      border-top: none;
-    }
-    .name {
-      font-size: 30rpx;
-      font-weight: bold;
-      margin-bottom: 30rpx;
-    }
-    .info {
+}
+.header {
+  &.group {
+    border-top: none;
+  }
+  .name {
+    font-size: 30rpx;
+    font-weight: bold;
+    margin-bottom: 30rpx;
+  }
+  .info {
+    display: flex;
+    font-size: 24rpx;
+    color: #888;
+    > view {
+      margin-right: 15rpx;
       display: flex;
-      font-size: 24rpx;
-      color: #888;
-      >view {
-        margin-right: 15rpx;
-        display: flex;
-        .iconfont {
-          margin-right: 5rpx;
-        }
+      .iconfont {
+        margin-right: 5rpx;
       }
     }
   }
-  .group {
-    background: #fff;
-    padding: 20rpx;
-    margin-bottom: 15rpx;
-    border-bottom: 2rpx solid #eee;
-    border-top: 2rpx solid #eee;
-    &.screenshot {
-      margin-bottom: 0;
-      border-bottom: none;
-      .title {
-        margin-bottom: 0;
-      }
-    }
+}
+.group {
+  background: #fff;
+  padding: 20rpx;
+  margin-bottom: 15rpx;
+  border-bottom: 2rpx solid #eee;
+  border-top: 2rpx solid #eee;
+  &.screenshot {
+    margin-bottom: 0;
+    border-bottom: none;
     .title {
-      margin-bottom: 30rpx;
-      border-left: 10rpx solid @base-color;
-      padding-left: 20rpx;
+      margin-bottom: 0;
     }
   }
+  .title {
+    margin-bottom: 30rpx;
+    border-left: 10rpx solid @base-color;
+    padding-left: 20rpx;
+  }
+}
+button.mo-btn {
+  position: fixed;
+  bottom: 0;
+}
 </style>
 <template>
   <view>
     <view class="header group">
       <view class="name">
-        一个钱包
+        {{item.title}}
       </view>
       <view class="info">
         <view class="user">
           <view class="iconfont icon-user"></view>
-          <view>某同学</view>
+          <view>{{item.nickname || '某同学'}}</view>
         </view>
         <view class="time">
           <view class="iconfont icon-time"></view>
-          <view>2018-5-11</view>
+          <view>{{item.created_at}}</view>
         </view>
       </view>
     </view>
@@ -78,7 +83,7 @@
         描述
       </view>
       <view class="content">
-        打算上了撒打算打算的凡人歌市府大道
+        {{item.info}}
       </view>
     </view>
     <view class="group">
@@ -86,7 +91,7 @@
         地点
       </view>
       <view class="content">
-        江安
+        {{item.address}}
       </view>
     </view>
     <view class="group">
@@ -94,33 +99,95 @@
         联系方式
       </view>
       <view class="content">
-        某同学（QQ：4567899876）
+        {{item.nickname}}（{{item.contact}}）
       </view>
     </view>
-    <view class="group screenshot">
+    <view class="group" wx:if="{{item.category == '一卡通招领'}}">
       <view class="title">
-        截图
+        一卡通信息
+      </view>
+      <view class="content">
+        <view>学院: {{item.card_info.college}}</view>
+        <view>姓名: {{item.card_info.name}}</view>
+        <view>学号: {{item.card_info.no}}</view>
       </view>
     </view>
-    <swiper class="screenshots">
-      <block wx:for="{{images}}">
-        <swiper-item>
-          <view style="background-image: url({{item}})" class="slide-image"></view>
-        </swiper-item>
-      </block>
-    </swiper>
+    <block wx:else>
+      <view class="group screenshot">
+        <view class="title">
+          截图
+        </view>
+      </view>
+      <swiper class="screenshots">
+        <block wx:for="{{images}}" wx:key="index">
+          <swiper-item>
+            <view style="background-image: url({{item}})" class="slide-image"></view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </block>
+    <button wx:if="{{is_me}}"  @tap="to({{item.id}})" class="mo-btn">修改信息</button>
   </view>
 </template>
 <script>
-  import wepy from "wepy";
-  import HttpMixin from "mixins/http";
-  import ToastMixin from "mixins/toast";
-  import db from "util/db";
-  export default class BindJwc extends wepy.page {
-    config = {}
-    data = {
-      images: ["http://img.zcool.cn/community/01b37659aece1aa801211d251b0fef.png@1280w_1l_2o_100sh.webp"],
-      height: 500,
+import wepy from "wepy";
+import HttpMixin from "mixins/http";
+import ToastMixin from "mixins/toast";
+import db from "util/db";
+import dayjs from "dayjs";
+export default class BindJwc extends wepy.page {
+  config = {};
+  mixins = [HttpMixin, ToastMixin];
+  data = {
+    images: [
+      "http://img.zcool.cn/community/01b37659aece1aa801211d251b0fef.png@1280w_1l_2o_100sh.webp"
+    ],
+    height: 500,
+    item: {},
+    is_me: false,
+  };
+
+  methods = {
+    to(id) {
+      wepy.navigateTo({ url: "/pages/lostFind/new?id=" + id });
+    }
+  };
+
+  /**
+   * 隐藏学号
+   */
+  hiddenSid(sid) {
+    let arr = sid.split("");
+    arr.splice(-6, 4, "****");
+    return arr.join("");
+  }
+
+  async get(id) {
+    try {
+      const res = await this.GetWithBind("/lost_find/" + id);
+      let data = res.data.data;
+      data.created_at = dayjs(data.created_at).format("YYYY-MM-DD");
+      if (data.category == "一卡通招领") {
+        data.card_info = JSON.parse(data.card_info);
+        if (!res.data.is_me && !res.data.is_owner)
+          data.card_info.no = this.hiddenSid(data.card_info.no);
+      } else {
+        this.images = data.pictures.split(",");
+      }
+      this.is_me = res.data.is_me
+      this.item = data;
+      this.$apply();
+    } catch (error) {
+      console.error(error);
     }
   }
+
+  onLoad(option) {
+    if (!("id" in option)) {
+      this.ShowToast("参数错误！");
+      return;
+    }
+    this.get(option.id);
+  }
+}
 </script>

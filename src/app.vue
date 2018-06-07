@@ -1,6 +1,7 @@
 <style lang="less">
   @import "./icon/iconfont";
   @import "./less/config";
+  @import "./less/app";
 </style>
 
 <script>

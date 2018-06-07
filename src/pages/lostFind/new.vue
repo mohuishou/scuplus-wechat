@@ -93,7 +93,6 @@ button {
         </label>
         <label class="image">
           <view class="title">图片上传</view>
-          <input name="pictures" type="text" style="display: none;" value="{{imageUrl}}" />
           <view style="background-image: url({{imageUrl}});" @tap="chooseImg" class="image-up">
             <view wx:if="{{imageUrl == ''}}" class="iconfont icon-add"></view>
           </view>
@@ -102,7 +101,7 @@ button {
       <view class="group">
         <label>
           <view class="title">称呼</view>
-          <input name="user_name" placeholder="建议不要输入全名" />
+          <input name="nickname" placeholder="建议不要输入全名" />
         </label>
         <label>
           <view class="title">联系方式</view>
@@ -137,6 +136,37 @@ export default class BindJwc extends wepy.page {
     tid: 0,
     imageUrl: ""
   };
+  async uploadImage() {
+    if (!this.imageUrl) return false;
+    // 图片检查
+    try {
+      wx.showLoading({
+        title: "图片检查中...",
+        mask: true
+      });
+      const check_res = await ImageCheck(this.imageUrl);
+    } catch (error) {
+      wx.hideLoading();
+      this.ShowToast(error);
+      return false;
+    }
+
+    // 图片上传
+    try {
+      wx.hideLoading();
+      wx.showLoading({
+        title: "图片上传中...",
+        mask: true
+      });
+      const res = await Upload(this.imageUrl, "lost_find");
+      wx.hideLoading();
+      return res.Location || "";
+    } catch (error) {
+      wx.hideLoading();
+      this.ShowToast("图片上传失败！");
+      return false;
+    }
+  }
   methods = {
     changeCategories(e) {
       this.cid = e.detail.value || 0;
@@ -169,49 +199,35 @@ export default class BindJwc extends wepy.page {
 
       // 参数校验
       for (const key in params) {
-        if ((key != "image" && params[key] === "") || this.imageUrl === "") {
+        if (key != "image" && params[key] === "") {
           this.ShowToast("不能有空值！");
           return;
         }
       }
 
-      // 图片检查
-      try {
-        wx.showLoading({
-          title: "图片检查中...",
-          mask: true
-        });
-        const check_res = await ImageCheck(this.imageUrl);
-      } catch (error) {
-        this.ShowToast(error);
+      if (this.cid > 1 && this.imageUrl === "") {
+        this.ShowToast("请上传图片");
         return;
       }
 
       // 图片上传
-      try {
-        wx.hideLoading();
-        wx.showLoading({
-          title: "图片上传中...",
-          mask: true
-        });
-        const res = await Upload(this.imageUrl, "lost_find");
-        params.pictures = res.Location || "";
-      } catch (error) {
-        this.ShowToast("图片上传失败！");
-        return;
-      }
-      wx.hideLoading();
-
+      const url = await this.uploadImage();
+      params.pictures = url || "";
       // 参数转换
       params.contact = `[${this.callTypes[params.contact_type]}]: ${
         params.contact
       }`;
       delete params.contact_type;
       params.category = this.categories[params.category];
-
       // 上传到服务器
       try {
         await this.PostWithBind("/lost_find", params);
+        // 创建成功，返回上一级
+        setTimeout(() => {
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
+        }, 1000);
       } catch (error) {
         console.log(error);
       }
