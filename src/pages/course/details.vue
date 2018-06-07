@@ -359,7 +359,7 @@
     }
     newEvaluate(evaluates) {
       for (let i = 0; i < evaluates.length; i++) {
-        evaluates[i].avatar = evaluates[i].avatar || "/icon/user@select.png";
+        evaluates[i].avatar = evaluates[i].avatar || "http://scuplus-1251451068.coscd.myqcloud.com/icon/user@select.png";
         evaluates[i].updated_str = new Date(
           evaluates[i].updated_at
         ).toLocaleDateString();

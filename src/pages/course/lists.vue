@@ -196,7 +196,7 @@
   const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"]
   const examTypes = ["", "论文", "考试", "大作业", "其他"]
   const taskTypes = ["", "没作业", "有作业"]
-  const orders = ["avg_grade desc", "avg_grade asc", "star desc", "star asc"]
+  const orders = ["star desc", "star asc"]
   export default class CourseLists extends wepy.page {
     config = {
       navigationBarTitleText: '寻课',
@@ -219,8 +219,8 @@
         campus: "",
         day: "",
       },
-      order: "avg_grade desc",
-      orderNames: ["平均分", "平均分", "评价", "评价"],
+      order: "star desc",
+      orderNames: ["评价", "评价"],
       orderIndex: 0,
       filters: [{
           name: "call_name",
@@ -356,7 +356,7 @@
       orderHandler() {
         const self = this
         wepy.showActionSheet({
-          itemList: ["平均分逆序", "平均分顺序", "评价逆序", "评价顺序"],
+          itemList: ["评价逆序", "评价顺序"],
           success: function(res) {
             self.orderIndex = res.tapIndex
             self.order = orders[res.tapIndex]

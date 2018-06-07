@@ -54,7 +54,7 @@
       <view wx:if="{{item.exam_type}}" class="tag">{{item.exam_type}}</view>
       <view wx:if="{{item.call_name}}" class="tag">{{item.call_name}}</view>
       <view wx:if="{{item.task}}" class="tag">{{item.task}}</view>
-      <view wx:if="{{item.avg_grade > 0}}" class="tag">平均分: {{item.avg_grade}}</view>
+      <!-- <view wx:if="{{item.avg_grade > 0}}" class="tag">平均分: {{item.avg_grade}}</view> -->
       <view wx:if="{{item.fail_rate == 0}}" class="tag">无挂科</view>
       <view wx:if="{{item.fail_rate > 0}}" class="tag">挂科率: {{item.fail_rate}}</view>
     </view>
