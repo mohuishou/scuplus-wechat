@@ -42,6 +42,8 @@
         'pages/lostFind/item',
         'pages/lostFind/new',
         'pages/help',
+        'pages/contact/lists',
+        'pages/contact/detail',
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',

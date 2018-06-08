@@ -116,7 +116,7 @@ button {
           <input value="{{item.contact || ''}}" name="contact" placeholder="{{tid == 4 ? '不建议使用手机号' : '请输入' + callTypes[tid]}}" />
         </label>
       </view>
-      <button form-type="submit">{{item.id ? '修改' : '提交'}}课程评价</button>
+      <button form-type="submit">{{item.id ? '修改' : '提交'}}失物招领</button>
     </form>
   </view>
 </template>
