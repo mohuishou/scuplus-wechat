@@ -206,7 +206,7 @@ export default class BindJwc extends wepy.page {
         }
       }
 
-      if (this.cid > 1 && this.imageUrl === "") {
+      if (this.cid > 0 && this.imageUrl === "") {
         this.ShowToast("请上传图片");
         return;
       }
