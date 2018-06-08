@@ -116,7 +116,7 @@ button {
           <input value="{{item.contact || ''}}" name="contact" placeholder="{{tid == 4 ? '不建议使用手机号' : '请输入' + callTypes[tid]}}" />
         </label>
       </view>
-      <button form-type="submit">{{item.id ? '修改' : '提交'}}课程评价</button>
+      <button form-type="submit">{{item.id ? '修改' : '提交'}}失物招领</button>
     </form>
   </view>
 </template>
@@ -140,17 +140,17 @@ export default class BindJwc extends wepy.page {
   async uploadImage() {
     if (!this.imageUrl) return false;
     // 图片检查
-    try {
-      wx.showLoading({
-        title: "图片检查中...",
-        mask: true
-      });
-      const check_res = await ImageCheck(this.imageUrl);
-    } catch (error) {
-      wx.hideLoading();
-      this.ShowToast(error);
-      return false;
-    }
+    // try {
+    //   wx.showLoading({
+    //     title: "图片检查中...",
+    //     mask: true
+    //   });
+    //   const check_res = await ImageCheck(this.imageUrl);
+    // } catch (error) {
+    //   wx.hideLoading();
+    //   this.ShowToast(error);
+    //   return false;
+    // }
 
     // 图片上传
     try {
@@ -206,7 +206,7 @@ export default class BindJwc extends wepy.page {
         }
       }
 
-      if (this.cid > 1 && this.imageUrl === "") {
+      if (this.cid > 0 && this.imageUrl === "") {
         this.ShowToast("请上传图片");
         return;
       }
