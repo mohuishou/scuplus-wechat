@@ -140,17 +140,17 @@ export default class BindJwc extends wepy.page {
   async uploadImage() {
     if (!this.imageUrl) return false;
     // 图片检查
-    try {
-      wx.showLoading({
-        title: "图片检查中...",
-        mask: true
-      });
-      const check_res = await ImageCheck(this.imageUrl);
-    } catch (error) {
-      wx.hideLoading();
-      this.ShowToast(error);
-      return false;
-    }
+    // try {
+    //   wx.showLoading({
+    //     title: "图片检查中...",
+    //     mask: true
+    //   });
+    //   const check_res = await ImageCheck(this.imageUrl);
+    // } catch (error) {
+    //   wx.hideLoading();
+    //   this.ShowToast(error);
+    //   return false;
+    // }
 
     // 图片上传
     try {
