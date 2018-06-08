@@ -115,13 +115,8 @@
     mixins = [HttpMixin, ToastMixin];
     data = {
       feedbacks: [{
-          name: "BUG反馈",
-          url: "/pages/my/feedback?index=0",
-          type: "page"
-        },
-        {
-          name: "功能建议",
-          url: "/pages/my/feedback?index=1",
+          name: "帮助反馈",
+          url: "/pages/help",
           type: "page"
         },
         {

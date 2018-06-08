@@ -27,7 +27,7 @@
   .mview {
     padding-top: 30rpx;
     // 控制每行图标数目
-    width: 25%; // border-bottom: 1px solid #eee;
+    width: 20%; // border-bottom: 1px solid #eee;
   }
   .icon-btn {
     text-align: center;
