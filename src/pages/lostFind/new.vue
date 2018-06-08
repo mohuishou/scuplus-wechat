@@ -225,6 +225,7 @@ export default class BindJwc extends wepy.page {
       }`;
       delete params.contact_type;
       params.category = this.categories[params.category];
+
       // 上传到服务器
       try {
         if ("id" in this.item) {

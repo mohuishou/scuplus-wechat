@@ -206,7 +206,6 @@
         let params = Object.assign(this.params, e.detail.value);
         delete params.course_name
         const self = this;
-        console.log(params);
         
         for (const x in params) {
           if (!params[x]) {
@@ -234,7 +233,6 @@
       // 有id表示需要修改
       if ("id" in option && option.id > 0) {
         const resp = await this.GetWithBind("/course/comment?id=" + option.id);
-        console.log(resp);
         for (let i = 0; i < this.items.length; i++) {
           const v = resp.data[this.items[i].name];
           for (let j = 0; j < this.items[i].radios.length; j++) {
