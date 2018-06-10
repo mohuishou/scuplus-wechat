@@ -44,6 +44,7 @@
         'pages/help',
         'pages/contact/lists',
         'pages/contact/detail',
+        'pages/lecture/lecture',
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',

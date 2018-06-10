@@ -76,6 +76,13 @@ const funcs = [{
   type: 'jwc'
 },
 {
+  name: '学术讲座',
+  url: 'lecture/lecture',
+  icon: 'lecture',
+  bg: '#ab96c5',
+  type: 'normal'
+},
+{
   name: '通讯录',
   url: 'contact/lists',
   icon: 'contact',
@@ -90,7 +97,7 @@ const funcs = [{
   type: 'normal'
 },
 {
-  name: '打赏开发者',
+  name: '开发者',
   url: 'money',
   icon: 'money',
   bg: '#ab96c5',

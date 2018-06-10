@@ -9,3 +9,10 @@
   color: #fff;
   font-size: 28rpx;
 }
+.mo-panel {
+  margin: 20rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  box-shadow: 4rpx 4rpx 10rpx #eee;
+}
