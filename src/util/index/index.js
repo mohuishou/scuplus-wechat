@@ -76,6 +76,13 @@ const funcs = [{
   type: 'jwc'
 },
 {
+  name: '通讯录',
+  url: 'contact/lists',
+  icon: 'contact',
+  bg: '#ab96c5',
+  type: 'normal'
+},
+{
   name: '帮助',
   url: 'help',
   icon: 'help',
