@@ -393,14 +393,18 @@ export default class CourseLists extends wepy.page {
       console.error("getSystemInfoSync failed!");
     }
 
-    this.initGradeCount()
+    this.initGradeCount();
     const grades = this.grade_count;
+    let series = [
+      {
+        name: "数据不足",
+        data: 1,
+        color: "#ddd"
+      }
+    ];
 
-    pieChart = new wxCharts({
-      animation: true,
-      canvasId: "pieCanvas",
-      type: "pie",
-      series: [
+    if (this.grade_count.all > 0) {
+      series = [
         {
           name: "0~60",
           data: grades.g0
@@ -421,7 +425,14 @@ export default class CourseLists extends wepy.page {
           name: "90~100",
           data: grades.g90
         }
-      ],
+      ];
+    }
+
+    pieChart = new wxCharts({
+      animation: true,
+      canvasId: "pieCanvas",
+      type: "pie",
+      series: series,
       width: windowWidth,
       height: 280,
       disablePieStroke: true,
