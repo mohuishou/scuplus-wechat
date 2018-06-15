@@ -11,7 +11,6 @@ page {
   padding: 20rpx 20rpx;
   border-radius: 4rpx;
   display: flex;
-  height: 150rpx;
   border: 2rpx solid #eee;
   box-shadow: 2rpx 2rpx 4rpx #e8e8e8;
   background: #fff;
@@ -44,17 +43,28 @@ page {
   }
 }
 .address {
-  height: 100rpx;
-  > view {
+  display: block;
+  .row {
+    margin-top: 20rpx;
     display: flex;
-    align-content: space-between;
-    flex-wrap: wrap;
-    > view {
-      width: 100%;
+    &:first-child{
+      margin-top: 0;
     }
   }
   .title {
     color: #888;
+    line-height: 200%;
+    width: 90rpx;
+  }
+  .address-list {
+    width: calc(~"100% - 100rpx");
+    line-height: 200%;
+    display: flex;
+    > view {
+      &:first-child {
+        margin-right: 20rpx;
+      }
+    }
   }
 }
 .course-info {
@@ -68,7 +78,6 @@ page {
   }
   > view {
     display: flex;
-    flex-wrap: wrap;
     margin-top: 15rpx;
     width: 100%;
     &:first-child {
@@ -77,10 +86,10 @@ page {
     .title {
       color: #888;
       width: 160rpx;
+      min-width: 160rpx;
     }
     > view {
       display: flex;
-      flex-wrap: wrap;
     }
   }
 }
@@ -194,14 +203,20 @@ page {
   <view>
     <Card :item.sync="item" :isTo.sync="isTo"></Card>
     <view class="address panel">
-      <view class="title">
-        <view>时间</view>
-        <view>地点</view>
-      </view>
-      <block wx:for="{{courses}}" wx:key="index">
-        <view>
-          <view>{{item.week}}周{{item.day_str}} {{item.session_str}}小节</view>
-          <view>{{item.campus}}{{item.building}} {{item.classroom}}</view>
+      <block wx:for="{{courses}}" wx:for-item="course_items" wx-for-index="i" wx:key="i">
+        <view class="row">
+          <view class="title">
+            <view>时间</view>
+            <view>地点</view>
+          </view>
+          <view class="address-list">
+            <block wx:for="{{course_items}}" wx:key="index">
+              <view>
+                <view>{{item.week}}周{{item.day_str}} {{item.session_str}}小节</view>
+                <view>{{item.campus}}{{item.building}} {{item.classroom}}</view>
+              </view>
+            </block>
+          </view>
         </view>
       </block>
     </view>
@@ -212,7 +227,7 @@ page {
             <view>课程号</view>
           </view>
           <view>
-            <view>{{courses[0].course_id}}</view>
+            <view>{{course.courses[0].course_id}}</view>
           </view>
         </view>
         <view class="right">
@@ -220,7 +235,7 @@ page {
             <view>学分</view>
           </view>
           <view>
-            <view>{{courses[0].credit}}</view>
+            <view>{{course.courses[0].credit}}</view>
           </view>
         </view>
       </view>
@@ -230,7 +245,7 @@ page {
             <view>课序号</view>
           </view>
           <view>
-            <view>{{courses[0].lesson_id}}</view>
+            <view>{{course.courses[0].lesson_id}}</view>
           </view>
         </view>
         <view class="right">
@@ -238,7 +253,7 @@ page {
             <view>考试类型</view>
           </view>
           <view>
-            <view>{{courses[0].exam_type}}</view>
+            <view>{{course.courses[0].exam_type}}</view>
           </view>
         </view>
       </view>
@@ -247,7 +262,7 @@ page {
           <view>学院</view>
         </view>
         <view>
-          <view>{{courses[0].college}}</view>
+          <view>{{course.courses[0].college}}</view>
         </view>
       </view>
       <view>
@@ -255,7 +270,7 @@ page {
           <view>选课限制</view>
         </view>
         <view>
-          <view>{{courses[0].course_limit}}</view>
+          <view>{{course.courses[0].course_limit}}</view>
         </view>
       </view>
     </view>
@@ -490,7 +505,16 @@ export default class CourseLists extends wepy.page {
       }
       courses[i].week = week;
     }
-    return courses;
+
+    // 一位数组变二维，一行只放两个上课节次
+    let newCourses = [[]];
+    courses.forEach(e => {
+      if (newCourses[newCourses.length - 1].length >= 2) {
+        newCourses.push([]);
+      }
+      newCourses[newCourses.length - 1].push(e);
+    });
+    return newCourses;
   }
   newEvaluate(evaluates) {
     for (let i = 0; i < evaluates.length; i++) {
