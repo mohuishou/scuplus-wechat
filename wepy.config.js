@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 var prod = process.env.NODE_ENV === 'production'
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
       'config': path.join(__dirname, 'src/config'),
       'less': path.join(__dirname, 'src/less'),
       'icon': path.join(__dirname, 'src/icon'),
-      'plugins': path.join(__dirname, 'src/plugins'),
+      'plugins': path.join(__dirname, 'src/plugins')
     },
     modules: ['node_modules']
   },
@@ -30,9 +30,9 @@ module.exports = {
     },
     /*sass: {
       outputStyle: 'compressed'
-    },*/
+    }, */
     babel: {
-      sourceMap: true,
+      sourceMap: false,
       presets: [
         'env'
       ],
@@ -41,7 +41,7 @@ module.exports = {
         'transform-decorators-legacy',
         'transform-object-rest-spread',
         'transform-export-extensions',
-        'transform-node-env-inline',
+        'transform-node-env-inline'
       ]
     }
   },
@@ -54,8 +54,7 @@ module.exports = {
 }
 
 if (prod) {
-
-  delete module.exports.compilers.babel.sourcesMap;
+  delete module.exports.compilers.babel.sourcesMap
   // 压缩sass
   // module.exports.compilers['sass'] = {outputStyle: 'compressed'}
 
