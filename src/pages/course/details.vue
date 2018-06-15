@@ -481,7 +481,8 @@ export default class CourseLists extends wepy.page {
           }
           prev = e;
         }
-        if (weeks[weeks.length - 1] > start) {
+
+        if (weeks[weeks.length - 1] - start > 0) {
           week += start + "-" + weeks[weeks.length - 1];
         } else {
           week += start;
