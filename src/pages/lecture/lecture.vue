@@ -65,7 +65,7 @@ picker {
 
 <template>
   <view>
-    <search class="search-top" @search.user="search" title="请输入标题"></search>
+    <search :autoFocus="auto_focus" class="search-top" @search.user="search" title="请输入标题"></search>
     <view class="lists">
       <view @tap="active({{index}})" wx:for="{{items}}" wx:key="index" class="mo-panel">
         <view class="header">
@@ -127,6 +127,7 @@ export default class Lecture extends wepy.page {
     listBottom: ListBottom
   };
   data = {
+    auto_focus: false,
     items: [
       {
         address: "望江校区经纬楼（经管楼）西202学术报告厅",

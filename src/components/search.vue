@@ -39,7 +39,7 @@ page {
 <template>
   <form @submit="submit">
     <view class="search">
-      <input @confirm="search" name="name" placeholder="{{title}}" confirm-type="search" auto-focus/>
+      <input @confirm="search" name="name" placeholder="{{title}}" confirm-type="search" auto-focus="{{autoFocus}}" />
       <button form-type="submit">搜索</button>
     </view>
   </form>
@@ -48,7 +48,11 @@ page {
 import wepy from "wepy";
 export default class Share extends wepy.component {
   props = {
-    title: String
+    title: String,
+    autoFocus: {
+      type: Boolean,
+      default: true
+    }
   };
   methods = {
     submit(e) {

@@ -47,7 +47,7 @@ page {
   .row {
     margin-top: 20rpx;
     display: flex;
-    &:first-child{
+    &:first-child {
       margin-top: 0;
     }
   }
@@ -157,6 +157,7 @@ page {
   }
 }
 .new-comment {
+  display: flex;
   z-index: 9999;
   position: fixed;
   bottom: 0;
@@ -166,6 +167,10 @@ page {
   text-align: center;
   padding: 30rpx 0;
   font-size: 30rpx;
+  cover-view {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 .course-chart {
@@ -329,12 +334,14 @@ page {
         暂无评论
       </view>
     </view>
-    <cover-view wx:if="{{course.has}}" @tap="newComment" class="new-comment">
-      {{ course.evaluate.id == 0 ? "添加评价" : "编辑评价" }}
-    </cover-view>
-    <!-- 没有评价权限 -->
-    <cover-view wx:else @tap="changeSchedule" class="no-comment new-comment">
-      {{ inSchedule ? "删除课程" : "添加到我的课表"}}
+    <cover-view class="new-comment">
+      <cover-view wx:if="{{course.evaluate.id > 0}}"  @tap="newComment">
+        {{ course.evaluate.status == -1 ? "添加评价" : "编辑评价" }}
+      </cover-view>
+      <!-- 课程表没有该课程 -->
+      <cover-view  wx:if="{{!course.has}}" @tap="changeSchedule" class="no-comment">
+        {{ inSchedule ? "删除课程" : "添加到我的课表"}}
+      </cover-view>
     </cover-view>
   </view>
 </template>
@@ -564,15 +571,8 @@ export default class CourseLists extends wepy.page {
     },
     newComment() {
       // 检查是否拥有权限
-      if (!this.course.has) {
-        this.ShowToast("您暂时没有该课程");
-        return;
-      }
-      let params = `id=${this.course.evaluate.id}&course_id=${
-        this.item.course_id
-      }&lesson_id=${this.item.lesson_id}&course_name=${this.item.name}`;
       wepy.navigateTo({
-        url: "/pages/course/comment?" + params
+        url: "/pages/course/comment?id=" + this.course.evaluate.id
       });
     }
   };

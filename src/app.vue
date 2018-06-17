@@ -37,6 +37,7 @@
         'pages/course/lists',
         'pages/course/details',
         'pages/course/comment',
+        'pages/course/commentLists',
         'pages/course/search',
         'pages/lostFind/lists',
         'pages/lostFind/item',
@@ -44,6 +45,8 @@
         'pages/help',
         'pages/contact/lists',
         'pages/contact/detail',
+        'pages/lecture/lecture',
+        'pages/evaluate/lists',
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',
