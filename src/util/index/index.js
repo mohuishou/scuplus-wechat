@@ -97,12 +97,26 @@ const funcs = [{
   type: 'normal'
 },
 {
-  name: '开发者',
-  url: 'money',
-  icon: 'money',
+  name: '快捷评教',
+  url: 'evaluate/lists',
+  icon: 'eva',
   bg: '#ab96c5',
-  type: 'money'
+  type: 'jwc'
+},
+{
+  name: '课程评教',
+  url: 'course/commentLists',
+  icon: 'course_eva',
+  bg: '#ab96c5',
+  type: 'jwc'
 }
+  // {
+  //   name: '开发者',
+  //   url: 'money',
+  //   icon: 'money',
+  //   bg: '#ab96c5',
+  //   type: 'money'
+  // }
 ]
 
 module.exports = {
