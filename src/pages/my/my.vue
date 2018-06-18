@@ -64,6 +64,16 @@
         </repeat>
       </view>
       <view class="list-group">
+        <repeat for="{{configs}}" item="item" key="index">
+          <mview6 @mtap.user="to" :arg.sync="item">
+            <view slot="content" class="list">
+              <view class="name">{{item.name}}</view>
+              <view class="iconfont icon-arrow-right"></view>
+            </view>
+          </mview6>
+        </repeat>
+      </view>
+      <view class="list-group">
         <repeat for="{{binds}}" item="item" key="index">
           <mview2 @mtap.user="to" :arg.sync="item">
             <view slot="content" class="list">
@@ -111,6 +121,7 @@
       mview3: MView,
       mview4: MView,
       mview5: MView,
+      mview6: MView,
     };
     mixins = [HttpMixin, ToastMixin];
     data = {
@@ -122,6 +133,13 @@
         {
           name: "我的反馈",
           url: "/pages/my/feedbackList",
+          type: "page"
+        },
+      ],
+      configs: [
+        {
+          name: "通知设置",
+          url: "/pages/my/notifyConfig",
           type: "page"
         },
       ],

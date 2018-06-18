@@ -104,7 +104,7 @@ const funcs = [{
   type: 'jwc'
 },
 {
-  name: '课程评教',
+  name: '课程评价',
   url: 'course/commentLists',
   icon: 'course_eva',
   bg: '#ab96c5',

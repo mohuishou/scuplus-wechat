@@ -47,6 +47,7 @@
         'pages/contact/detail',
         'pages/lecture/lecture',
         'pages/evaluate/lists',
+        'pages/my/notifyConfig'
       ],
       window: {
         navigationBarBackgroundColor: '#ffffff',
