@@ -103,7 +103,7 @@ export default class CourseLists extends wepy.page {
 
   async get() {
     try {
-      if (this.page == 1){
+      if (this.params.page == 1){
         this.is_last = false
       }
       if (this.is_last) {
@@ -132,7 +132,7 @@ export default class CourseLists extends wepy.page {
       } else {
         for (const k in data) {
           if (k in this.items) {
-            this.items[k].value = this.items[k].value.concat(data[k]);
+            this.items[k].value = this.items[k].value.concat(data[k].value);
           } else {
             this.items[k] = data[k];
           }
