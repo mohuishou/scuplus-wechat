@@ -142,6 +142,11 @@
           url: "/pages/my/notifyConfig",
           type: "page"
         },
+        {
+          name: "广告设置",
+          url: "/pages/my/adConfig",
+          type: "page"
+        },
       ],
       binds: [{
           name: "教务处绑定",

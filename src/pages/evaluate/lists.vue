@@ -25,6 +25,13 @@ page {
   font-size: 26rpx;
   margin: 20rpx 20rpx 0rpx 20rpx;
 }
+.ad {
+  margin-top: 20rpx;
+  padding: 0 20rpx;
+  ad {
+    border-radius: 6rpx;
+  }
+}
 </style>
 <template minapp="wepy">
   <view>
@@ -33,6 +40,10 @@ page {
         {{term.name}}
       </view>
       <block wx:for="{{term.value}}" wx:key="index">
+        <view class="ad" wx:if="{{adShow && index !=0 && index % 8 == 0}}">
+          <ad unit-id="adunit-ed4290e57794aa57"></ad>
+        </view>
+
         <view @tap="to({{item.id}})" class="mo-panel">
           <view class="header">
             <view class="title">{{item.course_name}}</view>
@@ -47,7 +58,6 @@ page {
           </view>
         </view>
       </block>
-
     </block>
     <list-bottom :isLast.sync="is_last"></list-bottom>
   </view>
@@ -57,7 +67,7 @@ import wepy from "wepy";
 import HttpMixin from "mixins/http";
 import ToastMixin from "mixins/toast";
 import ListBottom from "components/listBottom";
-
+import ADConfig from "util/ad";
 export default class CourseLists extends wepy.page {
   config = {
     navigationBarTitleText: "快捷评教",
@@ -74,6 +84,11 @@ export default class CourseLists extends wepy.page {
       page_size: 15
     },
     is_last: false
+  };
+  computed = {
+    adShow() {
+      return ADConfig.Get("evaluate");
+    }
   };
   methods = {
     to(id) {
@@ -92,7 +107,7 @@ export default class CourseLists extends wepy.page {
   // 下拉刷新，更新列表
   async onPullDownRefresh() {
     try {
-      this.params.page = 1
+      this.params.page = 1;
       await this.PostWithBind("/evaluates");
       await this.get();
     } catch (error) {
@@ -103,8 +118,8 @@ export default class CourseLists extends wepy.page {
 
   async get() {
     try {
-      if (this.params.page == 1){
-        this.is_last = false
+      if (this.params.page == 1) {
+        this.is_last = false;
       }
       if (this.is_last) {
         return;

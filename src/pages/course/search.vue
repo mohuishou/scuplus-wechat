@@ -61,6 +61,14 @@ page {
   padding: 30rpx 0;
   font-size: 30rpx;
 }
+.ad {
+  margin-top: 15rpx;
+  padding-left: 15rpx;
+  padding-right: 15rpx;
+  ad {
+    border-radius: 6rpx;
+  }
+}
 </style>
 
 <template>
@@ -74,6 +82,9 @@ page {
 
     <scroll-view style="height: {{height}}px;" scroll-y class="main" @scrolltolower="more">
       <repeat for="{{courses}}" item="data" key="index">
+        <view class="ad" wx:if="{{adShow && (index == 6 || (index % 15 == 0 && index != 0))}}">
+          <ad unit-id="adunit-62acc878b4ddb2f5"></ad>
+        </view>
         <Card :item.sync="data"></Card>
       </repeat>
       <view class="add" @tap="addCourse" wx:if="{{courses.length == 0 && from == 'add'}}">
@@ -91,6 +102,7 @@ import wepy from "wepy";
 import HttpMixin from "mixins/http";
 import ToastMixin from "mixins/toast";
 import Card from "components/course/card";
+import ADConfig from "util/ad";
 const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"];
 const examTypes = ["", "论文", "考试", "大作业", "其他"];
 const taskTypes = ["", "没作业", "有作业"];
@@ -101,6 +113,11 @@ export default class CourseLists extends wepy.page {
   mixins = [HttpMixin, ToastMixin];
   components = {
     Card: Card
+  };
+  computed = {
+    adShow() {
+      return ADConfig.Get("courseSearch");
+    }
   };
   data = {
     courses: [],

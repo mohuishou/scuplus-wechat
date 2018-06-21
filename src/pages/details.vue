@@ -23,7 +23,7 @@ page {
       display: flex;
       align-items: baseline;
       margin-right: 10rpx;
-      margin-bottom:10rpx;
+      margin-bottom: 10rpx;
     }
     .tag {
       margin-right: 10rpx;
@@ -129,6 +129,10 @@ button.tab {
     }
   }
 }
+ad {
+  margin-top: 20rpx;
+  border-radius: 6rpx;
+}
 </style>
 
 <template>
@@ -157,6 +161,7 @@ button.tab {
         原文(点击复制链接)：{{url}}
       </view>
     </view>
+    <ad wx:if="{{adShow}}" unit-id="adunit-1a73b5ee3ee27c9e"></ad>
   </view>
   <view class="tabs">
     <button open-type="share" class="tab">
@@ -181,12 +186,18 @@ import Share from "components/share";
 import HttpMixin from "mixins/http";
 import ToastMixin from "mixins/toast";
 import dayjs from "dayjs";
+import ADConfig from "util/ad";
 export default class Details extends wepy.page {
   config = {};
   mixins = [HttpMixin, ToastMixin];
   components = {
     htmlParser: htmlParser,
     share: Share
+  };
+  computed = {
+    adShow() {
+      return ADConfig.Get("newsDetail");
+    }
   };
   data = {
     title: "",
@@ -205,17 +216,15 @@ export default class Details extends wepy.page {
   };
   copyUrl(url) {
     if (!url) {
-      return
+      return;
     }
     let content = `
     ${this.title}: ${url}  ——BY We川大
-    `
+    `;
     wepy.setClipboardData({
       data: content,
-      success: function(res) {
-      },
-      fail: res => {
-      }
+      success: function(res) {},
+      fail: res => {}
     });
   }
   methods = {

@@ -130,6 +130,14 @@ radio .wx-radio-input {
     }
   }
 }
+.ad {
+  margin-top: 15rpx;
+  padding-left: 15rpx;
+  padding-right: 15rpx;
+  ad {
+    border-radius: 6rpx;
+  }
+}
 </style>
 
 <template>
@@ -181,6 +189,9 @@ radio .wx-radio-input {
     </view>
     <scroll-view style="height: {{height}}px;" scroll-y class="main" @scrolltolower="more">
       <repeat for="{{courses}}" item="data" key="index">
+        <view class="ad" wx:if="{{adShow && (index == 6 || (index % 15 == 0 && index != 0))}}">
+          <ad unit-id="adunit-df0fd6c5249c88d8"></ad>
+        </view>
         <Card :item.sync="data"></Card>
       </repeat>
     </scroll-view>
@@ -193,6 +204,7 @@ import HttpMixin from "mixins/http";
 import ToastMixin from "mixins/toast";
 import db from "util/db";
 import DataMixin from "mixins/data";
+import ADConfig from "util/ad";
 import Card from "components/course/card";
 const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"];
 const examTypes = ["", "论文", "考试", "大作业", "其他"];
@@ -205,6 +217,11 @@ export default class CourseLists extends wepy.page {
   mixins = [HttpMixin, ToastMixin];
   components = {
     Card: Card
+  };
+  computed = {
+    adShow() {
+      return ADConfig.Get("courseList");
+    }
   };
   data = {
     isShowFilter: false,

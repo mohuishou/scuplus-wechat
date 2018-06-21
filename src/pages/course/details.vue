@@ -202,6 +202,10 @@ page {
     width: 100%;
   }
 }
+
+ad {
+  margin-top: 20rpx;
+}
 </style>
 
 <template>
@@ -333,13 +337,14 @@ page {
       <view wx:if="{{evaluates.length == 0}}" style="text-align: center; color: #888;width: 100%;">
         暂无评论
       </view>
+      <ad wx:if="{{adShow}}" unit-id="adunit-980940e6a5b9ca5b"></ad>
     </view>
     <cover-view class="new-comment">
-      <cover-view wx:if="{{course.evaluate.id > 0}}"  @tap="newComment">
+      <cover-view wx:if="{{course.evaluate.id > 0}}" @tap="newComment">
         {{ course.evaluate.status == -1 ? "添加评价" : "编辑评价" }}
       </cover-view>
       <!-- 课程表没有该课程 -->
-      <cover-view  wx:if="{{!course.has}}" @tap="changeSchedule" class="no-comment">
+      <cover-view wx:if="{{!course.has}}" @tap="changeSchedule" class="no-comment">
         {{ inSchedule ? "删除课程" : "添加到我的课表"}}
       </cover-view>
     </cover-view>
@@ -354,6 +359,7 @@ import db from "util/db";
 import DataMixin from "mixins/data";
 import Card from "components/course/card";
 import wxCharts from "plugins/wxcharts-min.js";
+import ADConfig from "util/ad";
 const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"];
 const examTypes = ["", "论文", "考试", "大作业", "其他"];
 const taskTypes = ["", "没作业", "有作业"];
@@ -365,6 +371,11 @@ export default class CourseLists extends wepy.page {
   mixins = [HttpMixin, ToastMixin];
   components = {
     Card: Card
+  };
+  computed = {
+    adShow() {
+      return ADConfig.Get("courseDetail");
+    }
   };
   data = {
     options: {},

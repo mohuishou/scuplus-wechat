@@ -1,101 +1,105 @@
 <style lang="less">
-  
-  @import "./src/less/config.less";
-  page {
-    background: @bg-color;
-  }
-  .grade {
-    margin: 20rpx;
-    margin-bottom: 120rpx;
-  }
-  .header {
-    box-shadow: 4rpx 4rpx 10rpx #ddd;
-    .none {
-      text-align: center;
-      background: #fff;
-    }
-    .grade-header {
-      border-radius: 0.2rem;
-      .title {
-        display: flex;
-        justify-content: space-between;
-      }
-    }
+@import "./src/less/config.less";
+page {
+  background: @bg-color;
+}
+.grade {
+  margin: 20rpx;
+  margin-bottom: 120rpx;
+}
+.header {
+  box-shadow: 4rpx 4rpx 10rpx #ddd;
+  .none {
+    text-align: center;
+    background: #fff;
   }
   .grade-header {
-    margin-top: 0.5rem;
-    background: @base-color;
-    color: #fff;
-    text-align: center;
-    padding: 0.5rem;
+    border-radius: 0.2rem;
     .title {
-      display: block;
-    }
-    .info {
-      font-size: 0.7rem;
       display: flex;
       justify-content: space-between;
-      padding-top: 0.5rem;
     }
   }
-  .grade-lists {
-    background: #fff;
-    border-radius: 0.2rem;
+}
+.grade-header {
+  margin-top: 0.5rem;
+  background: @base-color;
+  color: #fff;
+  text-align: center;
+  padding: 0.5rem;
+  .title {
     display: block;
-    box-shadow: 4rpx 4rpx 4rpx #ddd;
-    .grade-list {
-      display: flex;
-      color: #666;
-      font-size: 0.8rem;
-      padding: 0.2rem 0.5rem;
-      &.select {
-        background: #ddd !important;
-      }
-      &:nth-child(2n+1) {
-        background-color: #f8f8f8;
-      }
-      text {
-        padding: 0.1rem;
-        display: table-cell;
-        flex: 1;
-        &:nth-child(1) {
-          flex: 4;
-        }
-      }
-    }
   }
-  .bottom-tabs {
+  .info {
+    font-size: 0.7rem;
     display: flex;
-    justify-content: space-around;
-    position: fixed;
-    bottom: 0;
-    background: #fff;
-    margin: 0;
-    width: 100%;
-    color: #555;
-    height: 95rpx;
-    .bottom-tab {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      transition: all 0.5s;
-      .iconfont {
-        font-size: 38rpx
-      }
-      .tab-name {
-        font-size: 24rpx;
-      }
-      &.active {
-        transition: all 0.5s;
-        color: @base-color;
-        .tab-name {
-          transition: all 0.5s;
-          font-size: 30rpx;
-        }
+    justify-content: space-between;
+    padding-top: 0.5rem;
+  }
+}
+.grade-lists {
+  background: #fff;
+  border-radius: 0.2rem;
+  display: block;
+  box-shadow: 4rpx 4rpx 4rpx #ddd;
+  .grade-list {
+    display: flex;
+    color: #666;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    &.select {
+      background: #ddd !important;
+    }
+    &:nth-child(2n + 1) {
+      background-color: #f8f8f8;
+    }
+    text {
+      padding: 0.1rem;
+      display: table-cell;
+      flex: 1;
+      &:nth-child(1) {
+        flex: 4;
       }
     }
   }
+}
+.bottom-tabs {
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  background: #fff;
+  margin: 0;
+  width: 100%;
+  color: #555;
+  height: 95rpx;
+  .bottom-tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: all 0.5s;
+    .iconfont {
+      font-size: 38rpx;
+    }
+    .tab-name {
+      font-size: 24rpx;
+    }
+    &.active {
+      transition: all 0.5s;
+      color: @base-color;
+      .tab-name {
+        transition: all 0.5s;
+        font-size: 30rpx;
+      }
+    }
+  }
+}
+.ad {
+  margin-top: 20rpx;
+  border-radius: 0.2rem;
+  height: 100rpx;
+}
 </style>
 
 <template>
@@ -125,6 +129,7 @@
         <empty wx:else msg="暂无成绩信息，下拉更新">
         </empty>
       </view>
+
       <block wx:for="{{grades}}" wx:key="index">
         <view class="grade-lists">
           <view @tap="selectTerm({{index}},{{!item.grades[0].selected}})" class="grade-header">
@@ -157,6 +162,7 @@
             </view>
           </block>
         </view>
+        <ad class="ad" wx-if="{{adShow && (index % 2 == 1) }}" unit-id="adunit-d286588d6069ca38"></ad>
       </block>
     </view>
     <view class="bottom-tabs">
@@ -185,168 +191,177 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import gradeUtil from '../util/grade'
-  import Empty from "../components/empty";
-  import HttpMixin from "../mixins/http";
-  import ToastMixin from "../mixins/toast";
-  import DataMixin from "../mixins/data";
-  import db from "../util/db"
-  export default class Grade extends wepy.page {
-    config = {
-      navigationBarTitleText: '我的成绩',
-      enablePullDownRefresh: true
-    };
-    components = {
-      empty: Empty,
-    };
-    mixins = [HttpMixin, ToastMixin, DataMixin];
-    data = {
-      grades: null,
-      avg: null,
-      bottom_active: 1,
+import wepy from "wepy";
+import gradeUtil from "../util/grade";
+import Empty from "../components/empty";
+import HttpMixin from "../mixins/http";
+import ToastMixin from "../mixins/toast";
+import DataMixin from "../mixins/data";
+import db from "../util/db";
+import ADConfig from "util/ad";
+export default class Grade extends wepy.page {
+  config = {
+    navigationBarTitleText: "我的成绩",
+    enablePullDownRefresh: true
+  };
+  components = {
+    empty: Empty
+  };
+  computed = {
+    adShow() {
+      return ADConfig.Get("grade");
     }
-    calAllGrades() {
-      let sum = {
-        all: {
-          grade: 0,
-          credit: 0,
-          gpa: 0
-        },
-        required: {
-          grade: 0,
-          credit: 0,
-          gpa: 0
-        }
+  };
+  mixins = [HttpMixin, ToastMixin, DataMixin];
+  data = {
+    grades: null,
+    avg: null,
+    bottom_active: 1
+  };
+  calAllGrades() {
+    let sum = {
+      all: {
+        grade: 0,
+        credit: 0,
+        gpa: 0
+      },
+      required: {
+        grade: 0,
+        credit: 0,
+        gpa: 0
       }
-      let avg = {
-        all: {
-          grade: 0,
-          gpa: 0
-        },
-        required: {
-          grade: 0,
-          gpa: 0
-        }
+    };
+    let avg = {
+      all: {
+        grade: 0,
+        gpa: 0
+      },
+      required: {
+        grade: 0,
+        gpa: 0
       }
-      this.grades.forEach(g => {
-        sum.all.grade += g.sum.all.grade
-        sum.all.credit += g.sum.all.credit
-        sum.all.gpa += g.sum.all.gpa
-        sum.required.grade += g.sum.required.grade
-        sum.required.credit += g.sum.required.credit
-        sum.required.gpa += g.sum.required.gpa
-      })
-      avg.all.gpa = (sum.all.gpa / sum.all.credit).toFixed(3)
-      avg.all.grade = (sum.all.grade / sum.all.credit).toFixed(3)
-      avg.required.gpa = (sum.required.gpa / sum.required.credit).toFixed(3)
-      avg.required.grade = (sum.required.grade / sum.required.credit).toFixed(3)
-      this.avg = avg
-      this.$apply()
-    }
-    Select(m, option, isRequired = false) {
-      if (m < 0) {
-        for (let m = 0; m < this.grades.length; m++) {
-          const e = this.grades[m]
-          for (let n = 0; n < e.grades.length; n++) {
-            if (isRequired) {
-              this.grades[m].grades[n].selected = (this.grades[m].grades[n].course_type === "必修")
-            } else {
-              this.grades[m].grades[n].selected = option
-            }
-          }
-        }
-      } else {
-        const e = this.grades[m]
+    };
+    this.grades.forEach(g => {
+      sum.all.grade += g.sum.all.grade;
+      sum.all.credit += g.sum.all.credit;
+      sum.all.gpa += g.sum.all.gpa;
+      sum.required.grade += g.sum.required.grade;
+      sum.required.credit += g.sum.required.credit;
+      sum.required.gpa += g.sum.required.gpa;
+    });
+    avg.all.gpa = (sum.all.gpa / sum.all.credit).toFixed(3);
+    avg.all.grade = (sum.all.grade / sum.all.credit).toFixed(3);
+    avg.required.gpa = (sum.required.gpa / sum.required.credit).toFixed(3);
+    avg.required.grade = (sum.required.grade / sum.required.credit).toFixed(3);
+    this.avg = avg;
+    this.$apply();
+  }
+  Select(m, option, isRequired = false) {
+    if (m < 0) {
+      for (let m = 0; m < this.grades.length; m++) {
+        const e = this.grades[m];
         for (let n = 0; n < e.grades.length; n++) {
-          this.grades[m].grades[n].selected = option
-        }
-      }
-    }
-    methods = {
-      updateGrades() {
-        this.updateGrade()
-      },
-      select(i, j) {
-        this.grades[i].grades[j].selected = !this.grades[i].grades[j].selected
-        this.$apply()
-      },
-      calc(i) {
-        this.bottom_active = i
-        let grades = []
-        for (let m = 0; m < this.grades.length; m++) {
-          const e = this.grades[m];
-          for (let n = 0; n < e.grades.length; n++) {
-            if (e.grades[n].selected) grades.push(e.grades[n])
+          if (isRequired) {
+            this.grades[m].grades[n].selected =
+              this.grades[m].grades[n].course_type === "必修";
+          } else {
+            this.grades[m].grades[n].selected = option;
           }
         }
-        const result = gradeUtil.calTermGrade(grades, false)
-        wepy.showModal({
-          title: "计算结果",
-          content: `您共选择${grades.length}门课程, 学分共计: ${result.sum.all.credit}; \r
-                    平均分: ${result.avg.all.grade}; \r
-                    平均绩点: ${result.avg.all.gpa}; \r`,
-          showCancel: false
-        })
-      },
-      selectTerm(m, option) {
-        this.Select(m, option)
-      },
-      selectAll(i) {
-        this.bottom_active = i
-        this.Select(-1, true)
-      },
-      selectRequire(i) {
-        this.bottom_active = i
-        this.Select(-1, true, true)
-      },
-      help(i) {
-        this.bottom_active = i
-        wepy.navigateTo({
-          url: `details?id=3&&from=notice`
-        })
-      },
-      deleteSelect(i) {
-        this.bottom_active = i
-        this.Select(-1, false)
-      },
-    }
-    async updateGrade() {
-      await this.PostWithBind('/user/grade')
-      this.get()
-      wepy.stopPullDownRefresh()
-    }
-    onPullDownRefresh() {
-      this.updateGrade()
-    }
-    async get() {
-      try {
-        const resp = await this.GetWithBind('/user/grade')
-        let grades = []
-        let map = {}
-        let i = 0
-        resp.data.forEach(e => {
-          const term_key = `${e.year}${e.term}`
-          if (!(term_key in map)) {
-            map[term_key] = i
-            i++
-            grades[map[term_key]] = []
-          }
-          grades[map[term_key]].push(e)
-        })
-        grades = gradeUtil.cal(grades)
-        this.grades = grades
-        this.$apply()
-        this.calAllGrades()
-        this.InitSet("grades", grades)
-      } catch (error) {
-        console.log(error);
       }
-    }
-    async onLoad() {
-      await this.Init("grades")
-      this.calAllGrades()
+    } else {
+      const e = this.grades[m];
+      for (let n = 0; n < e.grades.length; n++) {
+        this.grades[m].grades[n].selected = option;
+      }
     }
   }
+  methods = {
+    updateGrades() {
+      this.updateGrade();
+    },
+    select(i, j) {
+      this.grades[i].grades[j].selected = !this.grades[i].grades[j].selected;
+      this.$apply();
+    },
+    calc(i) {
+      this.bottom_active = i;
+      let grades = [];
+      for (let m = 0; m < this.grades.length; m++) {
+        const e = this.grades[m];
+        for (let n = 0; n < e.grades.length; n++) {
+          if (e.grades[n].selected) grades.push(e.grades[n]);
+        }
+      }
+      const result = gradeUtil.calTermGrade(grades, false);
+      wepy.showModal({
+        title: "计算结果",
+        content: `您共选择${grades.length}门课程, 学分共计: ${
+          result.sum.all.credit
+        }; \r
+                    平均分: ${result.avg.all.grade}; \r
+                    平均绩点: ${result.avg.all.gpa}; \r`,
+        showCancel: false
+      });
+    },
+    selectTerm(m, option) {
+      this.Select(m, option);
+    },
+    selectAll(i) {
+      this.bottom_active = i;
+      this.Select(-1, true);
+    },
+    selectRequire(i) {
+      this.bottom_active = i;
+      this.Select(-1, true, true);
+    },
+    help(i) {
+      this.bottom_active = i;
+      wepy.navigateTo({
+        url: `details?id=3&&from=notice`
+      });
+    },
+    deleteSelect(i) {
+      this.bottom_active = i;
+      this.Select(-1, false);
+    }
+  };
+  async updateGrade() {
+    await this.PostWithBind("/user/grade");
+    this.get();
+    wepy.stopPullDownRefresh();
+  }
+  onPullDownRefresh() {
+    this.updateGrade();
+  }
+  async get() {
+    try {
+      const resp = await this.GetWithBind("/user/grade");
+      let grades = [];
+      let map = {};
+      let i = 0;
+      resp.data.forEach(e => {
+        const term_key = `${e.year}${e.term}`;
+        if (!(term_key in map)) {
+          map[term_key] = i;
+          i++;
+          grades[map[term_key]] = [];
+        }
+        grades[map[term_key]].push(e);
+      });
+      grades = gradeUtil.cal(grades);
+      this.grades = grades;
+      this.$apply();
+      this.calAllGrades();
+      this.InitSet("grades", grades);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async onLoad() {
+    await this.Init("grades");
+    this.calAllGrades();
+  }
+}
 </script>
 
