@@ -19,8 +19,17 @@ page {
   height: 100rpx;
   align-items: center;
   border-bottom: 2rpx solid #ddd;
+  .search-type {
+    display: flex;
+    align-items: baseline;
+    width: 130rpx;
+    .iconfont {
+      margin-left: 8rpx;
+      font-size: 26rpx;
+    }
+  }
   input {
-    width: calc(~"100% - 260rpx");
+    width: calc(~"100% - 380rpx");
     font-size: 28rpx;
     padding: 10rpx;
     padding-left: 20rpx;
@@ -60,6 +69,17 @@ page {
   text-align: center;
   padding: 30rpx 0;
   font-size: 30rpx;
+  display: flex;
+  align-items: center;
+  > view {
+    flex: 1;
+    text-align: center;
+  }
+  .order {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 .ad {
   margin-top: 15rpx;
@@ -69,12 +89,22 @@ page {
     border-radius: 6rpx;
   }
 }
+.iconfont .asc {
+  transition: all 0.5s ease;
+  transform: rotateX(180deg);
+}
 </style>
 
 <template>
   <view>
     <form @submit="submit">
       <view class="search">
+        <view @tap="changeSearchType" class="search-type">
+          <view class="name">
+            {{searchType == 'name' ? '课程名' : '教师名' }}
+          </view>
+          <view class="iconfont icon-jiantouarrow483"></view>
+        </view>
         <input @confirm="search" @blur="changeSearch" name="name" placeholder="请输入课程名称" confirm-type="search" auto-focus/>
         <button form-type="submit">搜索</button>
       </view>
@@ -91,8 +121,14 @@ page {
         没有结果？点击添加自定义课程
       </view>
     </scroll-view>
-    <view @tap="addCourse" wx:if="{{from == 'add'}}" class="add-schedule">
-      自定义课程
+    <view class="add-schedule">
+      <view class="order" @tap="orderHandler">
+        <view>
+          {{orderNames[orderIndex]}}
+        </view>
+        <view class="iconfont icon-jiantouarrow483 {{orderIndex % 2 == 1 ? 'asc' : ''}}"></view>
+      </view>
+      <view @tap="addCourse" wx:if="{{from == 'add'}}" class="">自定义</view>
     </view>
   </view>
 </template>
@@ -106,6 +142,7 @@ import ADConfig from "util/ad";
 const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"];
 const examTypes = ["", "论文", "考试", "大作业", "其他"];
 const taskTypes = ["", "没作业", "有作业"];
+const orders = ["star desc", "star asc", "avg_grade desc", "avg_grade asc"];
 export default class CourseLists extends wepy.page {
   config = {
     navigationBarTitleText: "课程搜索"
@@ -126,7 +163,11 @@ export default class CourseLists extends wepy.page {
     name: "",
     height: 500,
     from: "",
-    isEmpty: false
+    isEmpty: false,
+    searchType: "name",
+    order: "star desc",
+    orderNames: ["评价", "评价", "平均分", "平均分"],
+    orderIndex: 0
   };
   newCourse(courses) {
     for (let i = 0; i < courses.length; i++) {
@@ -150,11 +191,13 @@ export default class CourseLists extends wepy.page {
     if (this.page == 1) {
       this.isEmpty = false;
     }
-    const resp = await this.PostWithBind("/course/search", {
+    let params = {
       page: this.page,
       page_size: this.page_size,
-      name: this.name
-    });
+      order: this.order
+    };
+    params[this.searchType] = this.name;
+    const resp = await this.PostWithBind("/course/search", params);
     if (this.page > 1) {
       this.courses = this.courses.concat(this.newCourse(resp.data));
     } else {
@@ -167,6 +210,36 @@ export default class CourseLists extends wepy.page {
     this.$apply();
   }
   methods = {
+    orderHandler() {
+      const self = this;
+      wepy.showActionSheet({
+        itemList: ["评价逆序", "评价顺序", "平均分逆序", "平均分顺序"],
+        success: function(res) {
+          self.orderIndex = res.tapIndex;
+          self.order = orders[res.tapIndex];
+          self.page = 1;
+          self.$apply();
+          self.searchCourse();
+        }
+      });
+    },
+    changeSearchType() {
+      const self = this;
+      wepy.showActionSheet({
+        itemList: ["课程名", "教师名"],
+        success: function(res) {
+          if (res.tapIndex == 0) {
+            self.searchType = "name";
+          } else {
+            self.searchType = "teacher_name";
+          }
+          self.$apply();
+        },
+        fail: function(res) {
+          console.log(res.errMsg);
+        }
+      });
+    },
     addCourse() {
       // 跳转到自定义课程界面
       wepy.navigateTo({

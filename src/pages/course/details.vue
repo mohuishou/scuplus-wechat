@@ -276,6 +276,14 @@ ad {
       </view>
       <view>
         <view class="title">
+          <view>教师</view>
+        </view>
+        <view>
+          <view>{{course.course_count.teacher_all}}</view>
+        </view>
+      </view>
+      <view>
+        <view class="title">
           <view>选课限制</view>
         </view>
         <view>
@@ -478,6 +486,7 @@ export default class CourseLists extends wepy.page {
     course.exam_type = examTypes[course.exam_type];
     course.avg_grade = course.avg_grade.toFixed(1);
     course.fail_rate = course.fail_rate.toFixed(1);
+    course.teacher_all = course.teacher;
     let teachers = course.teacher.split(",");
     let is_more = teachers.length > 1 ? "等" : "";
     course.teacher = teachers[0] + is_more;
