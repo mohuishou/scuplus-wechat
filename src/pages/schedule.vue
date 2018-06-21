@@ -1,129 +1,129 @@
 <style lang="less">
-  @import "./src/less/config";
-  @tab-bg: #f5f5f5;
-  page {
-    width: 100%;
-    height: 100%;
-    background: @bg-color;
-  }
-  scroll-view {
-    width: 100%;
-    height: 2000rpx;
-    margin-bottom: 80rpx;
-    padding-top: 80rpx;
-  }
-  .contanier {
-    display: flex;
-    width: auto;
-    height: 100%;
-  }
-  .header {
-    position: fixed;
-    display: flex;
-    width: 100%;
-    top: 0;
-    font-size: 28rpx;
-    background: @tab-bg;
-    .time {
-      flex-wrap: wrap;
-      view {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        &.day {
-          font-size: 24rpx;
-          margin-top: 5rpx;
-        }
-        &.date {
-          font-size: 22rpx;
-          color: #888;
-          margin-bottom: 5rpx;
-        }
-      }
-    }
-    >view {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-right: 1px solid #e0e0e0;
-      height: 80rpx;
-      flex: 2;
-    }
-    .title {
-      flex: 1;
-      font-size: 24rpx;
-    }
-  }
-  .col {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    flex: 2;
-    &.title {
-      flex: 1;
-    }
+@import "./src/less/config";
+@tab-bg: #f5f5f5;
+page {
+  width: 100%;
+  height: 100%;
+  background: @bg-color;
+}
+scroll-view {
+  width: 100%;
+  height: 2000rpx;
+  margin-bottom: 80rpx;
+  padding-top: 80rpx;
+}
+.contanier {
+  display: flex;
+  width: auto;
+  height: 100%;
+}
+.header {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  top: 0;
+  font-size: 28rpx;
+  background: @tab-bg;
+  .time {
     flex-wrap: wrap;
-  }
-  .row {
-    text-align: center;
-    flex: 1;
-    padding: 0 0.15rem;
-    border-bottom: 1px solid @bg-color;
-    &.title {
+    view {
+      width: 100%;
       display: flex;
       justify-content: center;
-      background: @tab-bg;
       align-items: center;
-      border-bottom: 1px solid #e0e0e0;
-      &:first-child {
-        border-top: 1px solid #e0e0e0;
+      &.day {
+        font-size: 24rpx;
+        margin-top: 5rpx;
       }
-    }
-    &.item {
-      font-size: 20rpx;
-      height: 300rpx;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      view {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .course-name {
-        padding-top: 10rpx;
-        padding-bottom: 10rpx;
+      &.date {
+        font-size: 22rpx;
+        color: #888;
+        margin-bottom: 5rpx;
       }
     }
   }
-  .tabs {
-    position: fixed;
-    bottom: 0;
+  > view {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    border-right: 1px solid #e0e0e0;
     height: 80rpx;
-    width: calc(~"100% - 90rpx");
-    color: #555;
+    flex: 2;
+  }
+  .title {
+    flex: 1;
+    font-size: 24rpx;
+  }
+}
+.col {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  flex: 2;
+  &.title {
+    flex: 1;
+  }
+  flex-wrap: wrap;
+}
+.row {
+  text-align: center;
+  flex: 1;
+  padding: 0 0.15rem;
+  border-bottom: 1px solid @bg-color;
+  &.title {
+    display: flex;
+    justify-content: center;
     background: @tab-bg;
-    padding-left: 60rpx;
-    padding-right: 30rpx;
-    .iconfont {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      width: 100rpx;
-      height: 100%;
-    }
-    .icon-add {
-      font-size: 40rpx;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    &:first-child {
+      border-top: 1px solid #e0e0e0;
     }
   }
+  &.item {
+    font-size: 20rpx;
+    height: 300rpx;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    view {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .course-name {
+      padding-top: 10rpx;
+      padding-bottom: 10rpx;
+    }
+  }
+}
+.tabs {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80rpx;
+  width: calc(~"100% - 90rpx");
+  color: #555;
+  background: @tab-bg;
+  padding-left: 60rpx;
+  padding-right: 30rpx;
+  .iconfont {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100rpx;
+    height: 100%;
+  }
+  .icon-add {
+    font-size: 40rpx;
+  }
+}
 </style>
 
 <template>
-  <scroll-view scroll-x scroll-into-view="day-{{day}}">
+  <scroll-view @touchstart="moveStart" @touchend="moveEnd" scroll-x scroll-into-view="day-{{day}}">
     <view class="contanier">
       <view class="header">
         <view class="title">{{month}}月</view>
@@ -158,222 +158,245 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import HttpMixin from "mixins/http";
-  import ToastMixin from "mixins/toast";
-  import DataMixin from "mixins/data";
-  import db from "util/db";
-  import TermMixin from "mixins/term";
-  export default class Schedule extends wepy.page {
-    config = {
-      navigationBarTitleText: "我的课表",
-      enablePullDownRefresh: true,
-    };
-    mixins = [HttpMixin, ToastMixin, DataMixin, TermMixin];
-    components = {};
-    data = {
-      schedules: [
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13]
-      ],
-      day: 0,
-      scheduleItems: [],
-      week: 1, // 当前选择周次
-      nowWeek: 2, // 本周
-      month: 1,
-      headers: [],
-      allWeeks: [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
-      ]
-    };
-    methods = {
-      toCourseDetail(course_id, lesson_id) {
-        if (!course_id || !lesson_id) {
-          this.ShowToast("不存在该课程！")
-          return
-        }
-        let items = db.Get("myScheduleItems") || [];
-        const self = this
-        if (course_id < 0 && lesson_id < 0) {
-          wepy.showModal({
-            title: '确认删除', //提示的标题
-            content: '是否从我的课表删除该门课程', //提示的内容
-            showCancel: true, //是否显示取消按钮
-            success: (res) => {
-              if (res.confirm) {
-                for (let i = 0; i < items.length; i++) {
-                  const item = items[i];
-                  if (item.course_id == course_id && item.lesson_id == lesson_id) {
-                    items.splice(i, 1);
-                  }
+import wepy from "wepy";
+import HttpMixin from "mixins/http";
+import ToastMixin from "mixins/toast";
+import DataMixin from "mixins/data";
+import MoveMixin from "mixins/move";
+import db from "util/db";
+import TermMixin from "mixins/term";
+export default class Schedule extends wepy.page {
+  config = {
+    navigationBarTitleText: "我的课表",
+    enablePullDownRefresh: true
+  };
+  mixins = [HttpMixin, ToastMixin, DataMixin, TermMixin, MoveMixin];
+  components = {};
+  data = {
+    schedules: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]],
+    day: 0,
+    scheduleItems: [],
+    week: 1, // 当前选择周次
+    nowWeek: 2, // 本周
+    month: 1,
+    headers: [],
+    allWeeks: [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ]
+  };
+  methods = {
+    toCourseDetail(course_id, lesson_id) {
+      if (!course_id || !lesson_id) {
+        this.ShowToast("不存在该课程！");
+        return;
+      }
+      let items = db.Get("myScheduleItems") || [];
+      const self = this;
+      if (course_id < 0 && lesson_id < 0) {
+        wepy.showModal({
+          title: "确认删除", //提示的标题
+          content: "是否从我的课表删除该门课程", //提示的内容
+          showCancel: true, //是否显示取消按钮
+          success: res => {
+            if (res.confirm) {
+              for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                if (
+                  item.course_id == course_id &&
+                  item.lesson_id == lesson_id
+                ) {
+                  items.splice(i, 1);
                 }
-                db.Set("myScheduleItems", items)
-                self.ShowToast("删除成功！")
-                self.initData();
-                self.initHeaders()
-                self.initSchedules(self.scheduleItems);
-                self.$apply()
               }
+              db.Set("myScheduleItems", items);
+              self.ShowToast("删除成功！");
+              self.initData();
+              self.initHeaders();
+              self.initSchedules(self.scheduleItems);
+              self.$apply();
             }
-          })
-          return
-        }
-        wepy.navigateTo({
-          url: '/pages/course/details?course_id=' + course_id + '&lesson_id=' + lesson_id,
-        })
-      },
-      add() {
-        wepy.navigateTo({
-          url: '/pages/course/search?from=add'
-        })
-      },
-      changeWeek(e) {
-        this.ChangeWeek(e.detail.value - 0 + 1)
+          }
+        });
+        return;
       }
-    };
-    ChangeWeek(week) {
-      this.week = week;
-      this.initData();
-      this.initHeaders()
-      this.initSchedules(this.scheduleItems);
+      wepy.navigateTo({
+        url:
+          "/pages/course/details?course_id=" +
+          course_id +
+          "&lesson_id=" +
+          lesson_id
+      });
+    },
+    add() {
+      wepy.navigateTo({
+        url: "/pages/course/search?from=add"
+      });
+    },
+    changeWeek(e) {
+      this.ChangeWeek(e.detail.value - 0 + 1);
     }
-    initHeaders() {
-      let current = this.GetDate(this.week)
-      this.month = current.getMonth() + 1
-      this.headers = []
-      for (let i = 0; i < 7; i++) {
-        this.headers.push({
-          day: ["日", "一", "二", "三", "四", "五", "六"][current.getDay()],
-          date: current.getDate()
-        })
-        current.setDate(current.getDate() + 1)
-      }
-      this.$apply()
+  };
+  movePrev() {
+    this.ChangeWeek(this.week - 1);
+  }
+  moveNext() {
+    this.ChangeWeek(this.week + 1);
+  }
+  ChangeWeek(week) {
+    if (week < 1 || week > 25) {
+      return;
     }
-    async onLoad() {
-      // 初始化数据
-      this.initData();
-      // 获取本学期开学时间
-      await this.InitTerm();
-      // 计算本周周次
-      const now = new Date();
-      this.month = now.getMonth() + 1;
-      let week = await this.GetWeek(
-        now.getFullYear(),
-        now.getMonth() + 1,
-        now.getDate()
-      );
-      this.week = week
-      this.nowWeek = week
-      // 获取课程表数据
-      await this.Init("scheduleItems", 24 * 30);
-      // 渲染数据
-      this.initSchedules(this.scheduleItems);
-      // 获取今天星期几
-      this.day = new Date().getDay() || 7;
-      this.initHeaders()
-      this.$apply();
-      const update_time = db.Get("update_time." + "schedules") || 0;
-      if ((now.getTime() - update_time) / 1000 / 3600 > 3 * 24) {
-        this.InitSet("schedules", this.schedules);
-      }
+    this.week = week;
+    this.initData();
+    this.initHeaders();
+    this.initSchedules(this.scheduleItems);
+  }
+  initHeaders() {
+    let current = this.GetDate(this.week);
+    this.month = current.getMonth() + 1;
+    this.headers = [];
+    for (let i = 0; i < 7; i++) {
+      this.headers.push({
+        day: ["日", "一", "二", "三", "四", "五", "六"][current.getDay()],
+        date: current.getDate()
+      });
+      current.setDate(current.getDate() + 1);
     }
-    async get() {
-      const resp = await this.GetWithBind("/user/schedule", {
+    this.$apply();
+  }
+  async onLoad() {
+    // 初始化数据
+    this.initData();
+    // 获取本学期开学时间
+    await this.InitTerm();
+    // 计算本周周次
+    const now = new Date();
+    this.month = now.getMonth() + 1;
+    let week = await this.GetWeek(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      now.getDate()
+    );
+    this.week = week;
+    this.nowWeek = week;
+    // 获取课程表数据
+    await this.Init("scheduleItems", 24 * 30);
+    // 渲染数据
+    this.initSchedules(this.scheduleItems);
+    // 获取今天星期几
+    this.day = new Date().getDay() || 7;
+    this.initHeaders();
+    this.$apply();
+    const update_time = db.Get("update_time." + "schedules") || 0;
+    if ((now.getTime() - update_time) / 1000 / 3600 > 3 * 24) {
+      this.InitSet("schedules", this.schedules);
+    }
+  }
+  async get() {
+    const resp = await this.GetWithBind("/user/schedule", {
+      term: 1
+    });
+    this.scheduleItems = resp.data;
+    this.$apply();
+    this.InitSet("scheduleItems", resp.data);
+  }
+  async onPullDownRefresh() {
+    try {
+      await this.PostWithBind("/user/schedule", {
         term: 1
       });
-      this.scheduleItems = resp.data;
+      await this.get();
+      await this.initData();
+      await this.initSchedules(this.scheduleItems);
       this.$apply();
-      this.InitSet("scheduleItems", resp.data);
+      this.InitSet("schedules", this.schedules);
+    } catch (error) {
+      console.log(error);
     }
-    async onPullDownRefresh() {
-      try {
-        await this.PostWithBind("/user/schedule", {
-          term: 1
+    wepy.stopPullDownRefresh();
+  }
+  initSchedules(schedules) {
+    const myScheduleItems = db.Get("myScheduleItems") || [];
+    schedules = schedules.concat(myScheduleItems);
+    let colors = [
+      "#f07c82",
+      "#66CC99",
+      "#ea7293",
+      "#13afc8",
+      "#FF9999",
+      "#99CCFF",
+      "#f97d1c",
+      "#FF6666",
+      "#21a265"
+    ];
+    const week = this.week;
+    let ci = 0;
+    for (let e of schedules) {
+      ci++;
+      e.flex = 0;
+      e.sessionArr = [];
+      if (e.session !== "") {
+        e.sessionArr = e.session.split(",");
+        e.flex = e.sessionArr.length;
+      }
+      // 判断是否为本周课程
+      let thisWeek = false;
+      if (e.allWeek != "") {
+        const arr = e.all_week.split(",");
+        arr.forEach(el => {
+          if (el == week) thisWeek = true;
         });
-        await this.get();
-        await this.initData();
-        await this.initSchedules(this.scheduleItems);
-        this.$apply();
-        this.InitSet("schedules", this.schedules);
-      } catch (error) {
-        console.log(error);
       }
-      wepy.stopPullDownRefresh();
-    }
-    initSchedules(schedules) {
-      const myScheduleItems = db.Get("myScheduleItems") || [];
-      schedules = schedules.concat(myScheduleItems)
-      let colors = ["#f07c82", "#66CC99", "#ea7293", "#13afc8", "#FF9999", "#99CCFF", "#f97d1c", "#FF6666", "#21a265"];
-      const week = this.week;
-      let ci = 0;
-      for (let e of schedules) {
-        ci++
-        e.flex = 0;
-        e.sessionArr = [];
-        if (e.session !== "") {
-          e.sessionArr = e.session.split(",");
-          e.flex = e.sessionArr.length;
-        }
-        // 判断是否为本周课程
-        let thisWeek = false;
-        if (e.allWeek != "") {
-          const arr = e.all_week.split(",");
-          arr.forEach(el => {
-            if (el == week) thisWeek = true;
-          });
-        }
-        if (thisWeek) {
-          // 生成随机背景色
-          e.color = colors[ci % colors.length];
-          // 替换原矩阵值
-          e.sessionArr.forEach(element => {
-            this.schedules[(e.day % 7) + 1][element - 1].flex = 0;
-          });
-          
-          this.schedules[(e.day % 7) + 1][e.sessionArr[0] - 1] = e;
-        }
-      }
-    }
-    initData() {
-      // 初始化data
-      this.schedules = [
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13]
-      ];
-      for (let i = 0; i < 7; i++) {
-        let tmpData = [];
-        for (let j = 0; j < 13; j++) {
-          tmpData[j] = {
-            course_name: "",
-            flex: 1
-          };
-        }
-        this.schedules.push(tmpData);
+      if (thisWeek) {
+        // 生成随机背景色
+        e.color = colors[ci % colors.length];
+        // 替换原矩阵值
+        e.sessionArr.forEach(element => {
+          this.schedules[e.day % 7 + 1][element - 1].flex = 0;
+        });
+
+        this.schedules[e.day % 7 + 1][e.sessionArr[0] - 1] = e;
       }
     }
   }
+  initData() {
+    // 初始化data
+    this.schedules = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]];
+    for (let i = 0; i < 7; i++) {
+      let tmpData = [];
+      for (let j = 0; j < 13; j++) {
+        tmpData[j] = {
+          course_name: "",
+          flex: 1
+        };
+      }
+      this.schedules.push(tmpData);
+    }
+  }
+}
 </script>
 
 
