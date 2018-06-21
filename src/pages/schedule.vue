@@ -259,10 +259,10 @@ export default class Schedule extends wepy.page {
       this.ChangeWeek(e.detail.value - 0 + 1);
     }
   };
-  movePrev() {
+  moveRight() {
     this.ChangeWeek(this.week - 1);
   }
-  moveNext() {
+  moveLeft() {
     this.ChangeWeek(this.week + 1);
   }
   ChangeWeek(week) {

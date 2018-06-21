@@ -22,10 +22,10 @@ export default class MoveMixin extends wepy.mixin {
       this.moveClient.changedY = e.changedTouches[0].clientY - this.moveClient.startY
       if (this.moveClient.changedX > 100) {
         // 右滑，上一页
-        this.movePrev()
+        this.moveRight()
       } else if (this.moveClient.changedX < -100) {
         // 左滑，下一页
-        this.moveNext()
+        this.moveLeft()
       }
     }
   }

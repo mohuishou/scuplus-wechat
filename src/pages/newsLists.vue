@@ -59,7 +59,9 @@ page {
         <view class="iconfont icon-daohang"></view>
       </view>
     </view>
-    <list id="list" :params.sync="params"></list>
+    <view @touchstart="moveStart" @touchend="moveEnd">
+      <list id="list" :params.sync="params"></list>
+    </view>
   </view>
 </template>
 <script>
@@ -68,6 +70,7 @@ import wepy from "wepy";
 import HttpMixin from "mixins/http";
 import ToastMixin from "mixins/toast";
 import DataMixin from "mixins/data";
+import MoveMixin from "mixins/move";
 import db from "util/db";
 export default class NewsLists extends wepy.page {
   config = {
@@ -78,11 +81,9 @@ export default class NewsLists extends wepy.page {
     list: list
   };
 
-  mixins = [HttpMixin, ToastMixin, DataMixin];
+  mixins = [HttpMixin, ToastMixin, DataMixin, MoveMixin];
   data = {
     active: 0,
-    swipe: 0,
-    swipeY: 0,
     params: {
       tag_name: ""
     }
@@ -99,9 +100,7 @@ export default class NewsLists extends wepy.page {
   };
   methods = {
     tabHandle(index) {
-      this.active = index;
-      this.params.tag_name = this.tabs[index].name;
-      this.$invoke("list", "getNewDetails", 1);
+      this.tabChange(index);
     },
     to() {
       wepy.navigateTo({
@@ -109,6 +108,20 @@ export default class NewsLists extends wepy.page {
       });
     }
   };
+  tabChange(index) {
+    if (index < 0 || index >= this.tabs.length) {
+      return;
+    }
+    this.active = index;
+    this.params.tag_name = this.tabs[index].name;
+    this.$invoke("list", "getNewDetails", 1);
+  }
+  moveRight() {
+    this.tabChange(this.active + 1);
+  }
+  moveLeft() {
+    this.tabChange(this.active - 1);
+  }
   onLoad() {
     if (!db.Get("chooseTags")) {
       db.Set("chooseTags", [
