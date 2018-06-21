@@ -4,6 +4,7 @@ page {
   font-size: 28rpx;
   width: 100%;
   background: @bg-color;
+  padding-bottom: 100rpx;
   > view {
     width: 100%;
   }

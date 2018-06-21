@@ -29,7 +29,7 @@ import ToastMixin from "mixins/toast";
 import ADConfig from "util/ad";
 export default class My extends wepy.page {
   config = {
-    navigationBarTitleText: "通知设置"
+    navigationBarTitleText: "广告设置"
   };
   mixins = [HttpMixin, ToastMixin];
   data = {
