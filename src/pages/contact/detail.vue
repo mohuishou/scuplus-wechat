@@ -30,6 +30,11 @@ page {
     }
   }
 }
+.info {
+  margin: 20rpx;
+  color: #888;
+  font-size: 26rpx;
+}
 </style>
 <template>
   <view>
@@ -52,6 +57,9 @@ page {
           <view>{{item.comment}}</view>
         </view>
       </view>
+    </view>
+    <view class="info">
+      所有的联系方式，都来自官网，We川大不能保证联系方式一定正确，点击最上面的可以复制联系方式指向的链接
     </view>
   </view>
 </template>
