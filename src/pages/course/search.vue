@@ -219,7 +219,9 @@ export default class CourseLists extends wepy.page {
           self.order = orders[res.tapIndex];
           self.page = 1;
           self.$apply();
-          self.searchCourse();
+          if (self.name != "") {
+            self.searchCourse();
+          }
         }
       });
     },
