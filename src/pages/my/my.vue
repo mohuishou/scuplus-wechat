@@ -147,6 +147,11 @@
           url: "/pages/my/adConfig",
           type: "page"
         },
+        {
+          name: "用户设置",
+          url: "/pages/my/userConfig",
+          type: "page"
+        },
       ],
       binds: [{
           name: "教务处绑定",

@@ -46,7 +46,8 @@ export default class extends wepy.app {
       "pages/lecture/lecture",
       "pages/evaluate/lists",
       "pages/my/notifyConfig",
-      "pages/my/adConfig"
+      "pages/my/adConfig",
+      "pages/my/userConfig"
     ],
     window: {
       navigationBarBackgroundColor: "#ffffff",
@@ -146,6 +147,7 @@ export default class extends wepy.app {
         db.Set("verify", data.verify);
         db.Set("library_verify", data.library_verify);
         db.Set("jwc_verify", data.jwc_verify);
+        db.Set("user_type", data.user_type);
         this.GlobalData.verify = data.verify;
         if (data.verify === 0) {
           wepy.navigateTo({

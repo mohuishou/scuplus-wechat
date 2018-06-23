@@ -26,7 +26,7 @@ page {
 import wepy from "wepy";
 import HttpMixin from "mixins/http";
 import ToastMixin from "mixins/toast";
-export default class My extends wepy.page {
+export default class NotifyConfig extends wepy.page {
   config = {
     navigationBarTitleText: "通知设置"
   };
