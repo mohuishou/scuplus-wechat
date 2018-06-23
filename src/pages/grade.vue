@@ -208,6 +208,9 @@ export default class Grade extends wepy.page {
     empty: Empty
   };
   computed = {
+    isGraduate() {
+      return db.Get("user_type") == 1;
+    },
     adShow() {
       return ADConfig.Get("grade");
     }
@@ -278,7 +281,11 @@ export default class Grade extends wepy.page {
   }
   methods = {
     updateGrades() {
-      this.updateGrade();
+      if (this.isGraduate) {
+        this.graduateUpdate();
+      } else {
+        this.updateGrade();
+      }
     },
     select(i, j) {
       this.grades[i].grades[j].selected = !this.grades[i].grades[j].selected;
@@ -293,14 +300,14 @@ export default class Grade extends wepy.page {
           if (e.grades[n].selected) grades.push(e.grades[n]);
         }
       }
-      const result = gradeUtil.calTermGrade(grades, false);
+      const result = gradeUtil.calTermGrade(grades, 0);
       wepy.showModal({
         title: "计算结果",
         content: `您共选择${grades.length}门课程, 学分共计: ${
           result.sum.all.credit
         }; \r
-                    平均分: ${result.avg.all.grade}; \r
-                    平均绩点: ${result.avg.all.gpa}; \r`,
+        平均分: ${result.avg.all.grade}; \r
+        平均绩点: ${result.avg.all.gpa}; \r`,
         showCancel: false
       });
     },
@@ -326,36 +333,77 @@ export default class Grade extends wepy.page {
       this.Select(-1, false);
     }
   };
+
+  get() {
+    if (this.isGraduate) {
+      this.graduateGet();
+    } else {
+      this.getGrade();
+    }
+  }
+
+  async getGrade() {
+    try {
+      const resp = await this.GET("/user/grade");
+      this.setGrades(resp.data, 1);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async graduateGet() {
+    try {
+      const resp = await this.GET("/graduate/grades");
+      this.setGrades(resp.data, 2);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // 设置成绩
+  setGrades(data, init = 1) {
+    let grades = [];
+    let map = {};
+    let i = 0;
+    data.forEach(e => {
+      const term_key = `${e.year}${e.term}`;
+      if (!(term_key in map)) {
+        map[term_key] = i;
+        i++;
+        grades[map[term_key]] = [];
+      }
+      grades[map[term_key]].push(e);
+    });
+    grades = gradeUtil.cal(grades, init);
+    this.grades = grades;
+    this.$apply();
+    this.calAllGrades();
+    this.InitSet("grades", grades);
+  }
+
+  // 更新成绩
+  async graduateUpdate() {
+    try {
+      await this.POST("/graduate/grades");
+      this.get();
+    } catch (error) {
+      console.log(error);
+    }
+    wepy.stopPullDownRefresh();
+  }
   async updateGrade() {
-    await this.POST("/user/grade");
-    this.get();
+    try {
+      await this.POST("/user/grade");
+      this.get();
+    } catch (error) {
+      console.log(error);
+    }
     wepy.stopPullDownRefresh();
   }
   onPullDownRefresh() {
-    this.updateGrade();
-  }
-  async get() {
-    try {
-      const resp = await this.GET("/user/grade");
-      let grades = [];
-      let map = {};
-      let i = 0;
-      resp.data.forEach(e => {
-        const term_key = `${e.year}${e.term}`;
-        if (!(term_key in map)) {
-          map[term_key] = i;
-          i++;
-          grades[map[term_key]] = [];
-        }
-        grades[map[term_key]].push(e);
-      });
-      grades = gradeUtil.cal(grades);
-      this.grades = grades;
-      this.$apply();
-      this.calAllGrades();
-      this.InitSet("grades", grades);
-    } catch (error) {
-      console.log(error);
+    if (this.isGraduate) {
+      this.graduateUpdate();
+    } else {
+      this.updateGrade();
     }
   }
   async onLoad() {

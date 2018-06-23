@@ -57,36 +57,32 @@ const LEVLE_GRADE = {
 /**
  * 绩点计算器
  * @param {Object} data 带计算的数据
+ * @param {Boolean} init 初始化
  */
-let cal = function (data) {
-  let grade = [];
+let cal = function (data, init = 1) {
+  let grade = []
   for (let k = 0; k < data.length; k++) {
     if (!data[k]) {
-      continue;
+      continue
     }
-    grade[k] = calTermGrade(data[k])
+    grade[k] = calTermGrade(data[k], init)
   }
-  return grade;
+  return grade
 }
 
 /**
  * 设置对照类型
  * @param {String} term_name 
  */
-let setType = (term_name) => {
-  if (term_name == "") {
-    calType = ((new Date()).getFullYear() > 2017) ? 1 : 0;
-  } else {
-    let y = term_name.match(/\d+\-(\d+)/);
-    calType = (y.length > 1 && y[1] > 2017) ? 1 : 0;
-  }
+let setType = (year, term) => {
+  calType = year * 10 + term > 20171 ? 1 : 0
 }
 
 /**
  * 计算一个学期的平均成绩与绩点
- * @param {Array} grades 
+ * @param {Array} grades 成绩
  */
-function calTermGrade(grades, init = true) {
+function calTermGrade(grades, init = 1) {
   let sum = {
     all: {
       grade: 0,
@@ -112,18 +108,23 @@ function calTermGrade(grades, init = true) {
   };
   let results = grades.map((obj, i) => {
     if (obj.course_id) {
-      i == 0 && setType(obj.term_name)
-      if (init) {
+      i == 0 && setType(obj.year, obj.term)
+      if (init == 1) {
         obj.selected = false;
         obj.gradeCal = lv2grade(obj.grade);
         obj.gpa = grade2gpa(obj.gradeCal);
         obj.credit = obj.credit - 0;
+      } else if (init == 2) {
+        obj.selected = false;
+        obj.gradeCal = obj.grade
       }
-
-      if (obj.course_type == "必修") {
+      if (obj.course_type.indexOf("必修") > -1) {
+        obj.course_type = "必修"
         sum.required.grade += obj.gradeCal * obj.credit;
         sum.required.credit += obj.credit;
         sum.required.gpa += obj.gpa * obj.credit;
+      } else {
+        obj.course_type = "选修"
       }
       sum.all.grade += obj.gradeCal * obj.credit;
       sum.all.credit += obj.credit;
