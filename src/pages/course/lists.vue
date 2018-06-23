@@ -441,7 +441,7 @@ export default class CourseLists extends wepy.page {
     if (this.page == 1) {
       this.isEmpty = false;
     }
-    const resp = await this.GetWithBind(
+    const resp = await this.GET(
       "/course/all",
       Object.assign(
         {

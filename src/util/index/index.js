@@ -3,14 +3,16 @@ const funcs = [{
   url: 'schedule',
   icon: 'schedule',
   bg: '#eacdd1',
-  type: 'jwc'
+  type: 'jwc',
+  is_graduate: true
 },
 {
   name: '成绩',
   url: 'grade',
   icon: 'grade',
   bg: '#99ccee',
-  type: 'jwc'
+  type: 'jwc',
+  is_graduate: true
 },
 {
   name: '自习',
@@ -52,7 +54,8 @@ const funcs = [{
   url: 'exam',
   icon: 'exam',
   bg: '#2578b5',
-  type: 'jwc'
+  type: 'jwc',
+  is_graduate: false
 },
 {
   name: '校历',
@@ -73,7 +76,8 @@ const funcs = [{
   url: 'lostFind/lists',
   icon: 'lost_find',
   bg: '#ab96c5',
-  type: 'jwc'
+  type: 'jwc',
+  is_graduate: true
 },
 {
   name: '学术讲座',
@@ -101,14 +105,16 @@ const funcs = [{
   url: 'evaluate/lists',
   icon: 'eva',
   bg: '#ab96c5',
-  type: 'jwc'
+  type: 'jwc',
+  is_graduate: false
 },
 {
   name: '课程评价',
   url: 'course/commentLists',
   icon: 'course_eva',
   bg: '#ab96c5',
-  type: 'jwc'
+  type: 'jwc',
+  is_graduate: false
 }
   // {
   //   name: '开发者',

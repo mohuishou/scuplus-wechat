@@ -85,7 +85,7 @@ export default class CourseLists extends wepy.page {
       if (this.is_last) {
         return;
       }
-      const res = await this.GetWithBind("/course/comments", {
+      const res = await this.GET("/course/comments", {
         page: this.page,
         page_size: this.page_size,
         name: this.name

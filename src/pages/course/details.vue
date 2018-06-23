@@ -597,7 +597,7 @@ export default class CourseLists extends wepy.page {
     }
   };
   async init() {
-    const resp = await this.GetWithBind("/course", this.options);
+    const resp = await this.GET("/course", this.options);
     this.course = resp.data;
     this.item = this.newCourseCount(resp.data.course_count);
     this.courses = this.newCourse(resp.data.courses);

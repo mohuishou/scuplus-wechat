@@ -327,7 +327,7 @@ export default class Grade extends wepy.page {
     }
   };
   async updateGrade() {
-    await this.PostWithBind("/user/grade");
+    await this.POST("/user/grade");
     this.get();
     wepy.stopPullDownRefresh();
   }
@@ -336,7 +336,7 @@ export default class Grade extends wepy.page {
   }
   async get() {
     try {
-      const resp = await this.GetWithBind("/user/grade");
+      const resp = await this.GET("/user/grade");
       let grades = [];
       let map = {};
       let i = 0;

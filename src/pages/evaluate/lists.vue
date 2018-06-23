@@ -108,7 +108,7 @@ export default class CourseLists extends wepy.page {
   async onPullDownRefresh() {
     try {
       this.params.page = 1;
-      await this.PostWithBind("/evaluates");
+      await this.POST("/evaluates");
       await this.get();
     } catch (error) {
       console.error(error);
@@ -124,7 +124,7 @@ export default class CourseLists extends wepy.page {
       if (this.is_last) {
         return;
       }
-      const res = await this.GetWithBind("/evaluates", this.params);
+      const res = await this.GET("/evaluates", this.params);
       if (!res.data || res.data.length < this.params.page_size) {
         this.is_last = true;
       }

@@ -176,7 +176,7 @@ export default class BindJwc extends wepy.page {
 
   async get() {
     try {
-      const res = await this.GetWithBind("/lost_find/" + this.id);
+      const res = await this.GET("/lost_find/" + this.id);
       let data = res.data.data;
       data.created_at = dayjs(data.created_at).format("YYYY-MM-DD");
       if (data.category == "一卡通招领") {

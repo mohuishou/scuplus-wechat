@@ -245,7 +245,7 @@ export default class CourseLists extends wepy.page {
     }
 
     try {
-      await this.PostWithBind("/evaluate", params);
+      await this.POST("/evaluate", params);
       this.ShowToast("评价成功！");
       setTimeout(() => {
         wepy.navigateBack({
@@ -268,7 +268,7 @@ export default class CourseLists extends wepy.page {
     }
     try {
       let url = "/course/comment";
-      const resp = await self.PostWithBind(url, params);
+      const resp = await self.POST(url, params);
       self.ShowToast("评价成功！");
       setTimeout(() => {
         wepy.navigateBack({
@@ -282,7 +282,7 @@ export default class CourseLists extends wepy.page {
     this.params.id = option.id;
     // 有id表示需要修改
     if ("id" in option && option.id > 0) {
-      const resp = await this.GetWithBind("/course/comment?id=" + option.id);
+      const resp = await this.GET("/course/comment?id=" + option.id);
       this.course_name = resp.data.course_name;
       for (let i = 0; i < this.items.length; i++) {
         const v = resp.data[this.items[i].name];
@@ -299,7 +299,7 @@ export default class CourseLists extends wepy.page {
   async initEva(option) {
     try {
       this.from = option.from;
-      const res = await this.GetWithBind("/evaluate/" + option.id);
+      const res = await this.GET("/evaluate/" + option.id);
       let eva = res.data.evaluate;
       let course_eva = res.data.course_evaluate;
 

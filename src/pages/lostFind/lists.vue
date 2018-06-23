@@ -204,7 +204,7 @@ export default class BindJwc extends wepy.page {
     try {
       if (this.param.page > 1 && this.lastPage) return;
       if (this.param.page === 1) this.lastPage = false;
-      const res = await this.GetWithBind("/lost_finds", this.param);
+      const res = await this.GET("/lost_finds", this.param);
       if (res.data.length < this.param.page_size) {
         this.lastPage = true;
       }

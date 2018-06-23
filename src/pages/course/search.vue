@@ -198,7 +198,7 @@ export default class CourseLists extends wepy.page {
       order: this.order
     };
     params[this.searchType] = this.name;
-    const resp = await this.PostWithBind("/course/search", params);
+    const resp = await this.POST("/course/search", params);
     if (this.page > 1) {
       this.courses = this.courses.concat(this.newCourse(resp.data));
     } else {

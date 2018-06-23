@@ -316,7 +316,7 @@ export default class Schedule extends wepy.page {
     }
   }
   async get() {
-    const resp = await this.GetWithBind("/user/schedule", {
+    const resp = await this.GET("/user/schedule", {
       term: 1
     });
     this.scheduleItems = resp.data;
@@ -325,7 +325,7 @@ export default class Schedule extends wepy.page {
   }
   async onPullDownRefresh() {
     try {
-      await this.PostWithBind("/user/schedule", {
+      await this.POST("/user/schedule", {
         term: 1
       });
       await this.get();

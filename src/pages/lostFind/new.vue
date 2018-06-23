@@ -230,9 +230,9 @@ export default class BindJwc extends wepy.page {
       try {
         if ("id" in this.item) {
           params.id = this.item.id;
-          await this.PostWithBind("/lost_find/update", params);
+          await this.POST("/lost_find/update", params);
         } else {
-          await this.PostWithBind("/lost_find", params);
+          await this.POST("/lost_find", params);
         }
         // 创建成功，返回上一级
         setTimeout(() => {
