@@ -245,7 +245,7 @@ export default class Schedule extends wepy.page {
       this.getAndInit();
     },
     toCourseDetail(course_id, lesson_id) {
-      if (course_id > 0 && this.isGraduate) {
+      if (course_id && this.isGraduate) {
         return;
       }
       if (!course_id || !lesson_id) {

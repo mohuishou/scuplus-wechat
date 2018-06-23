@@ -42,7 +42,7 @@ scroll-view {
   <scroll-view style="height:{{height}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y scroll-top="{{scrollTop}}" lower-threshold="80">
     <view style="{{isTag != '' ? 'margin-top: 0px;' : '' }}" class="lists">
       <block wx:for="{{details}}" wx:key="{{item.id}}">
-        <ad wx:if="{{adShow && (index == 6 || (index % 15 == 0 && index != 0))}}" unit-id="adunit-b7c8a72749643459"></ad>
+        <ad wx:if="{{adShow && index == 6 }}" unit-id="adunit-b7c8a72749643459"></ad>
         <view @tap="toDetail({{item.id}})" class="list">
           <view class="title">
             {{item.title}}

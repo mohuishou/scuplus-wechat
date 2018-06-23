@@ -69,6 +69,12 @@ page {
   height: 150rpx;
   border-bottom: 2rpx dashed #fff;
 }
+.ad {
+  margin: 20rpx;
+  ad {
+    border-radius: 8rpx;
+  }
+}
 </style>
 
 <template>
@@ -141,17 +147,21 @@ page {
       </exam-card>
     </view>
     <empty wx:else msg="尚未绑定账号"></empty>
+    <view wx:if="{{adShow}}" class="ad">
+      <ad unit-id="adunit-35df18bc957ebcd2"></ad>
+    </view>
   </view>
 </template>
 
 <script>
 import wepy from "wepy";
-import HttpMixin from "../mixins/http";
-import index from "../util/index/index";
-import MView from "../components/mview";
-import Card from "../components/card";
-import Empty from "../components/empty";
-import db from "../util/db";
+import HttpMixin from "mixins/http";
+import index from "util/index/index";
+import MView from "components/mview";
+import Card from "components/card";
+import Empty from "components/empty";
+import ADConfig from "util/ad";
+import db from "util/db";
 export default class Index extends wepy.page {
   config = {};
   components = {
@@ -236,6 +246,9 @@ export default class Index extends wepy.page {
         }
       });
       return todaySchedule;
+    },
+    adShow() {
+      return ADConfig.Get("index");
     }
   };
   navigate(item) {
@@ -257,7 +270,7 @@ export default class Index extends wepy.page {
       if ("is_graduate" in item && item.is_graduate && !this.verify) {
         wepy.showModal({
           title: "账号信息错误",
-          content:  "账号未绑定或密码错误！是否前往绑定？",
+          content: "账号未绑定或密码错误！是否前往绑定？",
           success: function(res) {
             if (res.confirm) {
               wepy.navigateTo({

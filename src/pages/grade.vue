@@ -162,7 +162,7 @@ page {
             </view>
           </block>
         </view>
-        <ad class="ad" wx-if="{{adShow && (index % 2 == 1) }}" unit-id="adunit-d286588d6069ca38"></ad>
+        <ad class="ad" wx-if="{{adShow && index === 2 }}" unit-id="adunit-d286588d6069ca38"></ad>
       </block>
     </view>
     <view class="bottom-tabs">
