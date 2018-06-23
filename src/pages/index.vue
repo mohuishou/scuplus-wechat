@@ -110,7 +110,7 @@ page {
               <text class="class-info">{{item.sessionArr[0]}}~{{item.sessionArr[item.flex-1]}}</text>
             </view>
             <view class="card-right">
-              <text>{{item.building}} {{item.classroom}}</text>
+              <text>{{item.address}}</text>
             </view>
           </view>
         </block>
@@ -239,7 +239,8 @@ export default class Index extends wepy.page {
         return;
       }
       const todaySchedule = [];
-      let today = new Date().getDay() + 1;
+      // let today = new Date().getDay() + 1;
+      let today = 3
       schedules[today].forEach(e => {
         if (e.course_name) {
           todaySchedule.push(e);
