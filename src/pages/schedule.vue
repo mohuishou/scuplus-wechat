@@ -164,6 +164,7 @@ scroll-view {
           学期设置
         </view>
       </picker>
+      <view @tap="share" class="iconfont icon-pengyouquan"></view>
       <view @tap="add" class="iconfont icon-add"></view>
     </view>
   </view>
@@ -237,6 +238,9 @@ export default class Schedule extends wepy.page {
     }
   };
   methods = {
+    share() {
+      wepy.navigateTo({ url: "/pages/share/schedule" });
+    },
     changeYearTerm(e) {
       this.year_terms_val = e.detail.value;
       this.params.year = this.year_terms[0][this.year_terms_val[0]];
@@ -245,7 +249,7 @@ export default class Schedule extends wepy.page {
       this.getAndInit();
     },
     toCourseDetail(course_id, lesson_id) {
-      if (course_id && this.isGraduate) {
+      if (this.isGraduate && isNaN(course_id - 0)) {
         return;
       }
       if (!course_id || !lesson_id) {
@@ -413,12 +417,12 @@ export default class Schedule extends wepy.page {
       } else {
         await this.updateSchedules();
       }
-      await this.getAndInit()
+      await this.getAndInit();
     } catch (error) {
       console.error(error);
     }
     wepy.stopPullDownRefresh();
-    wepy.redirectTo({ url: '/pages/schedule' });
+    wepy.redirectTo({ url: "/pages/schedule" });
   }
   initSchedules(schedules) {
     const myScheduleItems = db.Get("myScheduleItems") || [];
@@ -443,8 +447,8 @@ export default class Schedule extends wepy.page {
       if (e.session !== "") {
         e.sessionArr = e.session.split(",");
         e.flex = e.sessionArr.length;
-        if (!('address') in e ) {
-          e.address = e.campus + e.building + e.classroom
+        if (!"address" in e) {
+          e.address = e.campus + e.building + e.classroom;
         }
       }
       // 判断是否为本周课程

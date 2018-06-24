@@ -206,6 +206,29 @@ page {
 ad {
   margin-top: 20rpx;
 }
+
+.btn {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 0;
+  font-size: 0rpx;
+  &::after {
+    content: "";
+    width: 0;
+    height: 0;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    display: none;
+    background-color: transparent;
+  }
+}
 </style>
 
 <template>
@@ -292,7 +315,7 @@ ad {
       </view>
     </view>
     <view class="header">
-      成绩分布
+      成绩分布 
     </view>
     <view class="course-chart panel">
       <view class="chart-header">
@@ -632,6 +655,11 @@ export default class CourseLists extends wepy.page {
   async onLoad(options) {
     this.options = options;
     // this.init()
+  }
+  onShareAppMessage(options) {
+    return {
+      title: "我发现一门超级棒的课程"
+    };
   }
 }
 </script>
