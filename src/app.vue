@@ -47,7 +47,8 @@ export default class extends wepy.app {
       "pages/evaluate/lists",
       "pages/my/notifyConfig",
       "pages/my/adConfig",
-      "pages/my/userConfig"
+      "pages/my/userConfig",
+      "pages/share/schedule"
     ],
     window: {
       navigationBarBackgroundColor: "#ffffff",
