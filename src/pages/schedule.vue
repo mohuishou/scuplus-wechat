@@ -447,7 +447,7 @@ export default class Schedule extends wepy.page {
       if (e.session !== "") {
         e.sessionArr = e.session.split(",");
         e.flex = e.sessionArr.length;
-        if (!"address" in e) {
+        if (!("address" in e)) {
           e.address = e.campus + e.building + e.classroom;
         }
       }

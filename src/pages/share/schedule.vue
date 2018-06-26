@@ -239,7 +239,7 @@ export default class Exam extends wepy.page {
     ctx.fillText("长按识别小程序", firstColWidth + 5, height - 40);
     ctx.fillText("微信搜索We川大查看", firstColWidth + 5, height - 20);
     const path = await this.download(
-      "http://scuplus-1251451068.coscd.myqcloud.com/qcode.jpg"
+      "https://scuplus-1251451068.coscd.myqcloud.com/qcode.jpg"
     );
     ctx.drawImage(path, this.width - 70, height - 70, 60, 60);
     ctx.draw();
