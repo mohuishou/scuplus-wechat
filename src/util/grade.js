@@ -75,7 +75,7 @@ let cal = function (data, init = 1) {
  * @param {String} term_name 
  */
 let setType = (year, term) => {
-  calType = (year * 10 + term) >= 20171 ? 1 : 0
+  calType = (year * 10 + term) >= 20170 ? 1 : 0
 }
 
 /**

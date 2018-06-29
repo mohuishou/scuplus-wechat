@@ -133,7 +133,7 @@ page {
       <block wx:for="{{grades}}" wx:key="index">
         <view class="grade-lists">
           <view @tap="selectTerm({{index}},{{!item.grades[0].selected}})" class="grade-header">
-            <text class="title">{{item.grades[0].year}}学年{{item.grades[0].term ? '春' : '秋'}}季学期</text>
+            <text class="title">{{item.grades[0].year}}~{{item.grades[0].year+1}}学年{{item.grades[0].term ? '春' : '秋'}}季学期</text>
             <view>
               <view class="info">
                 <text>必修绩点：{{item.avg.required.gpa}}</text>
