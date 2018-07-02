@@ -100,6 +100,7 @@
   import ToastMixin from '../mixins/toast'
   import DataMixin from "../mixins/data";
   import db from "../util/db"
+  import dayjs from "dayjs";
   export default class Ecard extends wepy.page {
     config = {
       navigationBarTitleText: '我的校园卡',
@@ -134,7 +135,7 @@
       try {
         let trans = await this.GetECard();
         for (let i = 0; i < trans.length; i++) {
-          trans[i].trans_time = new Date(trans[i].trans_time * 1000).toLocaleDateString()
+          trans[i].trans_time = dayjs(trans[i].trans_time * 1000).format("YYYY-MM-DD HH:mm")
         }
         this.trans = trans
         this.$apply()

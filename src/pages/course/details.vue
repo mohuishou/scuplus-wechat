@@ -315,7 +315,7 @@ ad {
       </view>
     </view>
     <view class="header">
-      成绩分布 
+      成绩分布
     </view>
     <view class="course-chart panel">
       <view class="chart-header">
@@ -391,6 +391,7 @@ import DataMixin from "mixins/data";
 import Card from "components/course/card";
 import wxCharts from "plugins/wxcharts-min.js";
 import ADConfig from "util/ad";
+import dayjs from "dayjs";
 const callTypes = ["", "不点名", "偶尔点名", "抽点", "全点"];
 const examTypes = ["", "论文", "考试", "大作业", "其他"];
 const taskTypes = ["", "没作业", "有作业"];
@@ -571,9 +572,9 @@ export default class CourseLists extends wepy.page {
       evaluates[i].avatar =
         evaluates[i].avatar ||
         "http://scuplus-1251451068.coscd.myqcloud.com/icon/user@select.png";
-      evaluates[i].updated_str = new Date(
-        evaluates[i].updated_at
-      ).toLocaleDateString();
+      evaluates[i].updated_str = dayjs(evaluates[i].updated_at).format(
+        "YYYY-MM-DD HH:mm"
+      );
     }
     return evaluates;
   }
