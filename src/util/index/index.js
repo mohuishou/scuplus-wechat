@@ -115,14 +115,35 @@ const funcs = [{
   bg: '#ab96c5',
   type: 'jwc',
   is_graduate: false
+},
+{
+  name: '我的反馈',
+  url: 'my/feedbackList',
+  icon: 'feedback',
+  bg: '#ab96c5',
+  type: 'normal'
+},
+{
+  name: '通知设置',
+  url: 'my/notifyConfig',
+  icon: 'notify',
+  bg: '#ab96c5',
+  type: 'normal'
+},
+{
+  name: '研究生',
+  url: 'my/userConfig',
+  icon: 'gs',
+  bg: '#ab96c5',
+  type: 'normal'
+},
+{
+  name: '打赏',
+  url: 'money',
+  icon: 'money',
+  bg: '#ab96c5',
+  type: 'money'
 }
-  // {
-  //   name: '开发者',
-  //   url: 'money',
-  //   icon: 'money',
-  //   bg: '#ab96c5',
-  //   type: 'money'
-  // }
 ]
 
 module.exports = {
