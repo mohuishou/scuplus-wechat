@@ -113,7 +113,7 @@ button.mo-btn {
         <view>学号: {{item.card_info.no}}</view>
       </view>
     </view>
-    <block wx:else>
+    <block wx:if="{{item.category != '一卡通招领' && images.length > 0}}">
       <view class="group screenshot">
         <view class="title">
           截图
@@ -142,9 +142,7 @@ export default class BindJwc extends wepy.page {
   };
   mixins = [HttpMixin, ToastMixin];
   data = {
-    images: [
-      "http://img.zcool.cn/community/01b37659aece1aa801211d251b0fef.png@1280w_1l_2o_100sh.webp"
-    ],
+    images: [],
     height: 500,
     item: {},
     is_me: false,
@@ -188,8 +186,9 @@ export default class BindJwc extends wepy.page {
           data.card_info = {};
         }
       } else {
-        this.images = data.pictures.split(",");
+        if (data.pictures != "") this.images = data.pictures.split(",");
       }
+
       this.is_me = res.data.is_me;
       this.item = data;
       wepy.setNavigationBarTitle({ title: data.title });
