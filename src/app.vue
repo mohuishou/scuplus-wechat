@@ -7,7 +7,7 @@
 <script>
 import wepy from "wepy";
 import "wepy-async-function";
-import { POST } from "./util/http";
+import Http from "./util/http";
 import db from "./util/db";
 export default class extends wepy.app {
   config = {
@@ -95,14 +95,51 @@ export default class extends wepy.app {
     verify: 0
   };
   onLaunch() {
+    // 登录
     this.getToken();
+
+    // 检查更新
+    this.checkUpdate();
+
+    // 检查通知信息
+    this.checkNotice();
   }
-  onShow() {
+  /**
+   * 检查最新通过，如果有最新通知则弹窗提示
+   */
+  async checkNotice() {
+    try {
+      // 检查这条通知是否已经展示
+      const newst_id = db.Get("notice_new") || 0;
+      const res = await Http.Get("/notice/new", {}, false);
+      if (!res.data.abstract) return;
+      if (res.data.id === newst_id) {
+        console.log("通知已阅", newst_id);
+        return;
+      }
+      wepy.showModal({
+        title: "通知", //提示的标题,
+        content: res.data.abstract, //提示的内容,
+        showCancel: true, //是否显示取消按钮,
+        cancelText: "取消", //取消按钮的文字，默认为取消，最多 4 个字符,
+        cancelColor: "#000000", //取消按钮的文字颜色,
+        confirmText: "查看", //确定按钮的文字，默认为取消，最多 4 个字符,
+        confirmColor: "#3CC51F", //确定按钮的文字颜色,
+        success: function(r) {
+          if (r.confirm) {
+            wepy.navigateTo({
+              url: `/pages/details?id=${res.data.id}&&from=notice`
+            });
+          }
+          db.Set("notice_new", res.data.id);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  checkUpdate() {
     const updateManager = wx.getUpdateManager();
-    updateManager.onCheckForUpdate(function(res) {
-      // 请求完新版本信息的回调
-      console.log(res.hasUpdate);
-    });
     updateManager.onUpdateReady(function() {
       wx.showModal({
         title: "更新提示",
@@ -139,7 +176,7 @@ export default class extends wepy.app {
       // 微信登录
       const code = await this.wxLogin();
       // 登录服务器
-      const resp = await POST("/login", {
+      const resp = await Http.Post("/login", {
         code: code
       });
       if (resp.status === 0) {
@@ -150,9 +187,14 @@ export default class extends wepy.app {
         db.Set("jwc_verify", data.jwc_verify);
         db.Set("user_type", data.user_type);
         this.GlobalData.verify = data.verify;
-        if (data.verify === 0) {
-          wepy.navigateTo({
-            url: "bind"
+        if (data.jwc_verify === 0 && data.verify === 0) {
+          wepy.showModal({
+            title: "账号绑定", //提示的标题,
+            content:
+              "同学您好，您暂时未绑定教务处或统一认证中心账号。\r\n如果您是研究生同学可以点击首页研究生按钮设置用户类型，再绑定统一认证中心账号，若为本科同学请绑定教务处账号", //提示的内容,
+            confirmText: "已阅读", //确定按钮的文字，默认为取消，最多 4 个字符,
+            confirmColor: "#3CC51F", //确定按钮的文字颜色,
+            success: res => {}
           });
         }
       } else {
