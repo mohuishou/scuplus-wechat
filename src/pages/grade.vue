@@ -133,7 +133,9 @@ page {
       <block wx:for="{{grades}}" wx:key="index">
         <view class="grade-lists">
           <view @tap="selectTerm({{index}},{{!item.grades[0].selected}})" class="grade-header">
-            <text class="title">{{item.grades[0].year}}~{{item.grades[0].year+1}}学年{{item.grades[0].term ? '春' : '秋'}}季学期</text>
+            <text wx:if="{{item.grades[0].year === -1}}" class="title">尚不及格</text>
+            <text wx:if="{{item.grades[0].year === -2}}" class="title">曾不及格季学期</text>
+            <text wx:if="{{item.grades[0].year >=   0}}" class="title">{{item.grades[0].year}}~{{item.grades[0].year+1}}学年{{item.grades[0].term ? '春' : '秋'}}季学期</text>
             <view>
               <view class="info">
                 <text>必修绩点：{{item.avg.required.gpa}}</text>
@@ -305,9 +307,7 @@ export default class Grade extends wepy.page {
         title: "计算结果",
         content: `您共选择${grades.length}门课程, 学分共计: ${
           result.sum.all.credit
-        }; \r
-        平均分: ${result.avg.all.grade}; \r
-        平均绩点: ${result.avg.all.gpa}; \r`,
+        }; \r平均分: ${result.avg.all.grade}; \r平均绩点: ${result.avg.all.gpa};`,
         showCancel: false
       });
     },
