@@ -51,7 +51,7 @@ page {
     <block wx:for="{{items}}" wx:key="index">
       <view @tap="active({{index}})" class="card">
         <view class="header">
-          <view class="title {{item.active ? 'active' : ''}}">{{item.title}}</view>
+          <view class="title">{{item.title}}</view>
           <view class="info">
             <view class="user">
               <view class="iconfont icon-user"></view>
@@ -62,9 +62,6 @@ page {
               <view class="">{{item.created_at}}</view>
             </view>
           </view>
-        </view>
-        <view class="content {{item.active ? 'active' : ''}}" style="height: {{item.height}}rpx;">
-          {{item.content}}
         </view>
       </view>
     </block>
@@ -98,13 +95,14 @@ export default class Help extends wepy.page {
   };
   methods = {
     active(i) {
-      this.items[i].active = !this.items[i].active;
-      if (this.items[i].active) {
-        this.items[i].height =
-          40 * Math.ceil(this.items[i].content.length / 20);
-      } else {
-        this.items[i].height = 0;
-      }
+      wepy.showModal({
+        title: this.items[i].title, //提示的标题,
+        content: this.items[i].content, //提示的内容,
+        showCancel: false, //是否显示取消按钮,
+        confirmText: '已阅读', //确定按钮的文字，默认为取消，最多 4 个字符,
+        confirmColor: '#3CC51F', //确定按钮的文字颜色,
+        success: res => {}
+      });
     },
     to() {
       wepy.navigateTo({ url: "/pages/my/feedback" });
@@ -118,8 +116,8 @@ export default class Help extends wepy.page {
         res.data[i].created_at = dayis(res.data[i].created_at).format(
           "YYYY-MM-DD"
         );
-        res.data[i].active = false;
-        res.data[i].height = 0;
+        // res.data[i].active = false;
+        // res.data[i].height = 0;
       }
       this.items = res.data;
       this.$apply();
