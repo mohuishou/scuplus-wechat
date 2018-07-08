@@ -60,6 +60,7 @@ scroll-view {
   height: 100%;
   flex-direction: column;
   flex: 2;
+  width: 0;
   &.title {
     flex: 1;
   }
@@ -86,10 +87,10 @@ scroll-view {
     color: #fff;
     display: flex;
     flex-direction: column;
+     overflow-wrap: break-word;
     view {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-block;
+      text-align: center;
     }
     .course-name {
       padding-top: 10rpx;
