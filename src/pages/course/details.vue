@@ -508,8 +508,8 @@ export default class CourseLists extends wepy.page {
     course.call_name = callTypes[course.call_name];
     course.task = taskTypes[course.task];
     course.exam_type = examTypes[course.exam_type];
-    course.avg_grade = course.avg_grade.toFixed(1);
-    course.fail_rate = course.fail_rate.toFixed(1);
+    course.avg_grade = course.avg_grade.toFixed(2);
+    course.fail_rate = (course.fail_rate * 100).toFixed(2);
     course.teacher_all = course.teacher;
     let teachers = course.teacher.split(",");
     let is_more = teachers.length > 1 ? "等" : "";

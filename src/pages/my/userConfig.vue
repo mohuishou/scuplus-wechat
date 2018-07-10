@@ -14,9 +14,15 @@ page {
   <view>
     <view class="group">
       <view class="title">
-        {{user_type === 0 ? '本科生' : '研究生'}}
+        本科生
       </view>
-      <switch checked="{{user_type}}" @change="changeUserType" />
+      <switch checked="{{user_type === 0}}" @change="changeUserType" />
+    </view>
+    <view class="group">
+      <view class="title">
+        研究生
+      </view>
+      <switch checked="{{user_type === 1}}" @change="changeUserType" />
     </view>
   </view>
 </template>
@@ -36,7 +42,7 @@ export default class UserConfig extends wepy.page {
   methods = {
     changeUserType() {
       this.user_type = (this.user_type + 1) % 2;
-      this.updateUserType()
+      this.updateUserType();
     }
   };
   async updateUserType() {
@@ -50,7 +56,7 @@ export default class UserConfig extends wepy.page {
       // 更新失败恢复设置
       console.error(error);
       this.user_type = (this.user_type + 1) % 2;
-      this.$apply()
+      this.$apply();
     }
   }
   onLoad() {
