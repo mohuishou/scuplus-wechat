@@ -3,6 +3,7 @@ import {
   domain
 } from '../config'
 import db from '../util/db'
+import Login from '../util/login'
 
 export default class HttpMixin extends wepy.mixin {
   // GET请求
@@ -36,6 +37,10 @@ export default class HttpMixin extends wepy.mixin {
     return new Promise((resolve, reject) => {
       handler.success = res => {
         if (showToast) wepy.hideLoading && wepy.hideLoading()
+        if (res.statusCode === 401) {
+          new Login().showErr()
+          return
+        }
         if (res.data.status === 0) {
           if (showToast) this.ShowToast(res.data.msg, 'success')
           resolve(res.data)

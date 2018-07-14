@@ -9,6 +9,7 @@ import wepy from "wepy";
 import "wepy-async-function";
 import Http from "./util/http";
 import db from "./util/db";
+import Login from "./util/login"
 export default class extends wepy.app {
   config = {
     pages: [
@@ -96,7 +97,7 @@ export default class extends wepy.app {
   };
   onLaunch() {
     // 登录
-    this.getToken();
+    new Login().getToken()
 
     // 检查更新
     this.checkUpdate();
@@ -155,74 +156,6 @@ export default class extends wepy.app {
       // 新的版本下载失败
       console.log("新版本下载失败！");
     });
-  }
-  // 微信登录
-  wxLogin() {
-    return new Promise((resolve, reject) => {
-      wepy.login({
-        success: res => {
-          if (res.code) {
-            resolve(res.code);
-          } else {
-            reject(res.errMsg);
-          }
-        },
-        fail: err => reject(err)
-      });
-    });
-  }
-  async login() {
-    try {
-      // 微信登录
-      const code = await this.wxLogin();
-      // 登录服务器
-      const resp = await Http.Post("/login", {
-        code: code
-      });
-      if (resp.status === 0) {
-        const data = resp.data;
-        db.Set("token", data.token);
-        db.Set("verify", data.verify);
-        db.Set("library_verify", data.library_verify);
-        db.Set("jwc_verify", data.jwc_verify);
-        db.Set("user_type", data.user_type);
-        this.GlobalData.verify = data.verify;
-        if (data.jwc_verify === 0 && data.verify === 0) {
-          wepy.showModal({
-            title: "账号绑定", //提示的标题,
-            content:
-              "同学您好，您暂时未绑定教务处或统一认证中心账号\r\n如果您是研究生同学可以点击首页研究生按钮设置用户类型，再绑定统一认证中心账号\r\n若为本科同学请绑定教务处账号", //提示的内容,
-            confirmText: "已阅读", //确定按钮的文字，默认为取消，最多 4 个字符,
-            confirmColor: "#3CC51F", //确定按钮的文字颜色,
-            success: res => {}
-          });
-        }
-      } else {
-        throw "用户登录失败！";
-      }
-    } catch (err) {
-      console.log("err", err);
-    }
-  }
-  checkSession() {
-    return new Promise((resolve, reject) => {
-      wepy.checkSession({
-        success: () => resolve(),
-        fail: () => reject()
-      });
-    });
-  }
-  async getToken() {
-    let token = db.Get("token");
-    if (!token) {
-      this.login();
-    } else {
-      try {
-        await this.checkSession();
-      } catch (error) {
-        this.login();
-      }
-    }
   }
 }
 </script>
