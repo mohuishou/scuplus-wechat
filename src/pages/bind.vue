@@ -164,6 +164,9 @@ export default class BindJwc extends wepy.page {
   }
   async Bind(params) {
     try {
+      if (db.Get(this.types[this.type].verify) == 1) {
+        await this.notice();
+      }
       const res = await this.POST(this.types[this.type].url || "/bind", params);
       db.Set(this.types[this.type].verify || "verify", 1);
       wepy.showModal({
@@ -180,6 +183,28 @@ export default class BindJwc extends wepy.page {
     } catch (error) {
       console.log(error);
     }
+  }
+  notice() {
+    return new Promise((resolve, reject) => {
+      wepy.showModal({
+        title: "提示", //提示的标题,
+        content: `修改${
+          this.types[this.type].name
+        }绑定账号，会清空上一个账号的所有相关数据\r\n每天最多仅可更换三次绑定账号\r\n点击确认修改`, //提示的内容,
+        showCancel: true, //是否显示取消按钮,
+        cancelText: "取消", //取消按钮的文字，默认为取消，最多 4 个字符,
+        cancelColor: "#000000", //取消按钮的文字颜色,
+        confirmText: "确定", //确定按钮的文字，默认为取消，最多 4 个字符,
+        confirmColor: "#3CC51F", //确定按钮的文字颜色,
+        success: res => {
+          if (res.confirm) {
+            resolve();
+            return;
+          }
+          reject("取消修改");
+        }
+      });
+    });
   }
 }
 </script>

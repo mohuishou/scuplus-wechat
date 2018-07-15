@@ -32,11 +32,10 @@ export default class Login {
       })
       if (resp.status === 0) {
         const data = resp.data
-        db.Set('token', data.token)
-        db.Set('verify', data.verify)
-        db.Set('library_verify', data.library_verify)
-        db.Set('jwc_verify', data.jwc_verify)
-        db.Set('user_type', data.user_type)
+        // 缓存登录之后的数据
+        for (const key in data) {
+          db.Set(key, data[key])
+        }
         if (data.jwc_verify === 0 && data.verify === 0) {
           wx.showModal({
             title: '账号绑定', // 提示的标题,
