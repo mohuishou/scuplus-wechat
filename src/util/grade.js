@@ -196,7 +196,6 @@ function trimStr(str) {
  * @param {String} g 等级
  */
 function lv2grade(g) {
-  g = trimStr(g)
   if (!isNaN(g)) {
     return g
   }
