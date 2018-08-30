@@ -101,6 +101,12 @@
           <view class="iconfont icon-arrow-right"></view>
         </view>
       </mview5>
+      <mview6 class="warn" @mtap.user="remove">
+        <view slot="content" class="list">
+          <view class="name">解除绑定，清空数据</view>
+          <view class="iconfont icon-arrow-right"></view>
+        </view>
+      </mview6>
     </view>
   </view>
 </template>
@@ -210,6 +216,27 @@
                 wx.clearStorageSync()
                 db.Set("token", token)
                 db.Set("verify", verify)
+                // 关闭所有页面并且跳转到首页，确保verify数据重新获取
+                wepy.reLaunch({
+                  url: "/pages/index"
+                });
+              } catch (e) {
+                self.ShowToast("清空失败！")
+              }
+            }
+          }
+        })
+      },
+      remove(){
+        const self = this
+        wepy.showModal({
+          title: "确认清空数据",
+          content: "会删除你的所有服务器数据以及本地数据，删除后必须完全退出小程序重新进入，请谨慎考虑，",
+          success: async function(res) {
+            if (res.confirm) {
+              try {
+                const resp = await self.POST("/goodbye")
+                wx.clearStorageSync()
                 // 关闭所有页面并且跳转到首页，确保verify数据重新获取
                 wepy.reLaunch({
                   url: "/pages/index"
