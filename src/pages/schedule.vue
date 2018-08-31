@@ -87,7 +87,7 @@ scroll-view {
     color: #fff;
     display: flex;
     flex-direction: column;
-     overflow-wrap: break-word;
+    overflow-wrap: break-word;
     view {
       display: inline-block;
       text-align: center;
@@ -445,6 +445,8 @@ export default class Schedule extends wepy.page {
       ci++;
       e.flex = 0;
       e.sessionArr = [];
+      if (e.session[e.session.length - 1] == ",")
+        e.session = e.session.substr(0, e.session.length - 1);
       if (e.session !== "") {
         e.sessionArr = e.session.split(",");
         e.flex = e.sessionArr.length;

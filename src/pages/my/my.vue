@@ -101,12 +101,12 @@
           <view class="iconfont icon-arrow-right"></view>
         </view>
       </mview5>
-      <mview6 class="warn" @mtap.user="remove">
+      <mview7 class="warn" @mtap.user="remove">
         <view slot="content" class="list">
           <view class="name">解除绑定，清空数据</view>
           <view class="iconfont icon-arrow-right"></view>
         </view>
-      </mview6>
+      </mview7>
     </view>
   </view>
 </template>
@@ -128,6 +128,7 @@
       mview4: MView,
       mview5: MView,
       mview6: MView,
+      mview7: MView,
     };
     mixins = [HttpMixin, ToastMixin];
     data = {
