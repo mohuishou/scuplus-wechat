@@ -79,7 +79,7 @@ ad {
         </view>
       </block>
     </view>
-    <ad wx:if="{{adShow}}" unit-id="adunit-95d3bc7778042638"></ad>
+    <!-- <ad wx:if="{{adShow}}" unit-id="adunit-95d3bc7778042638"></ad> -->
   </view>
 </template>
 

@@ -368,7 +368,7 @@ ad {
       <view wx:if="{{evaluates.length == 0}}" style="text-align: center; color: #888;width: 100%;">
         暂无评论
       </view>
-      <ad wx:if="{{adShow}}" unit-id="adunit-980940e6a5b9ca5b"></ad>
+      <!-- <ad wx:if="{{adShow}}" unit-id="adunit-980940e6a5b9ca5b"></ad> -->
     </view>
     <cover-view class="new-comment">
       <cover-view wx:if="{{course.evaluate.id > 0}}" @tap="newComment">

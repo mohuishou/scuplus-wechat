@@ -190,7 +190,7 @@ radio .wx-radio-input {
     <scroll-view style="height: {{height}}px;" scroll-y class="main" @scrolltolower="more">
       <repeat for="{{courses}}" item="data" key="index">
         <view class="ad" wx:if="{{adShow && (index == 6)}}">
-          <ad unit-id="adunit-df0fd6c5249c88d8"></ad>
+          <!-- <ad unit-id="adunit-df0fd6c5249c88d8"></ad> -->
         </view>
         <Card :item.sync="data"></Card>
       </repeat>

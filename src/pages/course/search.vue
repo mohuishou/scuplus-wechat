@@ -114,7 +114,7 @@ page {
     <scroll-view style="height: {{height}}px;" scroll-y class="main" @scrolltolower="more">
       <repeat for="{{courses}}" item="data" key="index">
         <view class="ad" wx:if="{{adShow && index == 6}}">
-          <ad unit-id="adunit-62acc878b4ddb2f5"></ad>
+          <!-- <ad unit-id="adunit-62acc878b4ddb2f5"></ad> -->
         </view>
         <Card :item.sync="data"></Card>
       </repeat>

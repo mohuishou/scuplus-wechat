@@ -148,7 +148,7 @@ page {
     </view>
     <empty wx:else msg="尚未绑定账号"></empty>
     <view wx:if="{{adShow}}" class="ad">
-      <ad unit-id="adunit-35df18bc957ebcd2"></ad>
+      <!-- <ad unit-id="adunit-35df18bc957ebcd2"></ad> -->
     </view>
   </view>
 </template>

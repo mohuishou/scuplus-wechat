@@ -41,7 +41,7 @@ page {
       </view>
       <block wx:for="{{term.value}}" wx:key="index">
         <view class="ad" wx:if="{{adShow && index == 8}}">
-          <ad unit-id="adunit-ed4290e57794aa57"></ad>
+          <!-- <ad unit-id="adunit-ed4290e57794aa57"></ad> -->
         </view>
 
         <view @tap="to({{item.id}})" class="mo-panel">

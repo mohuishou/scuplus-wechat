@@ -54,7 +54,7 @@ export default class extends wepy.app {
     window: {
       navigationBarBackgroundColor: "#ffffff",
       navigationBarTextStyle: "black",
-      navigationBarTitleText: "We川大",
+      navigationBarTitleText: "川大圈校内通",
       backgroundColor: "#dddddd"
     },
     tabBar: {

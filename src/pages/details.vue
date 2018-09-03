@@ -161,7 +161,7 @@ ad {
         原文(点击复制链接)：{{url}}
       </view>
     </view>
-    <ad wx:if="{{adShow}}" unit-id="adunit-1a73b5ee3ee27c9e"></ad>
+    <!-- <ad wx:if="{{adShow}}" unit-id="adunit-1a73b5ee3ee27c9e"></ad> -->
   </view>
   <view class="tabs">
     <button open-type="share" class="tab">

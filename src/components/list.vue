@@ -42,7 +42,7 @@ scroll-view {
   <scroll-view style="height:{{height}}px" @scrolltolower="updateLists" enable-back-to-top scroll-y scroll-top="{{scrollTop}}" lower-threshold="80">
     <view style="{{isTag != '' ? 'margin-top: 0px;' : '' }}" class="lists">
       <block wx:for="{{details}}" wx:key="{{item.id}}">
-        <ad wx:if="{{adShow && index == 6 }}" unit-id="adunit-b7c8a72749643459"></ad>
+        <!-- <ad wx:if="{{adShow && index == 6 }}" unit-id="adunit-b7c8a72749643459"></ad> -->
         <view @tap="toDetail({{item.id}})" class="list">
           <view class="title">
             {{item.title}}
@@ -58,7 +58,7 @@ scroll-view {
         </view>
       </block>
       <empty class="empty" wx:if="{{isNone}}" msg="没有数据了"></empty>
-      <ad wx:if="{{adShow && isNone }}" unit-id="adunit-b7c8a72749643459"></ad>
+      <!-- <ad wx:if="{{adShow && isNone }}" unit-id="adunit-b7c8a72749643459"></ad> -->
     </view>
   </scroll-view>
 </template>
