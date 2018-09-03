@@ -27,10 +27,10 @@ export default class TermMixin extends wepy.mixin {
     db.Set('term', resp.data)
     db.Set('update_time.term', new Date().getTime())
   }
-  async InitTerm() {
+  async InitTerm(cacheTime = 6) {
     const now = (new Date()).getTime()
     const update_time = db.Get('update_time.term') || 0
-    if ((now - update_time) / 1000 / 3600 < (30 * 24) && db.Get('term')) {
+    if ((now - update_time) / 1000 / 3600 < cacheTime && db.Get('term')) {
       this.term = db.Get('term')
       this.$apply()
     } else {
