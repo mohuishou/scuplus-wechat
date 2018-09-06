@@ -83,7 +83,10 @@ page {
     <swiper style="height: {{swiper_height}}px;" class="swiper" autoplay="true" interval="4000" duration="1000">
       <block wx:for="{{notices}}" wx:key="{{index}}">
         <swiper-item>
-          <image style="height: {{swiper_height}}px;" @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
+          <navigator wx:if="{{item.wxid != ''}}" target="miniProgram" open-type="navigate" app-id="{{item.wxid}}" path="{{item.abstract}}" extra-data="" version="release">
+            <image style="height: {{swiper_height}}px;" src="{{item.cover}}" class="slide-image" />
+          </navigator>
+          <image wx:else style="height: {{swiper_height}}px;" @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
         </swiper-item>
       </block>
     </swiper>
