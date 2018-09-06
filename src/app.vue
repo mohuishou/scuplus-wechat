@@ -13,6 +13,7 @@ import Login from "./util/login"
 export default class extends wepy.app {
   config = {
     pages: [
+      "pages/jump",
       "pages/index",
       "pages/library/loan",
       "pages/library/search",
@@ -57,36 +58,36 @@ export default class extends wepy.app {
       navigationBarTitleText: "We川大",
       backgroundColor: "#dddddd"
     },
-    tabBar: {
-      selectedColor: "#f06292",
-      color: "#707070",
-      list: [
-        {
-          pagePath: "pages/index",
-          text: "首页",
-          iconPath: "icon/home.png",
-          selectedIconPath: "icon/home@select.png"
-        },
-        {
-          pagePath: "pages/course/lists",
-          text: "寻课",
-          iconPath: "icon/course.png",
-          selectedIconPath: "icon/course@select.png"
-        },
-        {
-          pagePath: "pages/newsLists",
-          text: "资讯",
-          iconPath: "icon/news.png",
-          selectedIconPath: "icon/news@select.png"
-        },
-        {
-          pagePath: "pages/my/my",
-          text: "个人中心",
-          iconPath: "icon/user.png",
-          selectedIconPath: "icon/user@select.png"
-        }
-      ]
-    }
+    // tabBar: {
+    //   selectedColor: "#f06292",
+    //   color: "#707070",
+    //   list: [
+    //     {
+    //       pagePath: "pages/index",
+    //       text: "首页",
+    //       iconPath: "icon/home.png",
+    //       selectedIconPath: "icon/home@select.png"
+    //     },
+    //     {
+    //       pagePath: "pages/course/lists",
+    //       text: "寻课",
+    //       iconPath: "icon/course.png",
+    //       selectedIconPath: "icon/course@select.png"
+    //     },
+    //     {
+    //       pagePath: "pages/newsLists",
+    //       text: "资讯",
+    //       iconPath: "icon/news.png",
+    //       selectedIconPath: "icon/news@select.png"
+    //     },
+    //     {
+    //       pagePath: "pages/my/my",
+    //       text: "个人中心",
+    //       iconPath: "icon/user.png",
+    //       selectedIconPath: "icon/user@select.png"
+    //     }
+    //   ]
+    // }
   };
   constructor() {
     super();
