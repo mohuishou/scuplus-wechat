@@ -8,7 +8,7 @@
 
 ## APIDOC
 
-开发者已经毕业，小程序不会又大的变动，1.0版本已经发布，接下来会陆续完善小程序当中所涉及到的所有API
+开发者已经毕业，小程序不会有大的变动，1.0版本已经发布，接下来会陆续完善小程序当中所涉及到的所有API
 [https://documenter.getpostman.com/view/364695/RWaGUpsy](https://documenter.getpostman.com/view/364695/RWaGUpsy)
 
 ## 功能概要
