@@ -11,6 +11,9 @@
 开发者已经毕业，小程序不会有大的变动，1.0版本已经发布，接下来会陆续完善小程序当中所涉及到的所有API
 [https://documenter.getpostman.com/view/364695/RWaGUpsy](https://documenter.getpostman.com/view/364695/RWaGUpsy)
 
+## 后端
+https://github.com/mohuishou/scuplus-go
+
 ## 功能概要
 
 - [x] 成绩查询/绩点计算器/成绩更新通知
