@@ -242,8 +242,7 @@ export default class Index extends wepy.page {
         return;
       }
       const todaySchedule = [];
-      // let today = new Date().getDay() + 1;
-      let today = 3
+      let today = new Date().getDay() + 1;
       schedules[today].forEach(e => {
         if (e.course_name) {
           todaySchedule.push(e);
