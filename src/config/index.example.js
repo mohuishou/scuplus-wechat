@@ -5,3 +5,12 @@ const domains = {
 }
 export const domain = domains[env]
 export const version = '0.8.0' // 版本号
+
+export const COSConf = {
+  key: {
+    SecretId: 'xxx',
+    SecretKey: 'xxx'
+  },
+  bucket: 'xxx',
+  region: 'xxx'
+}

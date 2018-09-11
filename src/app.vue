@@ -9,7 +9,7 @@ import wepy from "wepy";
 import "wepy-async-function";
 import Http from "./util/http";
 import db from "./util/db";
-import Login from "./util/login"
+import Login from "./util/login";
 export default class extends wepy.app {
   config = {
     pages: [
@@ -97,7 +97,7 @@ export default class extends wepy.app {
   };
   onLaunch() {
     // 登录
-    new Login().getToken()
+    new Login().getToken();
 
     // 检查更新
     this.checkUpdate();

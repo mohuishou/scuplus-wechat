@@ -6,6 +6,14 @@
 
 小程序采用wepy开发，不知道怎么取名字，仿照we重邮取了一个
 
+## APIDOC
+
+开发者已经毕业，小程序不会有大的变动，1.0版本已经发布，接下来会陆续完善小程序当中所涉及到的所有API
+[https://documenter.getpostman.com/view/364695/RWaGUpsy](https://documenter.getpostman.com/view/364695/RWaGUpsy)
+
+## 后端
+https://github.com/mohuishou/scuplus-go
+
 ## 功能概要
 
 - [x] 成绩查询/绩点计算器/成绩更新通知
@@ -20,10 +28,6 @@
 - [x] 反馈/查看/评论/通知(已整合github issues)
 - [x] 寻课（课程助手，可以获取课程详细信息，拥有该课程的用户可以进行评价）
 - [x] 寻物/寻卡(失物招领,并且针对校园卡单独分类)
-
-## 扫码体验
-
-![img/qcode.jpg](img/qcode.jpg)
 
 ## 预览
 > 部分页面，截止于0.9.2
