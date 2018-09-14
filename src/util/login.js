@@ -12,7 +12,8 @@ export default class Login {
   }
   async getToken() {
     let token = db.Get('token')
-    if (!token) {
+    let unionID = db.Get("unionid")
+    if (!token || !unionID) {
       await this.login()
     } else {
       try {

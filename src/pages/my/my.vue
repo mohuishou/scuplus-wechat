@@ -56,7 +56,7 @@ page {
         <open-data type="userNickName" lang="zh_CN"></open-data>
       </view>
     </view>
-    <view wx:if="{{unionid}}" class="lists">
+    <view class="lists">
       <view class="list-group">
         <repeat for="{{feedbacks}}" item="item" key="index">
           <mview @mtap.user="to" :arg.sync="item">
@@ -112,7 +112,7 @@ page {
         </view>
       </mview7>
     </view>
-    <button wx:else @getuserinfo="userinfo" open-type="getUserInfo" class="mo-btn login">点击登录</button>
+    <button  wx:if="{{!unionid}}" @getuserinfo="userinfo" open-type="getUserInfo" class="mo-btn login">点击登录</button>
   </view>
 </template>
 
@@ -121,6 +121,7 @@ import wepy from "wepy";
 import MView from "components/mview";
 import HttpMixin from "mixins/http";
 import db from "util/db";
+import Login from "util/login";
 import ToastMixin from "mixins/toast";
 export default class My extends wepy.page {
   config = {
@@ -187,7 +188,8 @@ export default class My extends wepy.page {
     qqGroup: {
       url: "698433701",
       type: "copy"
-    }
+    },
+    count: 0,
   };
   methods = {
     async userinfo(e) {
@@ -199,7 +201,8 @@ export default class My extends wepy.page {
         this.unionid = true
         this.$apply()
         db.Set("unionid", true);
-      } catch (error) {}
+      } catch (error) {
+      }
     },
     pay() {
       wepy.previewImage({
