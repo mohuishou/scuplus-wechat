@@ -36,32 +36,28 @@ https://github.com/mohuishou/scuplus-go
 
 ## 安装说明
 
-> 注意，we川大目前处于积极开发阶段，api/ui随时可能大改
+> 已经配置好了容器化开发环境只需要安装 vscode、docker 即可快速使用
 
-#### 1. 安装（更新） wepy 命令行工具。
-```bash
-npm install wepy-cli -g
-```
+### 开发工具
 
-#### 2. 克隆本仓库
+- vscode（已安装扩展: ms-vscode-remote.remote-containers）
+- docker 
+
+### 1. 克隆本仓库
 
 ```bash
 git clone git@github.com:mohuishou/scuplus-wechat.git
 ```
 
-#### 3. 安装依赖
-```bash
-cd scuplus-wechat
-npm install
-```
+### 2. vscode 中点击左下角, 选择 remote-container: open in 
 
-#### 4. 修改配置文件
+### 3. 修改配置文件
 ```bash
 cd src/config
 mv index.example.js index.js
 ```
 
-#### 5. 开启实时编译
+### 4. 开启实时编译
 ```bash
 npm run dev
 ```
