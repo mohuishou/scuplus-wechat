@@ -84,118 +84,118 @@ ad {
 </template>
 
 <script>
-import wepy from "wepy";
-import HttpMixin from "../mixins/http";
-import ToastMixin from "../mixins/toast";
-import db from "../util/db";
-import ADConfig from "util/ad";
+import wepy from 'wepy'
+import HttpMixin from '../mixins/http'
+import ToastMixin from '../mixins/toast'
+import db from '../util/db'
+import ADConfig from 'util/ad'
 export default class Classroom extends wepy.page {
   config = {
-    navigationBarTitleText: "我要自习"
+    navigationBarTitleText: '我要自习'
   };
   data = {
     JA: [
       {
-        name: "一教A座",
-        value: "yjA"
+        name: '一教A座',
+        value: 'yjA'
       },
       {
-        name: "一教B座",
-        value: "yjB"
+        name: '一教B座',
+        value: 'yjB'
       },
       {
-        name: "一教C座",
-        value: "yjC"
+        name: '一教C座',
+        value: 'yjC'
       },
       {
-        name: "一教D座",
-        value: "yjD"
+        name: '一教D座',
+        value: 'yjD'
       },
       {
-        name: "综合楼B座",
-        value: "zongB"
+        name: '综合楼B座',
+        value: 'zongB'
       },
       {
-        name: "综合楼C座",
-        value: "zongC"
+        name: '综合楼C座',
+        value: 'zongC'
       },
       {
-        name: "文科楼一区",
-        value: "wen1"
+        name: '文科楼一区',
+        value: 'wen1'
       },
       {
-        name: "文科楼二区",
-        value: "wen2"
+        name: '文科楼二区',
+        value: 'wen2'
       },
       {
-        name: "文科楼三区",
-        value: "wen3"
+        name: '文科楼三区',
+        value: 'wen3'
       }
     ],
     WJ: [
       {
-        name: "东二教",
-        value: "WJdong2"
+        name: '东二教',
+        value: 'WJdong2'
       },
       {
-        name: "东三教",
-        value: "WJdong3"
+        name: '东三教',
+        value: 'WJdong3'
       },
       {
-        name: "基教楼A座",
-        value: "WJjijiaoA"
+        name: '基教楼A座',
+        value: 'WJjijiaoA'
       },
       {
-        name: "基教楼C座",
-        value: "WJjijiaoC"
+        name: '基教楼C座',
+        value: 'WJjijiaoC'
       }
     ],
     HX: [
       {
-        name: "九教",
-        value: "HX9"
+        name: '九教',
+        value: 'HX9'
       },
       {
-        name: "十教",
-        value: "HX10"
+        name: '十教',
+        value: 'HX10'
       }
     ],
     building: {
-      addr: "望江",
-      name: "东二教",
-      value: "WJdong2"
+      addr: '望江',
+      name: '东二教',
+      value: 'WJdong2'
     },
     buildings: [
       [
         {
-          name: "望江",
-          value: "WJ"
+          name: '望江',
+          value: 'WJ'
         },
         {
-          name: "江安",
-          value: "JA"
+          name: '江安',
+          value: 'JA'
         },
         {
-          name: "华西",
-          value: "HX"
+          name: '华西',
+          value: 'HX'
         }
       ],
       [
         {
-          name: "东二教",
-          value: "WJdong2"
+          name: '东二教',
+          value: 'WJdong2'
         },
         {
-          name: "东三教",
-          value: "WJdong3"
+          name: '东三教',
+          value: 'WJdong3'
         },
         {
-          name: "基教楼A座",
-          value: "WJjijiaoA"
+          name: '基教楼A座',
+          value: 'WJjijiaoA'
         },
         {
-          name: "基教楼C座",
-          value: "WJjijiaoC"
+          name: '基教楼C座',
+          value: 'WJjijiaoC'
         }
       ]
     ],
@@ -204,51 +204,51 @@ export default class Classroom extends wepy.page {
   };
   computed = {
     adShow() {
-      return ADConfig.Get("classroom");
+      return ADConfig.Get('classroom')
     }
   };
   mixins = [HttpMixin, ToastMixin];
   components = {};
   methods = {
     changeBuilding(e) {
-      this.index = e.detail.value;
-      this.building = this.buildings[1][this.index[1]];
-      this.building.addr = this.buildings[0][this.index[0]].name;
-      this.get(this.building.value);
+      this.index = e.detail.value
+      this.building = this.buildings[1][this.index[1]]
+      this.building.addr = this.buildings[0][this.index[0]].name
+      this.get(this.building.value)
     },
     columnchange(e) {
       if (e.detail.column !== 0) {
-        return;
+        return
       }
-      let building = this.buildings[0][e.detail.value].value;
-      this.buildings[1] = this[building];
+      let building = this.buildings[0][e.detail.value].value
+      this.buildings[1] = this[building]
     },
     show(item, i) {
       wepy.showModal({
         title: this.building.name + item.roomName,
         content: `座位数: ${item.roomZws}, 第${i + 1}大节: ${item.classUse[i]
-          .kcm || "空闲"}`,
+          .kcm || '空闲'}`,
         showCancel: false
-      });
+      })
     }
   };
   async get(classroom) {
-    const resp = await this.POST("/classroom", {
+    const resp = await this.POST('/classroom', {
       classroom: classroom
-    });
-    this.rooms = JSON.parse(resp.data).roomdata;
-    this.$apply();
-    db.Set("classroom", this.building);
+    })
+    this.rooms = JSON.parse(resp.data).roomdata
+    this.$apply()
+    db.Set('classroom', this.building)
   }
   async onLoad() {
-    this.building = db.Get("classroom") || this.building;
+    this.building = db.Get('classroom') || this.building
     // 获取教室
-    this.get(this.building.value || "WJdong2");
+    this.get(this.building.value || 'WJdong2')
   }
   onShareAppMessage(options) {
     return {
-      title: "一起来自习"
-    };
+      title: '一起来自习'
+    }
   }
 }
 </script>

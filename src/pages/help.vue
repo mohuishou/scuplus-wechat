@@ -69,14 +69,14 @@ page {
   </view>
 </template>
 <script>
-import wepy from "wepy";
-import HttpMixin from "mixins/http";
-import ToastMixin from "mixins/toast";
-import Search from "components/search";
-import dayis from "dayjs";
+import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import Search from 'components/search'
+import dayis from 'dayjs'
 export default class Help extends wepy.page {
   config = {
-    navigationBarTitleText: "帮助"
+    navigationBarTitleText: '帮助'
   };
   mixins = [HttpMixin, ToastMixin];
   components = {
@@ -85,9 +85,9 @@ export default class Help extends wepy.page {
   data = {
     items: [
       {
-        title: "账号无法绑定",
-        created_at: "2018-06-06",
-        content: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试",
+        title: '账号无法绑定',
+        created_at: '2018-06-06',
+        content: '测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
         active: false,
         height: 0
       }
@@ -96,38 +96,38 @@ export default class Help extends wepy.page {
   methods = {
     active(i) {
       wepy.showModal({
-        title: this.items[i].title, //提示的标题,
-        content: this.items[i].content, //提示的内容,
-        showCancel: false, //是否显示取消按钮,
-        confirmText: '已阅读', //确定按钮的文字，默认为取消，最多 4 个字符,
-        confirmColor: '#3CC51F', //确定按钮的文字颜色,
+        title: this.items[i].title, // 提示的标题,
+        content: this.items[i].content, // 提示的内容,
+        showCancel: false, // 是否显示取消按钮,
+        confirmText: '已阅读', // 确定按钮的文字，默认为取消，最多 4 个字符,
+        confirmColor: '#3CC51F', // 确定按钮的文字颜色,
         success: res => {}
-      });
+      })
     },
     to() {
-      wepy.navigateTo({ url: "/pages/my/feedback" });
+      wepy.navigateTo({ url: '/pages/my/feedback' })
     }
   };
 
   async get() {
     try {
-      const res = await this.GET("/helps");
+      const res = await this.GET('/helps')
       for (let i = 0; i < res.data.length; i++) {
         res.data[i].created_at = dayis(res.data[i].created_at).format(
-          "YYYY-MM-DD"
-        );
+          'YYYY-MM-DD'
+        )
         // res.data[i].active = false;
         // res.data[i].height = 0;
       }
-      this.items = res.data;
-      this.$apply();
+      this.items = res.data
+      this.$apply()
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
   onLoad() {
-    this.get();
+    this.get()
   }
 }
 </script>

@@ -157,22 +157,22 @@ page {
 </template>
 
 <script>
-import wepy from "wepy";
-import HttpMixin from "mixins/http";
-import index from "util/index/index";
-import MView from "components/mview";
-import Card from "components/card";
-import Empty from "components/empty";
-import ADConfig from "util/ad";
-import db from "util/db";
+import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import index from 'util/index/index'
+import MView from 'components/mview'
+import Card from 'components/card'
+import Empty from 'components/empty'
+import ADConfig from 'util/ad'
+import db from 'util/db'
 export default class Index extends wepy.page {
   config = {};
   components = {
     mview: MView,
-    "schedule-card": Card,
-    "book-card": Card,
+    'schedule-card': Card,
+    'book-card': Card,
     ecard: Card,
-    "exam-card": Card,
+    'exam-card': Card,
     empty: Empty
   };
   mixins = [HttpMixin];
@@ -180,7 +180,7 @@ export default class Index extends wepy.page {
     notices: [
       {
         cover:
-          "http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg",
+          'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
         id: 1
       }
     ],
@@ -188,147 +188,147 @@ export default class Index extends wepy.page {
     swiper_height: 200,
     verifyChecks: {
       jwc: {
-        name: "教务处",
-        params: "jwc",
-        key: "jwc_verify"
+        name: '教务处',
+        params: 'jwc',
+        key: 'jwc_verify'
       },
       library: {
-        name: "图书馆",
-        params: "library",
-        key: "library_verify"
+        name: '图书馆',
+        params: 'library',
+        key: 'library_verify'
       },
       my: {
-        name: "统一认证中心",
-        params: "bind",
-        key: "verify"
+        name: '统一认证中心',
+        params: 'bind',
+        key: 'verify'
       }
     }
   };
   computed = {
     verify() {
-      return db.Get("verify");
+      return db.Get('verify')
     },
     library_verify() {
-      return db.Get("library_verify");
+      return db.Get('library_verify')
     },
     jwc_verify() {
-      return db.Get("jwc_verify");
+      return db.Get('jwc_verify')
     },
     graduate_verify() {
-      return db.Get("user_type") == 1;
+      return db.Get('user_type') == 1
     },
     ecardBalance() {
-      const trans = db.Get("trans");
+      const trans = db.Get('trans')
       if (trans.length > 0) {
-        return [trans[0].balance];
+        return [trans[0].balance]
       } else {
-        return [];
+        return []
       }
     },
     exams() {
-      let arr = db.Get("exams");
-      let data = [];
+      let arr = db.Get('exams')
+      let data = []
       for (let i = 0; i < arr.length; i++) {
-        if (arr[i].t >= 0) data.push(arr[i]);
+        if (arr[i].t >= 0) data.push(arr[i])
       }
-      return data;
+      return data
     },
     loanBooks() {
-      return db.Get("loan_now");
+      return db.Get('loan_now')
     },
     todaySchedules() {
-      let schedules = db.Get("schedules");
+      let schedules = db.Get('schedules')
       if (!schedules) {
-        return;
+        return
       }
-      const todaySchedule = [];
-      let today = new Date().getDay() + 1;
+      const todaySchedule = []
+      let today = new Date().getDay() + 1
       schedules[today].forEach(e => {
         if (e.course_name) {
-          todaySchedule.push(e);
+          todaySchedule.push(e)
         }
-      });
-      return todaySchedule;
+      })
+      return todaySchedule
     },
     adShow() {
-      return ADConfig.Get("index");
+      return ADConfig.Get('index')
     }
   };
   navigate(item) {
-    let url = item.url;
-    if (item.type == "money") {
+    let url = item.url
+    if (item.type == 'money') {
       wepy.previewImage({
-        urls: ["https://scuplus-1251451068.coscd.myqcloud.com/q.png"]
-      });
-      return;
+        urls: ['https://scuplus-1251451068.coscd.myqcloud.com/q.png']
+      })
+      return
     }
     if (this.graduate_verify == 1) {
-      if (item.type == "jwc" && !item.is_graduate) {
+      if (item.type == 'jwc' && !item.is_graduate) {
         wepy.showModal({
-          title: "权限错误",
-          content: "研究生同学暂未开放"
-        });
-        return;
+          title: '权限错误',
+          content: '研究生同学暂未开放'
+        })
+        return
       }
-      if ("is_graduate" in item && item.is_graduate && !this.verify) {
+      if ('is_graduate' in item && item.is_graduate && !this.verify) {
         wepy.showModal({
-          title: "账号信息错误",
-          content: "账号未绑定或密码错误！是否前往绑定？",
+          title: '账号信息错误',
+          content: '账号未绑定或密码错误！是否前往绑定？',
           success: function(res) {
             if (res.confirm) {
               wepy.navigateTo({
-                url: "bind?type=bind"
-              });
+                url: 'bind?type=bind'
+              })
             }
           }
-        });
-        return;
+        })
+        return
       }
     }
     if (item.type in this.verifyChecks) {
-      let check = this.verifyChecks[item.type];
+      let check = this.verifyChecks[item.type]
       if (!this[check.key]) {
         wepy.showModal({
-          title: "账号信息错误",
-          content: check.name + "账号未绑定或密码错误！是否前往绑定？",
+          title: '账号信息错误',
+          content: check.name + '账号未绑定或密码错误！是否前往绑定？',
           success: function(res) {
             if (res.confirm) {
               wepy.navigateTo({
-                url: "bind?type=" + check.params
-              });
+                url: 'bind?type=' + check.params
+              })
             }
           }
-        });
-        return;
+        })
+        return
       }
     }
     wepy.navigateTo({
       url: item.url
-    });
+    })
   }
   methods = {
     noticeTo(id) {
       wepy.navigateTo({
         url: `details?id=${id}&&from=notice`
-      });
+      })
     },
     to(item) {
-      this.navigate(item);
+      this.navigate(item)
     }
   };
   async getNotice() {
-    const resp = await this.GET("/notices", {}, false);
-    this.notices = resp.data;
-    this.$apply();
+    const resp = await this.GET('/notices', {}, false)
+    this.notices = resp.data
+    this.$apply()
   }
   onLoad() {
     // 设置swipe高度 2:1
-    this.swiper_height = wepy.getSystemInfoSync().windowWidth / 2;
-    this.getNotice();
+    this.swiper_height = wepy.getSystemInfoSync().windowWidth / 2
+    this.getNotice()
     // this.notices = []
   }
   onShareAppMessage(options) {
-    return {};
+    return {}
   }
 }
 </script>

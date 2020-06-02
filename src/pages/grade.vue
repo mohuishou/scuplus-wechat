@@ -193,17 +193,17 @@ page {
 </template>
 
 <script>
-import wepy from "wepy";
-import gradeUtil from "../util/grade";
-import Empty from "../components/empty";
-import HttpMixin from "../mixins/http";
-import ToastMixin from "../mixins/toast";
-import DataMixin from "../mixins/data";
-import db from "../util/db";
-import ADConfig from "util/ad";
+import wepy from 'wepy'
+import gradeUtil from '../util/grade'
+import Empty from '../components/empty'
+import HttpMixin from '../mixins/http'
+import ToastMixin from '../mixins/toast'
+import DataMixin from '../mixins/data'
+import db from '../util/db'
+import ADConfig from 'util/ad'
 export default class Grade extends wepy.page {
   config = {
-    navigationBarTitleText: "我的成绩",
+    navigationBarTitleText: '我的成绩',
     enablePullDownRefresh: true
   };
   components = {
@@ -211,10 +211,10 @@ export default class Grade extends wepy.page {
   };
   computed = {
     isGraduate() {
-      return db.Get("user_type") == 1;
+      return db.Get('user_type') == 1
     },
     adShow() {
-      return ADConfig.Get("grade");
+      return ADConfig.Get('grade')
     }
   };
   mixins = [HttpMixin, ToastMixin, DataMixin];
@@ -235,7 +235,7 @@ export default class Grade extends wepy.page {
         credit: 0,
         gpa: 0
       }
-    };
+    }
     let avg = {
       all: {
         grade: 0,
@@ -245,170 +245,170 @@ export default class Grade extends wepy.page {
         grade: 0,
         gpa: 0
       }
-    };
+    }
     this.grades.forEach(g => {
-      sum.all.grade += g.sum.all.grade;
-      sum.all.credit += g.sum.all.credit;
-      sum.all.gpa += g.sum.all.gpa;
-      sum.required.grade += g.sum.required.grade;
-      sum.required.credit += g.sum.required.credit;
-      sum.required.gpa += g.sum.required.gpa;
-    });
-    avg.all.gpa = (sum.all.gpa / sum.all.credit).toFixed(3);
-    avg.all.grade = (sum.all.grade / sum.all.credit).toFixed(3);
-    avg.required.gpa = (sum.required.gpa / sum.required.credit).toFixed(3);
-    avg.required.grade = (sum.required.grade / sum.required.credit).toFixed(3);
-    this.avg = avg;
-    this.$apply();
+      sum.all.grade += g.sum.all.grade
+      sum.all.credit += g.sum.all.credit
+      sum.all.gpa += g.sum.all.gpa
+      sum.required.grade += g.sum.required.grade
+      sum.required.credit += g.sum.required.credit
+      sum.required.gpa += g.sum.required.gpa
+    })
+    avg.all.gpa = (sum.all.gpa / sum.all.credit).toFixed(3)
+    avg.all.grade = (sum.all.grade / sum.all.credit).toFixed(3)
+    avg.required.gpa = (sum.required.gpa / sum.required.credit).toFixed(3)
+    avg.required.grade = (sum.required.grade / sum.required.credit).toFixed(3)
+    this.avg = avg
+    this.$apply()
   }
   Select(m, option, isRequired = false) {
     if (m < 0) {
       for (let m = 0; m < this.grades.length; m++) {
-        const e = this.grades[m];
+        const e = this.grades[m]
         for (let n = 0; n < e.grades.length; n++) {
           if (isRequired) {
             this.grades[m].grades[n].selected =
-              this.grades[m].grades[n].course_type === "必修";
+              this.grades[m].grades[n].course_type === '必修'
           } else {
-            this.grades[m].grades[n].selected = option;
+            this.grades[m].grades[n].selected = option
           }
         }
       }
     } else {
-      const e = this.grades[m];
+      const e = this.grades[m]
       for (let n = 0; n < e.grades.length; n++) {
-        this.grades[m].grades[n].selected = option;
+        this.grades[m].grades[n].selected = option
       }
     }
   }
   methods = {
     updateGrades() {
       if (this.isGraduate) {
-        this.graduateUpdate();
+        this.graduateUpdate()
       } else {
-        this.updateGrade();
+        this.updateGrade()
       }
     },
     select(i, j) {
-      this.grades[i].grades[j].selected = !this.grades[i].grades[j].selected;
-      this.$apply();
+      this.grades[i].grades[j].selected = !this.grades[i].grades[j].selected
+      this.$apply()
     },
     calc(i) {
-      this.bottom_active = i;
-      let grades = [];
+      this.bottom_active = i
+      let grades = []
       for (let m = 0; m < this.grades.length; m++) {
-        const e = this.grades[m];
+        const e = this.grades[m]
         for (let n = 0; n < e.grades.length; n++) {
-          if (e.grades[n].selected) grades.push(e.grades[n]);
+          if (e.grades[n].selected) grades.push(e.grades[n])
         }
       }
-      const result = gradeUtil.calTermGrade(grades, 0);
+      const result = gradeUtil.calTermGrade(grades, 0)
       wepy.showModal({
-        title: "计算结果",
+        title: '计算结果',
         content: `您共选择${grades.length}门课程, 学分共计: ${
           result.sum.all.credit
         }; \r平均分: ${result.avg.all.grade}; \r平均绩点: ${result.avg.all.gpa};`,
         showCancel: false
-      });
+      })
     },
     selectTerm(m, option) {
-      this.Select(m, option);
+      this.Select(m, option)
     },
     selectAll(i) {
-      this.bottom_active = i;
-      this.Select(-1, true);
+      this.bottom_active = i
+      this.Select(-1, true)
     },
     selectRequire(i) {
-      this.bottom_active = i;
-      this.Select(-1, true, true);
+      this.bottom_active = i
+      this.Select(-1, true, true)
     },
     help(i) {
-      this.bottom_active = i;
+      this.bottom_active = i
       wepy.navigateTo({
         url: `details?id=3&&from=notice`
-      });
+      })
     },
     deleteSelect(i) {
-      this.bottom_active = i;
-      this.Select(-1, false);
+      this.bottom_active = i
+      this.Select(-1, false)
     }
   };
 
   get() {
     if (this.isGraduate) {
-      this.graduateGet();
+      this.graduateGet()
     } else {
-      this.getGrade();
+      this.getGrade()
     }
   }
 
   async getGrade() {
     try {
-      const resp = await this.GET("/user/grade");
-      this.setGrades(resp.data, 1);
+      const resp = await this.GET('/user/grade')
+      this.setGrades(resp.data, 1)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
   async graduateGet() {
     try {
-      const resp = await this.GET("/graduate/grades");
-      this.setGrades(resp.data, 2);
+      const resp = await this.GET('/graduate/grades')
+      this.setGrades(resp.data, 2)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
   // 设置成绩
   setGrades(data, init = 1) {
-    let grades = [];
-    let map = {};
-    let i = 0;
+    let grades = []
+    let map = {}
+    let i = 0
     data.forEach(e => {
-      const term_key = `${e.year}${e.term}`;
+      const term_key = `${e.year}${e.term}`
       if (!(term_key in map)) {
-        map[term_key] = i;
-        i++;
-        grades[map[term_key]] = [];
+        map[term_key] = i
+        i++
+        grades[map[term_key]] = []
       }
-      grades[map[term_key]].push(e);
-    });
-    grades = gradeUtil.cal(grades, init);
-    this.grades = grades;
-    this.$apply();
-    this.calAllGrades();
-    this.InitSet("grades", grades);
+      grades[map[term_key]].push(e)
+    })
+    grades = gradeUtil.cal(grades, init)
+    this.grades = grades
+    this.$apply()
+    this.calAllGrades()
+    this.InitSet('grades', grades)
   }
 
   // 更新成绩
   async graduateUpdate() {
     try {
-      await this.POST("/graduate/grades");
-      this.get();
+      await this.POST('/graduate/grades')
+      this.get()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-    wepy.stopPullDownRefresh();
+    wepy.stopPullDownRefresh()
   }
   async updateGrade() {
     try {
-      await this.POST("/user/grade");
-      this.get();
+      await this.POST('/user/grade')
+      this.get()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-    wepy.stopPullDownRefresh();
+    wepy.stopPullDownRefresh()
   }
   onPullDownRefresh() {
     if (this.isGraduate) {
-      this.graduateUpdate();
+      this.graduateUpdate()
     } else {
-      this.updateGrade();
+      this.updateGrade()
     }
   }
   async onLoad() {
-    await this.Init("grades");
-    this.calAllGrades();
+    await this.Init('grades')
+    this.calAllGrades()
   }
 }
 </script>

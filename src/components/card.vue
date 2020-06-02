@@ -113,19 +113,19 @@
       url: String,
       iconBg: {
         type: String,
-        default: "#99ccee"
+        default: '#99ccee'
       },
       noneText: {
         type: String,
-        default: "暂无数据"
+        default: '暂无数据'
       },
       footText: {
         type: String,
-        default: "点击查看"
+        default: '点击查看'
       },
       bg: {
         type: String,
-        default: "card-kb.png"
+        default: 'card-kb.png'
       }
     }
     methods = {

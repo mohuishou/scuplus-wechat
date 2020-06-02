@@ -180,13 +180,13 @@ ad {
 </template>
 
 <script>
-import wepy from "wepy";
-import htmlParser from "components/htmlParser";
-import Share from "components/share";
-import HttpMixin from "mixins/http";
-import ToastMixin from "mixins/toast";
-import dayjs from "dayjs";
-import ADConfig from "util/ad";
+import wepy from 'wepy'
+import htmlParser from 'components/htmlParser'
+import Share from 'components/share'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import dayjs from 'dayjs'
+import ADConfig from 'util/ad'
 export default class Details extends wepy.page {
   config = {};
   mixins = [HttpMixin, ToastMixin];
@@ -196,112 +196,112 @@ export default class Details extends wepy.page {
   };
   computed = {
     adShow() {
-      return ADConfig.Get("newsDetail");
+      return ADConfig.Get('newsDetail')
     }
   };
   data = {
-    title: "",
-    content: "",
-    name: "123",
-    url: "",
-    time: "",
-    from: "news",
-    tags: ["We川大公告"],
+    title: '',
+    content: '',
+    name: '123',
+    url: '',
+    time: '',
+    from: 'news',
+    tags: ['We川大公告'],
     shareOption: {
-      title: "",
-      content: "",
-      from: "",
-      params: ""
+      title: '',
+      content: '',
+      from: '',
+      params: ''
     }
   };
   copyUrl(url) {
     if (!url) {
-      return;
+      return
     }
     let content = `
     ${this.title}: ${url}  ——BY We川大
-    `;
+    `
     wepy.setClipboardData({
       data: content,
       success: function(res) {},
       fail: res => {}
-    });
+    })
   }
   methods = {
     copy(url) {
-      this.copyUrl(url);
+      this.copyUrl(url)
     },
     wxParseTagATap(e) {
-      this.copyUrl(e.currentTarget.dataset.src);
+      this.copyUrl(e.currentTarget.dataset.src)
     },
     share() {
-      this.$invoke("share", "show");
+      this.$invoke('share', 'show')
     }
   };
   async getDetail(id) {
-    const resp = await this.GET(`/detail/${id}`);
-    let title = resp.data.title;
-    if (resp.data.category === "scuinfo") {
-      title = resp.data.author;
-      resp.data.content = resp.data.content.replace(/\n/g, "<br />");
+    const resp = await this.GET(`/detail/${id}`)
+    let title = resp.data.title
+    if (resp.data.category === 'scuinfo') {
+      title = resp.data.author
+      resp.data.content = resp.data.content.replace(/\n/g, '<br />')
     }
-    this.content = resp.data.content;
+    this.content = resp.data.content
     wepy.setNavigationBarTitle({
       title: title
-    });
-    let tags = [];
+    })
+    let tags = []
     resp.data.tags.forEach(e => {
-      tags.push(e.name);
-    });
-    this.tags = tags;
-    this.title = title;
-    this.url = resp.data.url;
-    this.time = dayjs(resp.data.updated_at).format("YYYY-MM-DD");
-    this.shareOption.title = title;
-    this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, "");
-    this.shareOption.from = resp.data.category;
+      tags.push(e.name)
+    })
+    this.tags = tags
+    this.title = title
+    this.url = resp.data.url
+    this.time = dayjs(resp.data.updated_at).format('YYYY-MM-DD')
+    this.shareOption.title = title
+    this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, '')
+    this.shareOption.from = resp.data.category
     this.shareOption.params =
-      "page=pages/details&scene=" + resp.data.id + "_news";
-    this.$apply();
-    this.$invoke("htmlParser", "htmlParserNotice");
+      'page=pages/details&scene=' + resp.data.id + '_news'
+    this.$apply()
+    this.$invoke('htmlParser', 'htmlParserNotice')
   }
   async getNotice(id) {
-    const resp = await this.GET(`/notice/${id}`);
-    this.content = resp.data.content;
+    const resp = await this.GET(`/notice/${id}`)
+    this.content = resp.data.content
     wepy.setNavigationBarTitle({
       title: resp.data.title
-    });
-    this.title = resp.data.title;
-    this.time = dayjs(resp.data.updated_at).format("YYYY-MM-DD");
-    this.shareOption.title = resp.data.title;
-    this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, "");
+    })
+    this.title = resp.data.title
+    this.time = dayjs(resp.data.updated_at).format('YYYY-MM-DD')
+    this.shareOption.title = resp.data.title
+    this.shareOption.content = resp.data.content.replace(/<[^>]*>|\s+/g, '')
     this.shareOption.params =
-      "page=pages/details&scene=" + resp.data.id + "_notice";
-    this.$apply();
-    this.$invoke("htmlParser", "htmlParserNotice");
+      'page=pages/details&scene=' + resp.data.id + '_notice'
+    this.$apply()
+    this.$invoke('htmlParser', 'htmlParserNotice')
   }
   async onLoad(option) {
-    this.from = option.from;
-    let id = option.id || "";
-    let from = option.from || "";
-    if ("scene" in option) {
-      const r = option.scene.split("_");
-      id = r[0];
-      from = r[1];
+    this.from = option.from
+    let id = option.id || ''
+    let from = option.from || ''
+    if ('scene' in option) {
+      const r = option.scene.split('_')
+      id = r[0]
+      from = r[1]
     }
     switch (from) {
-      case "notice":
-        await this.getNotice(id);
-        break;
+      case 'notice':
+        await this.getNotice(id)
+        break
       default:
-        await this.getDetail(id);
-        break;
+        await this.getDetail(id)
+        break
     }
   }
   onShareAppMessage(options) {
     return {
       title: this.title
-    };
+    }
   }
 }
 </script>

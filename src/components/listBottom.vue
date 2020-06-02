@@ -27,7 +27,7 @@
   </view>
 </template>
 <script>
-import wepy from "wepy";
+import wepy from 'wepy'
 export default class ListBottom extends wepy.component {
   props = {
     isLast: {

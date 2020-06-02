@@ -48,23 +48,23 @@
         default: []
       },
       arg: {
-        type: Object,
+        type: Object
       }
     }
     mixins = [HttpMixin]
     methods = {
       cache(e) {
         if (this.arg) {
-          this.$emit("mtap", this.arg)
+          this.$emit('mtap', this.arg)
         } else {
-          this.$emit("mtap", ...this.args)
+          this.$emit('mtap', ...this.args)
         }
-        if (e.detail.formId == "the formId is a mock one") {
-          console.log("现在处于微信开发者工具！");
+        if (e.detail.formId == 'the formId is a mock one') {
+          console.log('现在处于微信开发者工具！')
           return
         }
-        this.POST("/user/msg_id", {
-          "ids": e.detail.formId
+        this.POST('/user/msg_id', {
+          'ids': e.detail.formId
         }, false)
       }
     }

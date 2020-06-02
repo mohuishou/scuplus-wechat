@@ -111,100 +111,100 @@ page {
 </template>
 
 <script>
-import wepy from "wepy";
-import HttpMixin from "mixins/http";
-import ToastMixin from "mixins/toast";
-import db from "util/db";
+import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import db from 'util/db'
 export default class BindJwc extends wepy.page {
   config = {
-    navigationBarTitleText: "",
-    navigationBarBackgroundColor: "#090a0f",
-    navigationBarTextStyle: "white"
+    navigationBarTitleText: '',
+    navigationBarBackgroundColor: '#090a0f',
+    navigationBarTextStyle: 'white'
   };
   mixins = [HttpMixin, ToastMixin];
   components = {};
   data = {
-    type: "bind",
+    type: 'bind',
     types: {
       bind: {
-        name: "统一认证账号",
-        url: "/bind",
-        verify: "verify",
+        name: '统一认证账号',
+        url: '/bind',
+        verify: 'verify',
         help:
-          "密码为统一身份认证平台(即EDU邮箱)的密码，默认密码为身份证后六位,忘记密码可以访问 my.scu.edu.cn 找回"
+          '密码为统一身份认证平台(即EDU邮箱)的密码，默认密码为身份证后六位,忘记密码可以访问 my.scu.edu.cn 找回'
       },
       library: {
-        name: "图书馆",
-        url: "/library/bind",
-        verify: "library_verify",
+        name: '图书馆',
+        url: '/library/bind',
+        verify: 'library_verify',
         help:
-          "密码为图书馆的密码，默认密码为身份证后六位,忘记密码可以访问图书馆找回"
+          '密码为图书馆的密码，默认密码为身份证后六位,忘记密码可以访问图书馆找回'
       },
       jwc: {
-        name: "教务处",
-        url: "/jwc/bind",
-        verify: "jwc_verify",
+        name: '教务处',
+        url: '/jwc/bind',
+        verify: 'jwc_verify',
         help:
-          "密码为教务处的密码，默认密码为身份证后六位,忘记密码可以访问教务处找回"
+          '密码为教务处的密码，默认密码为身份证后六位,忘记密码可以访问教务处找回'
       }
     }
   };
   methods = {
     bind(e) {
-      let params = e.detail.value;
-      if (params.student_id == 0 || params.password == "") {
-        this.ShowToast("学号密码必填！");
-        return;
+      let params = e.detail.value
+      if (params.student_id == 0 || params.password == '') {
+        this.ShowToast('学号密码必填！')
+        return
       }
-      this.Bind(params);
+      this.Bind(params)
     }
   };
   onLoad(option) {
-    this.type = option.type || this.type;
+    this.type = option.type || this.type
   }
   async Bind(params) {
     try {
       if (db.Get(this.types[this.type].verify) == 1) {
-        await this.notice();
+        await this.notice()
       }
-      const res = await this.POST(this.types[this.type].url || "/bind", params);
-      db.Set(this.types[this.type].verify || "verify", 1);
+      const res = await this.POST(this.types[this.type].url || '/bind', params)
+      db.Set(this.types[this.type].verify || 'verify', 1)
       wepy.showModal({
-        title: "绑定成功",
-        content: "点击确认掉转到首页，请在首页点击查看we川大使用说明！",
+        title: '绑定成功',
+        content: '点击确认掉转到首页，请在首页点击查看we川大使用说明！',
         showCancel: false,
         success: function(res) {
           // 关闭所有页面并且跳转到首页，确保verify数据重新获取
           wepy.reLaunch({
-            url: "/pages/index"
-          });
+            url: '/pages/index'
+          })
         }
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
   notice() {
     return new Promise((resolve, reject) => {
       wepy.showModal({
-        title: "提示", //提示的标题,
+        title: '提示', // 提示的标题,
         content: `修改${
           this.types[this.type].name
-        }绑定账号，会清空上一个账号的所有相关数据\r\n每天最多仅可更换三次绑定账号\r\n点击确认修改`, //提示的内容,
-        showCancel: true, //是否显示取消按钮,
-        cancelText: "取消", //取消按钮的文字，默认为取消，最多 4 个字符,
-        cancelColor: "#000000", //取消按钮的文字颜色,
-        confirmText: "确定", //确定按钮的文字，默认为取消，最多 4 个字符,
-        confirmColor: "#3CC51F", //确定按钮的文字颜色,
+        }绑定账号，会清空上一个账号的所有相关数据\r\n每天最多仅可更换三次绑定账号\r\n点击确认修改`, // 提示的内容,
+        showCancel: true, // 是否显示取消按钮,
+        cancelText: '取消', // 取消按钮的文字，默认为取消，最多 4 个字符,
+        cancelColor: '#000000', // 取消按钮的文字颜色,
+        confirmText: '确定', // 确定按钮的文字，默认为取消，最多 4 个字符,
+        confirmColor: '#3CC51F', // 确定按钮的文字颜色,
         success: res => {
           if (res.confirm) {
-            resolve();
-            return;
+            resolve()
+            return
           }
-          reject("取消修改");
+          reject('取消修改')
         }
-      });
-    });
+      })
+    })
   }
 }
 </script>

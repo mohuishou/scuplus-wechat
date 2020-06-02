@@ -45,7 +45,7 @@ page {
   </form>
 </template>
 <script>
-import wepy from "wepy";
+import wepy from 'wepy'
 export default class Share extends wepy.component {
   props = {
     title: String,
@@ -56,10 +56,10 @@ export default class Share extends wepy.component {
   };
   methods = {
     submit(e) {
-      this.$emit("search", e.detail.value.name);
+      this.$emit('search', e.detail.value.name)
     },
     search(e) {
-      this.$emit("search", e.detail.value);
+      this.$emit('search', e.detail.value)
     }
   };
 }

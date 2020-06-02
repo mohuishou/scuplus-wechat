@@ -110,27 +110,27 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import HttpMixin from "mixins/http";
-  import ToastMixin from "mixins/toast";
-  import DataMixin from "mixins/data";
-  import db from "util/db"
+  import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import DataMixin from 'mixins/data'
+import db from 'util/db'
   Array.prototype.removeVal = function(val) {
-    const index = this.indexOf(val);
-    if (index > -1) {
-      this.splice(index, 1);
-    }
+    const index = this.indexOf(val)
+  if (index > -1) {
+    this.splice(index, 1)
+  }
   }
   export default class ChooseTags extends wepy.page {
     config = {
-      navigationBarTitleText: "选择标签",
+      navigationBarTitleText: '选择标签'
     };
     mixins = [HttpMixin, ToastMixin, DataMixin];
     data = {
       active: false,
-      tags: ["社团活动", "本科教育", "研究生教育", "科研动态", "院内动态", "院内通知", "会议通知", "院系风采", "团情快讯", "热门", "最近", "川大在线", "新闻", "公告", "比赛", "挑战杯", "凤凰展翅", "宣讲会", "招聘信息", ],
-      college: ["材料科学与工程学院", "电气信息学院", "电子信息学院", "法学院", "高分子科学与工程学院", "公共管理学院", "华西公共卫生学院", "华西口腔医学院", "华西临床医学院", "华西药学院", "化学学院", "化学工程学院", "华西基础医学与法医学院", "计算机学院", "建筑与环境学院", "经济学院", "匹兹堡学院", "历史文化学院", "轻纺与食品学院", "软件学院", "商学院", "生命科学学院", "数学学院", "水利水电学院", "外国语学院", "文学与新闻学院", "物理科学与技术学院", "艺术学院", "制造科学与工程学院"],
-      org: ["青春川大", "教务处", "四川大学新闻网", "就业网", "学工部", "社团联", "研究生院"],
+      tags: ['社团活动', '本科教育', '研究生教育', '科研动态', '院内动态', '院内通知', '会议通知', '院系风采', '团情快讯', '热门', '最近', '川大在线', '新闻', '公告', '比赛', '挑战杯', '凤凰展翅', '宣讲会', '招聘信息' ],
+      college: ['材料科学与工程学院', '电气信息学院', '电子信息学院', '法学院', '高分子科学与工程学院', '公共管理学院', '华西公共卫生学院', '华西口腔医学院', '华西临床医学院', '华西药学院', '化学学院', '化学工程学院', '华西基础医学与法医学院', '计算机学院', '建筑与环境学院', '经济学院', '匹兹堡学院', '历史文化学院', '轻纺与食品学院', '软件学院', '商学院', '生命科学学院', '数学学院', '水利水电学院', '外国语学院', '文学与新闻学院', '物理科学与技术学院', '艺术学院', '制造科学与工程学院'],
+      org: ['青春川大', '教务处', '四川大学新闻网', '就业网', '学工部', '社团联', '研究生院'],
       choose: []
     }
     methods = {
@@ -142,7 +142,7 @@
           return
         }
         if (this.choose.length > 10) {
-          this.ShowToast("最多十个")
+          this.ShowToast('最多十个')
           return
         }
         this[type].removeVal(item)
@@ -150,7 +150,7 @@
           name: item,
           type: type
         })
-        db.Set("chooseTags", this.choose)
+        db.Set('chooseTags', this.choose)
       },
       delete(item) {
         if (!this.active) {
@@ -158,18 +158,18 @@
         }
         for (let i = 0; i < this.choose.length; i++) {
           if (this.choose[i].name == item.name) {
-            this.choose.splice(i, 1);
+            this.choose.splice(i, 1)
           }
         }
         this[item.type].unshift(item.name)
-        db.Set("chooseTags", this.choose)
+        db.Set('chooseTags', this.choose)
       }
     }
     onLoad() {
-      this.choose = db.Get("chooseTags") || this.choose
+      this.choose = db.Get('chooseTags') || this.choose
       this.choose.forEach(e => {
         this[e.type].removeVal(e.name)
-      });
-    }
+      })
+  }
   }
 </script>

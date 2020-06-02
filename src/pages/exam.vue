@@ -117,20 +117,20 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import Empty from "components/empty";
-  import ExamMixin from "mixins/exam";
-  import HttpMixin from "mixins/http";
-  import ToastMixin from "mixins/toast";
-  import DataMixin from "mixins/data";
-  import db from "util/db"
+  import wepy from 'wepy'
+import Empty from 'components/empty'
+import ExamMixin from 'mixins/exam'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import DataMixin from 'mixins/data'
+import db from 'util/db'
   export default class Exam extends wepy.page {
     config = {
       navigationBarTitleText: '考试安排',
       enablePullDownRefresh: true
     };
     components = {
-      empty: Empty,
+      empty: Empty
     };
     mixins = [ExamMixin, HttpMixin, ToastMixin, DataMixin];
     data = {
@@ -138,8 +138,8 @@
     };
     methods = {
       active(i) {
-        this.exams[i].active = !this.exams[i].active;
-        this.$apply();
+        this.exams[i].active = !this.exams[i].active
+        this.$apply()
       }
     };
     async onPullDownRefresh() {
@@ -147,38 +147,38 @@
         await this.UpdateExam()
         await this.get()
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
       wepy.stopPullDownRefresh()
     }
     async get() {
-      let exams = await this.GetExam();
+      let exams = await this.GetExam()
       for (let i = 0; i < exams.length; i++) {
-        const e = exams[i];
-        const start = Date.parse(e.start_time);
-        const now = new Date().getTime();
+        const e = exams[i]
+        const start = Date.parse(e.start_time)
+        const now = new Date().getTime()
         if (start - now < 0) {
-          exams[i].time_info = "已经考过啦";
+          exams[i].time_info = '已经考过啦'
           exams[i].t = -1
         } else {
           let hours = (start - now) / 1000 / 3600
-          let day = Math.floor(hours / 24);
+          let day = Math.floor(hours / 24)
           hours = Math.floor(hours)
           exams[i].t = day
           if (day == 0) {
-            exams[i].time_info = `还有不到${hours}小时考试`;
+            exams[i].time_info = `还有不到${hours}小时考试`
           } else {
-            exams[i].time_info = `还有不到${day}天考试`;
+            exams[i].time_info = `还有不到${day}天考试`
           }
         }
-        exams[i].active = false;
+        exams[i].active = false
       }
-      this.exams = exams;
-      this.$apply();
-      this.InitSet("exams", exams)
+      this.exams = exams
+      this.$apply()
+      this.InitSet('exams', exams)
     }
     async onLoad() {
-      this.Init("exams")
+      this.Init('exams')
     }
   }
 </script>

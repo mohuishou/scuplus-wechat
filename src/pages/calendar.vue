@@ -132,13 +132,13 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import HttpMixin from "mixins/http";
-  import ToastMixin from "mixins/toast";
-  import db from "util/db";
-  import DataMixin from "mixins/data";
-  import TermMixin from "mixins/term";
-  export default class BindJwc extends wepy.page {
+  import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import db from 'util/db'
+import DataMixin from 'mixins/data'
+import TermMixin from 'mixins/term'
+export default class BindJwc extends wepy.page {
     config = {
       navigationBarTitleText: '校历',
       enablePullDownRefresh: true
@@ -148,12 +148,12 @@
       current: {
         year: 2018,
         month: 1,
-        day: 1,
+        day: 1
       },
       today: {
         day: 6,
         month: 1,
-        year: 2018,
+        year: 2018
       },
       monthDay: [],
       events: [],
@@ -162,12 +162,12 @@
     };
     computed = {
       termName() {
-        if (!this.term) return "本学期数据获取错误！"
+        if (!this.term) return '本学期数据获取错误！'
         const start = new Date(this.term.start_time)
         const end = new Date(this.term.end_time)
         const now = new Date(this.current.year, this.current.month - 1, this.current.day)
         if (now.getTime() < start.getTime() || now.getTime() > end.getTime()) {
-          return "假期ing,浪～"
+          return '假期ing,浪～'
         }
         return this.term.name
       }
@@ -181,7 +181,7 @@
         this.init()
       },
       updateCurrent(e) {
-        const arr = e.detail.value.split("-")
+        const arr = e.detail.value.split('-')
         if (arr.length != 2) return
         this.current.year = arr[0]
         this.current.month = arr[1] - 0
@@ -216,22 +216,22 @@
     }
     // 获取本月一共有多少天
     getMonthDays() {
-      return new Date(this.current.year, this.current.month, 0).getDate();
-    }
+      return new Date(this.current.year, this.current.month, 0).getDate()
+  }
     // 计算每月第一天是星期几
     getFirstDayOfWeek() {
-      return new Date(Date.UTC(this.current.year, this.current.month - 1, 1)).getDay();
-    }
+      return new Date(Date.UTC(this.current.year, this.current.month - 1, 1)).getDay()
+  }
     async get() {
       try {
-        const resp = await this.GET("/term/events")
+        const resp = await this.GET('/term/events')
         this.term = resp.data.term
         this.termEvents = resp.data.events
         this.$apply()
-        this.InitSet("term", this.term)
-        this.InitSet("termEvents", this.termEvents)
+        this.InitSet('term', this.term)
+        this.InitSet('termEvents', this.termEvents)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
     async onPullDownRefresh() {
@@ -240,12 +240,12 @@
         this.current.year = this.today.year = new Date().getFullYear()
         this.current.day = this.today.day = new Date().getDate()
         this.current.month = this.today.month = new Date().getMonth() + 1
-        this.init();
+        this.init()
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-      wepy.stopPullDownRefresh();
-    }
+      wepy.stopPullDownRefresh()
+  }
     convertEvents() {
       this.events = []
       for (let j = 0; j < this.termEvents.length; j++) {
@@ -271,53 +271,53 @@
       // 初始化monthday
       this.monthDay = [
         [{
-            name: "周",
-            events: []
-          },
-          {
-            name: "日",
-            events: []
-          },
-          {
-            name: "一",
-            events: []
-          },
-          {
-            name: "二",
-            events: []
-          },
-          {
-            name: "三",
-            events: []
-          },
-          {
-            name: "四",
-            events: []
-          },
-          {
-            name: "五",
-            events: []
-          },
-          {
-            name: "六",
-            events: []
-          }
+          name: '周',
+          events: []
+        },
+        {
+          name: '日',
+          events: []
+        },
+        {
+          name: '一',
+          events: []
+        },
+        {
+          name: '二',
+          events: []
+        },
+        {
+          name: '三',
+          events: []
+        },
+        {
+          name: '四',
+          events: []
+        },
+        {
+          name: '五',
+          events: []
+        },
+        {
+          name: '六',
+          events: []
+        }
         ],
         []
-      ];
-      const firstDayWeek = this.getFirstDayOfWeek();
-      const days = this.getMonthDays();
+      ]
+      const firstDayWeek = this.getFirstDayOfWeek()
+      const days = this.getMonthDays()
       const empty = {
-        name: "",
+        name: '',
         events: []
-      };
+      }
       this.monthDay[this.monthDay.length - 1].push({
         name: this.GetWeek(this.current.year, this.current.month, 1) || '',
         events: []
-      });
-      // 计算每月第一周空白时间
+      })
+    // 计算每月第一周空白时间
       for (let i = 0; i < firstDayWeek; i++) {
-        this.monthDay[this.monthDay.length - 1].push(empty);
+        this.monthDay[this.monthDay.length - 1].push(empty)
       }
       // 填充每月时间
       for (let i = 1; i <= days; i++) {
@@ -325,27 +325,27 @@
           this.monthDay.push([{
             name: this.GetWeek(this.current.year, this.current.month, i) || '',
             events: []
-          }]);
+          }])
         }
-        let d = this.monthDay[this.monthDay.length - 1];
+        let d = this.monthDay[this.monthDay.length - 1]
         d.push({
           name: i,
           events: this.events[`${this.current.year}-${this.current.month}-${i}`] || []
-        });
+        })
       }
-      let d = this.monthDay[this.monthDay.length - 1];
-      const len = 8 - d.length;
-      for (let i = 0; i < len; i++) d.push(empty);
+      let d = this.monthDay[this.monthDay.length - 1]
+      const len = 8 - d.length
+      for (let i = 0; i < len; i++) d.push(empty)
       this.$apply()
     }
     async onLoad() {
-      await this.Init("termEvents", 24 * 30)
+      await this.Init('termEvents', 24 * 30)
       await this.InitTerm()
       this.current.year = this.today.year = new Date().getFullYear()
       this.current.day = this.today.day = new Date().getDate()
       this.current.month = this.today.month = new Date().getMonth() + 1
-      this.init();
-    }
+      this.init()
+  }
     onShareAppMessage(options) {
       return {}
     }

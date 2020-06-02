@@ -65,17 +65,17 @@ page {
   </view>
 </template>
 <script>
-import list from "components/list";
-import wepy from "wepy";
-import HttpMixin from "mixins/http";
-import ToastMixin from "mixins/toast";
-import DataMixin from "mixins/data";
-import MoveMixin from "mixins/move";
-import db from "util/db";
+import list from 'components/list'
+import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import DataMixin from 'mixins/data'
+import MoveMixin from 'mixins/move'
+import db from 'util/db'
 export default class NewsLists extends wepy.page {
   config = {
-    navigationBarTitleText: "最新资讯",
-    backgroundColor: "#eee"
+    navigationBarTitleText: '最新资讯',
+    backgroundColor: '#eee'
   };
   components = {
     list: list
@@ -85,69 +85,69 @@ export default class NewsLists extends wepy.page {
   data = {
     active: 0,
     params: {
-      tag_name: ""
+      tag_name: ''
     }
   };
   computed = {
     tabs() {
       return [
         {
-          name: "全部",
-          type: ""
+          name: '全部',
+          type: ''
         }
-      ].concat(db.Get("chooseTags"));
+      ].concat(db.Get('chooseTags'))
     }
   };
   methods = {
     tabHandle(index) {
-      this.tabChange(index);
+      this.tabChange(index)
     },
     to() {
       wepy.navigateTo({
-        url: "chooseTags"
-      });
+        url: 'chooseTags'
+      })
     }
   };
   tabChange(index) {
     if (index < 0 || index >= this.tabs.length) {
-      return;
+      return
     }
-    this.active = index;
-    this.params.tag_name = this.tabs[index].name;
-    this.$invoke("list", "getNewDetails", 1);
+    this.active = index
+    this.params.tag_name = this.tabs[index].name
+    this.$invoke('list', 'getNewDetails', 1)
   }
   moveRight() {
-    this.tabChange(this.active + 1);
+    this.tabChange(this.active + 1)
   }
   moveLeft() {
-    this.tabChange(this.active - 1);
+    this.tabChange(this.active - 1)
   }
   onLoad() {
-    if (!db.Get("chooseTags")) {
-      db.Set("chooseTags", [
+    if (!db.Get('chooseTags')) {
+      db.Set('chooseTags', [
         {
-          name: "青春川大",
-          type: "org"
+          name: '青春川大',
+          type: 'org'
         },
         {
-          name: "就业网",
-          type: "org"
+          name: '就业网',
+          type: 'org'
         },
         {
-          name: "学工部",
-          type: "org"
+          name: '学工部',
+          type: 'org'
         },
         {
-          name: "教务处",
-          type: "org"
+          name: '教务处',
+          type: 'org'
         }
-      ]);
+      ])
     }
   }
   onShareAppMessage(options) {
     return {
-      title: "最新资讯"
-    };
+      title: '最新资讯'
+    }
   }
 }
 </script>

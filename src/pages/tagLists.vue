@@ -4,31 +4,31 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import list from "../components/list"
+  import wepy from 'wepy'
+import list from '../components/list'
   export default class TagLists extends wepy.page {
     config = {}
     components = {
-      list: list,
+      list: list
     }
     data = {
-      name: "",
+      name: '',
       params: {
         tag_id: 1
       },
-      isTag: ""
+      isTag: ''
     }
     onLoad(option) {
       this.params.tag_id = option.id
       this.name = option.name
-      this.isTag = "true"
+      this.isTag = 'true'
       wepy.setNavigationBarTitle({
-        title: "#" + option.name
+        title: '#' + option.name
       })
     }
     onShareAppMessage(options) {
       return {
-        title: "#"+this.name
+        title: '#' + this.name
       }
     }
   }

@@ -98,15 +98,15 @@
   import EcardMixin from '../mixins/ecard'
   import HttpMixin from '../mixins/http'
   import ToastMixin from '../mixins/toast'
-  import DataMixin from "../mixins/data";
-  import db from "../util/db"
-  import dayjs from "dayjs";
-  export default class Ecard extends wepy.page {
+  import DataMixin from '../mixins/data'
+import db from '../util/db'
+  import dayjs from 'dayjs'
+export default class Ecard extends wepy.page {
     config = {
       navigationBarTitleText: '我的校园卡',
       navigationBarBackgroundColor: '#b92c18',
       enablePullDownRefresh: true,
-      navigationBarTextStyle: 'white',
+      navigationBarTextStyle: 'white'
     }
     mixins = [EcardMixin, HttpMixin, ToastMixin, DataMixin]
     components = {}
@@ -116,10 +116,10 @@
     }
     computed = {
       balance() {
-        if (this.trans.length > 0 && "balance" in this.trans[0]) {
+        if (this.trans.length > 0 && 'balance' in this.trans[0]) {
           return this.trans[0].balance
         }
-        return "无数据"
+        return '无数据'
       }
     }
     async onPullDownRefresh() {
@@ -127,26 +127,26 @@
         await this.UpdateECard()
         await this.get()
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
       wepy.stopPullDownRefresh()
     }
     async get() {
       try {
-        let trans = await this.GetECard();
+        let trans = await this.GetECard()
         for (let i = 0; i < trans.length; i++) {
-          trans[i].trans_time = dayjs(trans[i].trans_time * 1000).format("YYYY-MM-DD HH:mm")
+          trans[i].trans_time = dayjs(trans[i].trans_time * 1000).format('YYYY-MM-DD HH:mm')
         }
         this.trans = trans
         this.$apply()
-        this.InitSet("trans", trans)
+        this.InitSet('trans', trans)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
     async onLoad() {
       this.height = wx.getSystemInfoSync().windowWidth / 1.6
-      this.Init("trans")
+      this.Init('trans')
     }
   }
 </script>

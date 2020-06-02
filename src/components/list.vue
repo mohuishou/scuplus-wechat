@@ -64,11 +64,11 @@ scroll-view {
 </template>
 
 <script>
-import wepy from "wepy";
-import HttpMixin from "mixins/http";
-import ToastMixin from "mixins/toast";
-import Empty from "components/empty";
-import ADConfig from "util/ad";
+import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import Empty from 'components/empty'
+import ADConfig from 'util/ad'
 export default class List extends wepy.page {
   mixins = [HttpMixin, ToastMixin];
   components = {
@@ -78,12 +78,12 @@ export default class List extends wepy.page {
     params: {
       type: Object,
       default: {
-        tag_name: ""
+        tag_name: ''
       }
     },
     isTag: {
       type: String,
-      default: "",
+      default: '',
       twoWay: true
     }
   };
@@ -97,41 +97,41 @@ export default class List extends wepy.page {
   };
   computed = {
     adShow() {
-      return ADConfig.Get("newsLists");
+      return ADConfig.Get('newsLists')
     }
   };
   methods = {
     updateLists() {
-      this.page++;
-      this.getDetails();
+      this.page++
+      this.getDetails()
     },
     toDetail(id) {
       wepy.navigateTo({
         url: `details?id=${id}&&from=news`
-      });
+      })
     },
     toTagLists(tag) {
       wepy.navigateTo({
         url: `tagLists?id=${tag.id}&&name=${tag.name}`
-      });
+      })
     },
     getNewDetails(page) {
-      this.page = page || this.page;
-      this.isNone = false;
+      this.page = page || this.page
+      this.isNone = false
       // scrollTop 值必须要有变化，不然的话没有效果
-      this.scrollTop = 1;
+      this.scrollTop = 1
       setTimeout(() => {
-        this.scrollTop = 0;
-        this.details = [];
-        this.getDetails();
-      }, 200);
+        this.scrollTop = 0
+        this.details = []
+        this.getDetails()
+      }, 200)
     }
   };
   async getDetails() {
-    if (this.isNone && this.page != 1) return;
+    if (this.isNone && this.page != 1) return
     try {
       const resp = await this.GET(
-        "/details",
+        '/details',
         Object.assign(
           {
             page: this.page,
@@ -139,46 +139,46 @@ export default class List extends wepy.page {
           },
           this.params
         )
-      );
+      )
       if (resp.data.data.length == 0) {
-        this.isNone = true;
-        this.ShowToast("没有数据了");
-        this.$apply();
-        return;
+        this.isNone = true
+        this.ShowToast('没有数据了')
+        this.$apply()
+        return
       }
       for (let i = 0; i < resp.data.data.length; i++) {
         resp.data.data[i].created_at = this.timeParser(
           resp.data.data[i].created_at
-        );
+        )
       }
       if (this.page != 1) {
-        this.details = this.details.concat(resp.data.data);
+        this.details = this.details.concat(resp.data.data)
       } else {
-        this.details = resp.data.data;
+        this.details = resp.data.data
       }
-      this.$apply();
+      this.$apply()
     } catch (err) {}
   }
   timeParser(t) {
-    let date = new Date(Date.parse(t));
-    let y = date.getFullYear();
-    let m = date.getMonth() + 1;
-    m = m < 10 ? "0" + m : m;
-    let d = date.getDate();
-    d = d < 10 ? "0" + d : d;
-    let h = date.getHours();
-    let minute = date.getMinutes();
-    minute = minute < 10 ? "0" + minute : minute;
-    return y + "-" + m + "-" + d + " " + h + ":" + minute;
+    let date = new Date(Date.parse(t))
+    let y = date.getFullYear()
+    let m = date.getMonth() + 1
+    m = m < 10 ? '0' + m : m
+    let d = date.getDate()
+    d = d < 10 ? '0' + d : d
+    let h = date.getHours()
+    let minute = date.getMinutes()
+    minute = minute < 10 ? '0' + minute : minute
+    return y + '-' + m + '-' + d + ' ' + h + ':' + minute
   }
   onLoad() {
     try {
       setTimeout(() => {
-        this.getDetails();
-      }, 100);
-      this.height = wx.getSystemInfoSync().screenHeight;
+        this.getDetails()
+      }, 100)
+      this.height = wx.getSystemInfoSync().screenHeight
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 }

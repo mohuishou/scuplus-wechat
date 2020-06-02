@@ -92,26 +92,26 @@
 
 <script>
   import wepy from 'wepy'
-  import db from "util/db"
-  import DataMixin from "mixins/data";
-  export default class Bus extends wepy.page {
+  import db from 'util/db'
+  import DataMixin from 'mixins/data'
+export default class Bus extends wepy.page {
     config = {
       navigationBarBackgroundColor: '#ab96c5',
-      navigationBarTextStyle: 'white',
+      navigationBarTextStyle: 'white'
     }
     mixins = [DataMixin];
     changeColumn(v) {
       if (v == 0) {
         this.range[1] = [{
-          name: "望江",
+          name: '望江',
           value: 2
         }, {
-          name: "华西",
+          name: '华西',
           value: 3
         }]
       } else {
         this.range[1] = [{
-          name: "江安",
+          name: '江安',
           value: 1
         }]
       }
@@ -119,7 +119,7 @@
     methods = {
       change(e) {
         this.choose = e.detail.value
-        db.Set("busChoose", this.choose)
+        db.Set('busChoose', this.choose)
       },
       columnchange(e) {
         if (e.detail.column === 0) {
@@ -129,468 +129,468 @@
     }
     watch = {
       choose(n, o) {
-        this.chooseStr = this.range[0][n[0]].value + "-" + this.range[1][n[1]].value
+        this.chooseStr = this.range[0][n[0]].value + '-' + this.range[1][n[1]].value
       }
     }
     onLoad() {
-      this.choose = db.Get("busChoose") || [0, 0]
+      this.choose = db.Get('busChoose') || [0, 0]
       this.changeColumn(this.choose[0])
       this.height = wx.getSystemInfoSync().windowHeight - 80
     }
     data = {
       choose: [0, 0],
-      chooseStr: "1-2",
+      chooseStr: '1-2',
       range: [
         [{
-          name: "江安",
+          name: '江安',
           value: 1
         }, {
-          name: "望江",
+          name: '望江',
           value: 2
         }, {
-          name: "华西",
+          name: '华西',
           value: 3
         }],
         [{
-          name: "望江",
+          name: '望江',
           value: 2
         }, {
-          name: "华西",
+          name: '华西',
           value: 3
-        }],
+        }]
       ],
       height: 300,
       // 江安: 1, 望江: 2, 华西: 3;
       // 1-2: 江安到望江
       bus: {
-        "1-2": [{
-            time: "7:10",
-            addr: "文星花园 江安花园",
-            isFix: false,
-          },
-          {
-            time: "7:20",
-            addr: "江安点",
-            isFix: false,
-          },
-          {
-            time: "8:10",
-            addr: "文星花园 江安花园",
-            isFix: false,
-          },
-          {
-            time: "8:20",
-            addr: "江安点",
-            isFix: false,
-          },
-          {
-            time: "8:40",
-            addr: "江安点",
-            isFix: false,
-          },
-          {
-            time: "9:00",
-            addr: "江安点",
-            isFix: true,
-          },
-          {
-            time: "10:15",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "11:20",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "12:10",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "13:00",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "13:25",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "14:00",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "14:55",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "15:45",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "16:35",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "17:10",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "17:30",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "17:50",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "18:30",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "18:50",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "19:00",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "20:00",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "21:20",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "22:15",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "22:30",
-            addr: "一基楼",
-            isFix: true,
-          },
+        '1-2': [{
+          time: '7:10',
+          addr: '文星花园 江安花园',
+          isFix: false
+        },
+        {
+          time: '7:20',
+          addr: '江安点',
+          isFix: false
+        },
+        {
+          time: '8:10',
+          addr: '文星花园 江安花园',
+          isFix: false
+        },
+        {
+          time: '8:20',
+          addr: '江安点',
+          isFix: false
+        },
+        {
+          time: '8:40',
+          addr: '江安点',
+          isFix: false
+        },
+        {
+          time: '9:00',
+          addr: '江安点',
+          isFix: true
+        },
+        {
+          time: '10:15',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '11:20',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '12:10',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '13:00',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '13:25',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '14:00',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '14:55',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '15:45',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '16:35',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '17:10',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '17:30',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '17:50',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '18:30',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '18:50',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '19:00',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '20:00',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '21:20',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '22:15',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '22:30',
+          addr: '一基楼',
+          isFix: true
+        }
         ],
-        "2-1": [{
-            time: "7:10",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "7:20",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "7:30",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "7:40",
-            addr: "望江",
-            isFix: false,
-          },
-          {
-            time: "7:50",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "8:10",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "8:20",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "9:00",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "10:10",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "10:50",
-            addr: "望江",
-            isFix: false,
-          },
-          {
-            time: "11:10",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "12:10",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "12:30",
-            addr: "望江",
-            isFix: false,
-          },
-          {
-            time: "13:00",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "13:55",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "14:30",
-            addr: "望江",
-            isFix: false,
-          },
-          {
-            time: "15:00",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "15:30",
-            addr: "望江",
-            isFix: false,
-          },
-          {
-            time: "15:45",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "16:50",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "17:20",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "18:00",
-            addr: "望江 到文星花园",
-            isFix: true,
-          },
-          {
-            time: "18:15",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "18:50",
-            addr: "望江 到文星花园",
-            isFix: true,
-          },
-          {
-            time: "19:30",
-            addr: "望江 到文星花园",
-            isFix: true,
-          },
-          {
-            time: "20:30",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "21:10",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "21:40",
-            addr: "望江",
-            isFix: true,
-          },
-          {
-            time: "22:30",
-            addr: "望江",
-            isFix: true,
-          },
+        '2-1': [{
+          time: '7:10',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '7:20',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '7:30',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '7:40',
+          addr: '望江',
+          isFix: false
+        },
+        {
+          time: '7:50',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '8:10',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '8:20',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '9:00',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '10:10',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '10:50',
+          addr: '望江',
+          isFix: false
+        },
+        {
+          time: '11:10',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '12:10',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '12:30',
+          addr: '望江',
+          isFix: false
+        },
+        {
+          time: '13:00',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '13:55',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '14:30',
+          addr: '望江',
+          isFix: false
+        },
+        {
+          time: '15:00',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '15:30',
+          addr: '望江',
+          isFix: false
+        },
+        {
+          time: '15:45',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '16:50',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '17:20',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '18:00',
+          addr: '望江 到文星花园',
+          isFix: true
+        },
+        {
+          time: '18:15',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '18:50',
+          addr: '望江 到文星花园',
+          isFix: true
+        },
+        {
+          time: '19:30',
+          addr: '望江 到文星花园',
+          isFix: true
+        },
+        {
+          time: '20:30',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '21:10',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '21:40',
+          addr: '望江',
+          isFix: true
+        },
+        {
+          time: '22:30',
+          addr: '望江',
+          isFix: true
+        }
         ],
-        "1-3": [{
-            time: "8:20",
-            addr: "江安点",
-            isFix: true,
-          },
-          {
-            time: "8:40",
-            addr: "江安点",
-            isFix: true,
-          },
-          {
-            time: "9:00",
-            addr: "江安点",
-            isFix: true,
-          },
-          {
-            time: "10:15",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "12:10",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "13:00",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "14:55",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "15:45",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "16:35",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "17:20",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "17:50",
-            addr: "行政楼",
-            isFix: true,
-          },
-          {
-            time: "18:30",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "18:50",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "19:40",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "21:20",
-            addr: "一基楼",
-            isFix: true,
-          },
-          {
-            time: "22:15",
-            addr: "一基楼 江安-华西-望江",
-            isFix: true,
-          }
+        '1-3': [{
+          time: '8:20',
+          addr: '江安点',
+          isFix: true
+        },
+        {
+          time: '8:40',
+          addr: '江安点',
+          isFix: true
+        },
+        {
+          time: '9:00',
+          addr: '江安点',
+          isFix: true
+        },
+        {
+          time: '10:15',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '12:10',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '13:00',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '14:55',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '15:45',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '16:35',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '17:20',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '17:50',
+          addr: '行政楼',
+          isFix: true
+        },
+        {
+          time: '18:30',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '18:50',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '19:40',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '21:20',
+          addr: '一基楼',
+          isFix: true
+        },
+        {
+          time: '22:15',
+          addr: '一基楼 江安-华西-望江',
+          isFix: true
+        }
         ],
-        "3-1": [{
-            time: "7:15",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "7:40",
-            addr: "华西",
-            isFix: false,
-          },
-          {
-            time: "9:10",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "10:00",
-            addr: "华西",
-            isFix: false,
-          },
-          {
-            time: "11:10",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "12:10",
-            addr: "华西",
-            isFix: false,
-          },
-          {
-            time: "13:00",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "13:55",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "14:50",
-            addr: "华西",
-            isFix: false,
-          },
-          {
-            time: "15:40",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "16:50",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "17:20",
-            addr: "华西",
-            isFix: true,
-          }, {
-            time: "17:50",
-            addr: "华西 到文星花园",
-            isFix: false,
-          },
-          {
-            time: "18:15",
-            addr: "华西",
-            isFix: true,
-          },
-          {
-            time: "19:30",
-            addr: "华西",
-            isFix: true,
-          },
-        ],
+        '3-1': [{
+          time: '7:15',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '7:40',
+          addr: '华西',
+          isFix: false
+        },
+        {
+          time: '9:10',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '10:00',
+          addr: '华西',
+          isFix: false
+        },
+        {
+          time: '11:10',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '12:10',
+          addr: '华西',
+          isFix: false
+        },
+        {
+          time: '13:00',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '13:55',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '14:50',
+          addr: '华西',
+          isFix: false
+        },
+        {
+          time: '15:40',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '16:50',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '17:20',
+          addr: '华西',
+          isFix: true
+        }, {
+          time: '17:50',
+          addr: '华西 到文星花园',
+          isFix: false
+        },
+        {
+          time: '18:15',
+          addr: '华西',
+          isFix: true
+        },
+        {
+          time: '19:30',
+          addr: '华西',
+          isFix: true
+        }
+        ]
       }
     }
   }

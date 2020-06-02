@@ -13,10 +13,10 @@ async function get() {
 }
 
 async function update() {
-  const resp = await PostB("/exam")
-  if (resp.status === 0){
+  const resp = await PostB('/exam')
+  if (resp.status === 0) {
 
-  }else {
+  } else {
 
   }
 }

@@ -30,7 +30,7 @@
     props = {
       msg: {
         type: String,
-        default: "没有数据"
+        default: '没有数据'
       }
     }
   }

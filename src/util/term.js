@@ -1,7 +1,7 @@
-import db from "./db"
+import db from './db'
 
 export function GetYearTerm() {
-  let data = db.Get("year_term") || {}
+  let data = db.Get('year_term') || {}
   if ('year' in data) return data
   let date = new Date()
   data = {

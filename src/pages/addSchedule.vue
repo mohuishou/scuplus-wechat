@@ -127,13 +127,13 @@
 </template>
 
 <script>
-  import wepy from "wepy";
-  import HttpMixin from "mixins/http";
-  import ToastMixin from "mixins/toast";
-  import db from "util/db";
-  export default class AddSchedule extends wepy.page {
+  import wepy from 'wepy'
+import HttpMixin from 'mixins/http'
+import ToastMixin from 'mixins/toast'
+import db from 'util/db'
+export default class AddSchedule extends wepy.page {
     config = {
-      navigationBarTitleText: "自定义课程"
+      navigationBarTitleText: '自定义课程'
     };
     mixins = [HttpMixin, ToastMixin];
     methods = {
@@ -143,37 +143,37 @@
       submit(e) {
         let course = e.detail.value
         for (const x in course) {
-          if (course[x] === "") {
-            this.ShowToast("所有项目均为必填项！")
+          if (course[x] === '') {
+            this.ShowToast('所有项目均为必填项！')
             return
           }
         }
         if (course.session[0] >= course.session[1]) {
-          this.ShowToast("节次范围错误")
+          this.ShowToast('节次范围错误')
           return
         }
         course.day = course.day - 0 + 1
         // 节次
-        let session = ""
+        let session = ''
         for (let i = course.session[0] - 0 + 1; i < course.session[1] - 0 + 1; i++) {
-          session += i + ","
+          session += i + ','
         }
         session += `${course.session[1] - 0 + 1}`
         course.session = session
         if (course.all_week.length === 0) {
-          this.ShowToast("请选择上课周次！")
+          this.ShowToast('请选择上课周次！')
           return
         }
         course.all_week.sort((a, b) => a - b)
-        course.all_week = course.all_week.join(",")
+        course.all_week = course.all_week.join(',')
         course.course_id = -Math.random()
         course.lesson_id = -Math.random()
         // 添加课程
-        let items = db.Get("myScheduleItems") || [];
+        let items = db.Get('myScheduleItems') || []
         items.push(course)
-        db.Set("myScheduleItems", items);
+        db.Set('myScheduleItems', items)
         wepy.navigateBack({
-          delta: 2, //返回的页面数，如果 delta 大于现有页面数，则返回到首页
+          delta: 2 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页
         })
       },
       campusChange(e) {
@@ -184,7 +184,7 @@
       },
       sessionChange(e) {
         if (e.detail.value[0] >= e.detail.value[1]) {
-          this.ShowToast("范围错误")
+          this.ShowToast('范围错误')
           this.sessionIdx = [0, 2]
           return
         }
@@ -192,115 +192,115 @@
       }
     }
     data = {
-      campusArr: ["江安", "望江", "华西"],
+      campusArr: ['江安', '望江', '华西'],
       campusIdx: 0,
       sessionArr: [
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
       ],
       sessionIdx: [0, 2],
-      dayArr: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+      dayArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
       dayIdx: 0,
       weekArr: [{
-          name: 1,
-          value: 1,
-          checked: false
-        },
-        {
-          name: 2,
-          value: 2,
-          checked: false
-        },
-        {
-          name: 3,
-          value: 3,
-          checked: false
-        },
-        {
-          name: 4,
-          value: 4,
-          checked: false
-        },
-        {
-          name: 5,
-          value: 5,
-          checked: false
-        },
-        {
-          name: 6,
-          value: 6,
-          checked: false
-        },
-        {
-          name: 7,
-          value: 7,
-          checked: false
-        },
-        {
-          name: 8,
-          value: 8,
-          checked: false
-        },
-        {
-          name: 9,
-          value: 9,
-          checked: false
-        },
-        {
-          name: 10,
-          value: 10,
-          checked: false
-        },
-        {
-          name: 11,
-          value: 11,
-          checked: false
-        },
-        {
-          name: 12,
-          value: 12,
-          checked: false
-        },
-        {
-          name: 13,
-          value: 13,
-          checked: false
-        },
-        {
-          name: 14,
-          value: 14,
-          checked: false
-        },
-        {
-          name: 15,
-          value: 15,
-          checked: false
-        },
-        {
-          name: 16,
-          value: 16,
-          checked: false
-        },
-        {
-          name: 17,
-          value: 17,
-          checked: false
-        },
-        {
-          name: 18,
-          value: 18,
-          checked: false
-        },
-        {
-          name: 19,
-          value: 19,
-          checked: false
-        },
-        {
-          name: 20,
-          value: 20,
-          checked: false
-        },
+        name: 1,
+        value: 1,
+        checked: false
+      },
+      {
+        name: 2,
+        value: 2,
+        checked: false
+      },
+      {
+        name: 3,
+        value: 3,
+        checked: false
+      },
+      {
+        name: 4,
+        value: 4,
+        checked: false
+      },
+      {
+        name: 5,
+        value: 5,
+        checked: false
+      },
+      {
+        name: 6,
+        value: 6,
+        checked: false
+      },
+      {
+        name: 7,
+        value: 7,
+        checked: false
+      },
+      {
+        name: 8,
+        value: 8,
+        checked: false
+      },
+      {
+        name: 9,
+        value: 9,
+        checked: false
+      },
+      {
+        name: 10,
+        value: 10,
+        checked: false
+      },
+      {
+        name: 11,
+        value: 11,
+        checked: false
+      },
+      {
+        name: 12,
+        value: 12,
+        checked: false
+      },
+      {
+        name: 13,
+        value: 13,
+        checked: false
+      },
+      {
+        name: 14,
+        value: 14,
+        checked: false
+      },
+      {
+        name: 15,
+        value: 15,
+        checked: false
+      },
+      {
+        name: 16,
+        value: 16,
+        checked: false
+      },
+      {
+        name: 17,
+        value: 17,
+        checked: false
+      },
+      {
+        name: 18,
+        value: 18,
+        checked: false
+      },
+      {
+        name: 19,
+        value: 19,
+        checked: false
+      },
+      {
+        name: 20,
+        value: 20,
+        checked: false
+      }
       ]
     }
   }

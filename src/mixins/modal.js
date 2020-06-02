@@ -1,4 +1,4 @@
-import wepy from 'wepy';
+import wepy from 'wepy'
 
 export default class ModalMixin extends wepy.mixin {
   Alert(msg) {
